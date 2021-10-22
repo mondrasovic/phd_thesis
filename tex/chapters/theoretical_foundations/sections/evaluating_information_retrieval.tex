@@ -1,0 +1,171 @@
+\section{Evaluating Information Retrieval}
+\label{sec:EvaluatingInformationRetrieval}
+
+% -------------------------------------------------------------------------------------------------
+\subsection{Elementary Measures of Classification}
+\label{ssec:ElementaryMeasuresOfClassification}
+
+In order to put the meaning of \gls{map} (\cref{ssec:MeanAveragePrecision}) into a broader context, we will briefly explain the basics of accuracy, precision, recall, and some other derived metrics. We will use the standard terminology to denote whether the classification is correct (true) or not (false), for both positive and negative categories. All these measures can be obtained from the confusion matrix (see table \ref{tab:ConfusionMatrix}).
+
+\begin{table}[t]
+    \centering
+    
+    \begin{tabular}{|c|c|c|}
+        \hline
+                                        & \tblcolname{Actual positive} & \tblcolname{Actual negative}\\
+        \hline
+        \tblcolname{Predicted positive} & \gls{tp}                     & \gls{fp}\\
+        \hline
+        \tblcolname{Predicted negative} & \gls{fn}                     & \gls{tn}\\
+        \hline
+    \end{tabular}
+    
+    \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{Davis2016}}}
+    \label{tab:ConfusionMatrix}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    
+    \begin{tabular}{|p{0.2\linewidth}|p{0.2\linewidth}|p{0.5\linewidth}|}
+        \hline
+            
+        \tblcolname{Measure} & \tblcolname{Formula} & \tblcolname{Description}\\
+        \hline
+        
+        accuracy &
+        $\frac{\TP + \TN}{\TP + \TN + \FP + \FN}$ &
+        percentage of all the correct outcomes, a measure of statistical bias (systematic errors)\\
+        \hline
+        
+        precision &
+        $\frac{\TP}{\TP + \FP}$ &
+        the percentage of predictions that are correct, useful when the costs of \gls{fp} are high\\
+        \hline
+        
+        recall &
+        $\frac{\TP}{\TP + \FN}$ &
+        a.k.a sensitivity, it's the percentage of correctly spotted positives, useful when the costs of \gls{fn} are high\\
+        \hline
+        
+        true positive rate &
+        $\frac{\TP}{\TP + \FN}$ &
+        equal to recall\\
+        \hline
+        
+        false positive rate &
+        $\frac{\FP}{\FP + \TN}$ &
+        the percentage of negative instances incorrectly classified as positives (\gls{fp}), often referred to as \emph{alarm rate}\\
+        \hline
+        
+        positive predictive value &
+        $\frac{\TP}{\TP + \FP}$ &
+        equal to precision\\
+        \hline
+    \end{tabular}
+    
+    \caption[Measures of binary classification]{Elementary measures for evaluating binary classification. \externalsrc{\cite{Davis2016}}}
+    \label{tab:ElementaryMetrics}
+\end{table}
+
+% -------------------------------------------------------------------------------------------------
+\subsection{Important Curves}
+\label{ssec:ImportantCurves}
+
+\subsubsection{Precision-Recall Curve}
+\label{sssec:PrecisionRecallCurve}
+
+The precision-recall curve summarizes the trade-off between precision and recall for a given predictive model using different thresholds of probability. The precision-recall curve is appropriate for imbalanced datasets, i.e., datasets where the number of instances in each class may differ considerably (large skew in the class distribution \cite{Davis2016}).
+
+\subsubsection{ROC Curve}
+
+\cite{James2013} describes the \gls{roc} curve as simultaneously displaying two types of errors for all possible thresholds. It summarizes the trade-off between the true positive rate and false positive rate for a given predictive model using different thresholds of probability. The overall performance of a classifier is given by the \gls{auc} of the \gls{roc}. This curve is appropriate to use when the observations are balanced between each class in terms of the number of occurrences (as opposed to the aforementioned precision-recall curve).
+
+% -------------------------------------------------------------------------------------------------
+\subsection{Evaluating Bounding Box Prediction}
+\label{ssec:EvaluatingBoundingBoxPrediction}
+
+\subsubsection{Intersection Over Union}
+\label{sssec:IntersectionOverUnion}
+
+\Gls{iou} measures the overlap between two boundaries. For our purposes, we will use \gls{iou} as a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see figure \ref{fig:IntersectionOverUnion}).
+
+Let $\supsub{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\supsub{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+
+\begin{equation}
+\begin{aligned}
+    \vect{b}_1 \cap \vect{b}_2 =
+    &\max \cbrackets{0,
+                    \min \cbrackets{x_1 + w_1, x_2 + w_2} - \max \cbrackets{x_1, x_2} + 1}
+    \times\\
+    &\max \cbrackets{0,
+                    \min \cbrackets{y_1 + h_1, y_2 + h_2} - \max \cbrackets{y_1, y_2} + 1},
+\end{aligned}
+\end{equation}
+
+\noindent and the area of their union is given by
+
+\begin{equation}
+    \vect{b}_1 \cup \vect{b}_2 = w_1 h_1 + w_2 h_2 - \vect{b}_1 \cap \vect{b}_2.
+\end{equation}
+
+\noindent Then, the final \gls{iou} metric between $\vect{b_1}$ and $\vect{b_2}$ is computed as
+
+\begin{equation}
+    \label{eq:IntersectionOverUnion}
+    \func{\IOU}{\vect{b}_1, \vect{b}_2} =
+    \frac{\vect{b}_1 \cap \vect{b}_2}{\vect{b}_1 \cup \vect{b}_2},
+\end{equation}
+
+\noindent where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0$ represents no intersection, while value of $1$ represents a complete overlap. An \gls{iou} threshold, $t$, such that $0 \leq t \leq 1$, can be associated with this metric, denoting the decision boundary whether the prediction is a \gls{tp} or a \gls{tn}.
+
+\begin{figure}[t]
+    \centerline{\includegraphics[width=0.25\linewidth]{figures/theoretical_foundations/intersection_over_union.pdf}}
+    \caption[\Gls{iou} visualization]{Computation of the \gls{iou} metric between two \glspl{bbox} using of ratio of the area of overlap and the area of the union.}
+    \label{fig:IntersectionOverUnion}
+\end{figure}
+
+% -------------------------------------------------------------------------------------------------
+\subsection{Mean Average Precision}
+\label{ssec:MeanAveragePrecision}
+
+\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, PASCAL \gls{voc} \cite{Everingham10} and MS \gls{coco} \cite{Lin2014} challenge.
+
+\subsubsection{Object Re-Identification}
+\label{sssec:ObjectReIdentification}
+
+A common use case in the context of object \gls{reid} is to use \gls{map} to assess the search results for a particular query using Euclidean distance or cosine similarity as a metric. Oftentimes the model is trained with intent to use one of these trivial metrics. Furthermore, this approach is often paired with \emph{top-k} accuracy, typically \emph{top-1}, \emph{top-2} and \emph{top-5}.
+
+In a typical \gls{reid} evaluation setup, there is a query set and a so-called gallery set. For each object in a query set the aim is to retrieve a similar identity from the test set (i.e. the gallery set). The computation of the \gls{ap} for a query image $q$ is thus defined as
+
+\begin{equation}
+    \label{eq:AveragePrecision}
+    \func{\AP}{q} = \frac{1}{\func{N_{gt}}{q}} \sum_{k} \func{P}{k} \times {\delta}_k,
+\end{equation}
+
+\noindent where $\func{P}{k}$ represents precision at rank $k$, $\func{N_{gt}}{q}$ is the total number of true retrievals for the query $q$. The indicator ${\delta}_k$ is equal to $1$ when the matching of query image $q$ to a test image is correct at rank $r$, such that $1 \leq r \leq k$. The \gls{map} is then calculated as average over all query images, concretely
+
+\begin{equation}
+    \label{eq:MeanAveragePrecision}
+    \MAP = \frac{1}{Q} \sum_q \func{\AP}{q},
+\end{equation}
+
+\noindent where $Q$ is the total number of query images, as described in \cite{Kuma2019}. The equation \ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in equation \ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to the query $q$.
+
+\subsubsection{Object Detection}
+
+Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (section \ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the PASCAL \gls{voc} challenge \cite{Everingham10}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
+
+In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve (section \ref{sssec:PrecisionRecallCurve}) can be plotted \cite{salton_introduction_1983}. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In \cite{Everingham10}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
+
+\begin{equation}
+    \AP = \frac{1}{11} \sum_{r \in \cbrackets{0.0, 0.1, \dots, 1.0}} \func{p_{interp}}{r},
+\end{equation}
+
+\noindent where the precision at each recall level $r$ is interpolated by taking the maximum precision measured for a method for which the corresponding recall exceeds $r$. Precision interpolation is used to remove the \emph{zig-zag} pattern by evaluating
+
+\begin{equation}
+    \func{p_{interp}}{r} = \underset{\tilde{r}:\tilde{r} \geq r}{\max} \quad \func{p}{\tilde{r}},
+\end{equation}
+
+\noindent with $\func{p}{\tilde{r}}$ representing the measures precision at a specific recall level $\tilde{r}$ \cite{Everingham10, salton_introduction_1983}.

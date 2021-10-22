@@ -1,3 +1,19 @@
+*.aux
+*.bbl
+*.acn
+*.blg
+*.fdb_latexmk
+*.fls
+*.glo
+*.ist
+*.lof
+*.log
+*.lot
+*.pdf
+*.synctex.gz
+*.toc
+*.out
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,5 +1,0 @@
-Apply \datasetname{} to all the mentionings of datasets.
-
-Fix the "The key concept of the SSD framework" images ((a), (b) and (c) are given in the image)/
-
-Use $2D$ and $3D$ instead of 2D and 3D.
