@@ -1,2 +1,3 @@
-# phd_thesis
-My Ph.D. dissertation thesis focused on "Object Tracking In Video"
+# Ph.D. Dissertation Thesis
+
+My **Ph.D. dissertation thesis** focused on "**Object Tracking In Video**".
