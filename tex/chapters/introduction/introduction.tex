@@ -33,14 +33,12 @@ The field of computer vision has provided diverse approaches to visual tracking 
 
 % .......... use cases transition to occlusion
 Visual tracking of single or multiple objects is often just an intermediate step for various ends, such as traffic analysis~\cite{Tang2019}, whether from a static camera or as part of self-driving cars, pedestrian detection and tracking~\cite{Leal-Taixe2017}, activity understanding~\cite{DBLP:journals/corr/abs-1709-04905}, and imitation based on a video~\cite{2018-TOG-SFV}. While this is an important problem with annually occurring challenges for the best achievement, the current \gls{sota} solutions still lack high accuracy in unconstrained scenarios with potential object occlusion~\cite{Jiyan2007}. Understandably, the object might re-emerge after the occlusion in a significantly different form, thus it might be mistaken for a new object. Occlusion comes in three separate types~\cite{gabriel2003state}:
-
 \begin{itemize}
     \item \emph{self-occlusion}, where the object occludes itself (a person holding a phone),
     \item \emph{intra-object occlusion}, in which multiple different objects occlude each other (a small vehicle passing behind a truck),
     \item or \emph{object-background occlusion}, when the occlusion is caused by a static object in the background (a tree occluding a cat).
 \end{itemize}
-
-\noindent In traffic scenarios, the last two types are prevalent.
+In traffic scenarios, the last two types are prevalent.
 
 % .......... embeddings and latent spaces
 A key element for a tracking algorithm to hold onto when dealing with occlusion is to discern between new and previously seen objects. For this purpose, a repeated identification of some object, or \gls{reid}, is indispensable, notably when visual clues are decisive. Various advances in the creation of latent spaces and so-called \emph{embeddings} using deep neural networks (section \ref{ssec:ArtificialNeuralNetworks}) have shown promising results concerning object \gls{reid}, especially for people~\cite{Schroff2015, Taigman2014}. One use case of embeddings is to create a metric space into which the tracked visual objects are encoded as vectors. It is a form of dimensionality reduction, where similar objects are mapped onto a manifold closer together while distinct objects are mapped further away from each other~\cite{Hadsell2006}. Later on, the Euclidean distance or cosine similarity between any two vectors results in a high degree of similarity if the two visual samples belong to the same object. This metric can be tailor-made to a custom form of similarity. In our case, all such comparisons should handle various visual changes in the object character, as~\cite{Kuma2019} comprehensively demonstrated on vehicles.

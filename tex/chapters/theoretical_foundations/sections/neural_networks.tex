@@ -2,7 +2,7 @@
 
 In this short section, we briefly describe artificial neural networks and their various types relevant to this thesis. However, our assumption is that the reader is sufficiently equipped with the knowledge regarding deep machine learning, and thus, for the sake of keeping this document as short as possible, we will omit detailed elaboration.
 
-% ########################################
+% ##################################################
 \subsection{Artificial Neural Networks}
 \label{ssec:ArtificialNeuralNetworks}
 
@@ -18,14 +18,13 @@ The name \emph{feedforward} is derived from the fact that the information flows 
     \label{fig:TypicalFCNArchitecture}
 \end{figure}
 
-% ########################################
+% ##################################################
 \subsection{Convolutional Neural Networks}
 \label{ssec:ConvolutionalNeuralNetworks}
 
 This type of neural networks has gained popularity in the computer vision community thanks to a never-seen-before performance on image classification task~\cite{Krizhevsky2012}. This machine learning algorithm processes images or other high dimensional, grid-like input and then learns the importance (weights and biases) of various aspects of the input data. Even though \glspl{cnn} can handle $1D$ time series data and be a counterpart to \glspl{rnn}~\cite{franoischollet2017learning}, our primary focus is to process $3D$ tensors. Simply put, convolutional networks are artificial neural networks that use in at least one of their layers the convolution operation instead of a general matrix multiplication~\cite{Goodfellow-et-al-2016} (see Fig.~\ref{fig:TypicalCNNArchitecture}).
 
 The successful ability of these networks to capture spatial and temporal properties via learned convolutional filters is the fundamental principle. Let $f$ and $g$ be functions. Then, the operation of convolution denoted by $\star$ produces a third function, as a result of the following computation (demonstrating the commutativity property, too)~\cite{Goodfellow-et-al-2016}:
-
 \begin{equation}
     \label{eq:ConvolutionContinuous}
     \func{\rbrackets{f \star g}}{t} =
@@ -38,11 +37,9 @@ The successful ability of these networks to capture spatial and temporal propert
     \func{g}{\tau}
     d\tau.
 \end{equation}
-
-\noindent In this setting, $f$ will be the input, and $g$ be the kernel. The output of this operation is a feature map. During the training, the aim is to learn the weights of the kernel matrix (similar to general artificial neural networks) that produces a feature map based on which the model can solve the given task according to some objective function.
+In this setting, $f$ is be the input, and $g$ is the kernel. The output of this operation is a feature map. During the training, the aim is to learn the weights of the kernel matrix (similar to general artificial neural networks) that produces a feature map based on which the model can solve the given task according to some objective function.
 
 Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Then, for a given position $\rbrackets{i, j}$ in the input image $I$, the convolution can be written in its discrete form as
-
 \begin{equation}
     \label{eq:ConvolutionDiscrete}
     \func{\rbrackets{f \star g}}{i, j} =
@@ -51,8 +48,7 @@ Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Th
     \func{I}{m, n}
     \func{K}{i - m, j - n}.
 \end{equation}
-
-\noindent Nonetheless, many machine learning libraries implement the cross-correlation operation, not the convolution operation by its strict definition. This operation is the same except for the fact that the kernel is not flipped, thus the commutative property is not preserved, which is not demanded in neural networks. In that case, the result of the cross-correlation is given by~\cite{Goodfellow-et-al-2016}
+Nonetheless, many machine learning libraries implement the cross-correlation operation, not the convolution operation by its strict definition. This operation is the same except for the fact that the kernel is not flipped, thus the commutative property is not preserved, which is not demanded in neural networks. In that case, the result of the cross-correlation is given by~\cite{Goodfellow-et-al-2016}
 
 \begin{equation}
     \label{eq:CrossCorrelation}
@@ -63,9 +59,9 @@ Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Th
     \func{K}{m, n}.
 \end{equation}
 
-An indispensable outcome of \glspl{cnn} is the ability to capture hierarchical relations. Layers placed near the input to the model capture low-level features such as edges, colors, gradient orientations, and so on. On the other hand, layers placed further, deeper in the model, highlight semantic, abstract features that are specific to the task at hand. We will refer to this fact many times in our work since object trackers need to accurately discriminate between the foreground and background as well as properly generalize. The exploitation of these qualities of convolutional layers will be demonstrated in section~\ref{sec:VisualObjectTracking}.
+An indispensable outcome of \glspl{cnn} is the ability to capture hierarchical relations. Layers placed near the input of the model capture low-level features such as edges, colors, gradient orientations, and so on. On the other hand, layers placed further, deeper in the model, highlight semantic, abstract features that are specific to the task at hand. We will refer to this fact many times in our work since visual object trackers need to accurately discriminate between the foreground and background as well as properly generalize. The exploitation of the mentioned qualities of convolutional layers will be demonstrated in section~\ref{sec:VisualObjectTracking}.
 
-Another prominent use case of \glspl{cnn} is \emph{transfer learning}, where a pretrained model is adopted for a new task, utilizing the already learned features. These pretrained models may come in various flavors, but typical ones are pretrained for an image classification task using the ImageNet dataset~\cite{JiaDeng2009}. The reasoning is that visual features such as edges and contours are vital to general object recognition tasks, hence it is not needed to learn coarse, rudimentary, low-level features from scratch all the time. Our work will certainly require the \emph{transfer learning,} maybe even additional \emph{fine-tuning} of the pretrained model of choice.
+Another prominent use case of \glspl{cnn} is \emph{transfer learning}, where a pretrained model is adopted for a new task, utilizing the already learned features. These pretrained models may come in various flavors, but typical ones are pretrained for an image classification task using the \datasetname{ImageNet} dataset~\cite{JiaDeng2009}. The reasoning is that visual features such as edges and contours are vital to general object recognition tasks, hence it is not needed to learn coarse, rudimentary, low-level features from scratch all the time. Our work will certainly require the \emph{transfer learning}, and also additional \emph{fine-tuning} of the pretrained model of choice.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.9\linewidth]{figures/theoretical_foundations/typical_cnn_architecture.pdf}}

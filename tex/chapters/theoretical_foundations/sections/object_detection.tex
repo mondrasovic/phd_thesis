@@ -8,7 +8,7 @@ Historically speaking, object detection in its early stages of development depen
 
 Object detection is by its very nature a difficult task, because the number of objects is unknown in advance, which means, that the number of outputs of the model is variable. In terms of a standard deep learning model as described in section~\ref{ssec:ArtificialNeuralNetworks}, this represents a nuisance. A plethora of attempts have been proposed to evade this inherent shortage of standard neural networks. An obvious solution is to only produce a constant number of \glspl{bbox}, as utilized by \gls{ssd} and \gls{yolo}, for instance. But methods based on region proposals try to circumvent the obstacle of having to predict only a fixed set of \glspl{bbox}. Other differences between object detectors stem from the architecture itself, whether the training is an end-to-end pipeline or the model consists of various parts. Fully convolutional architectures are also becoming more prevalent and the latest results are promising~\cite{Tian2019}. We will also review fully convolutional trackers in great detail in section \ref{ssec:FullyConvolutionalTracking}.
 
-% ########################################
+% ##################################################
 \subsection{Non-Maximum Suppression}
 \label{ssec:NonMaximumSuppression}
 
@@ -58,7 +58,7 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
     \label{fig:NonMaximumSuppression}
 \end{figure}
 
-% ########################################
+% ##################################################
 \subsection{YOLO}
 \label{ssec:YouLookOnlyOnce}
 
@@ -67,7 +67,6 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
 The main implementation aspect is the unification of separate components of object detection into a single neural network. Training is thus executed in an end-to-end fashion. In the original article~\cite{Redmon2016}, the model was pre-trained on ImageNet~\cite{imagenet_cvpr09} classification task at half the resolution of $224 \times 224$. When detecting, the resolution was doubled to get required $448 \times 448$ (Fig.~\ref{fig:YOLOGeneralIdea}). The network uses features from the entire image for the prediction of each \gls{bbox}. It also simultaneously predicts all \glspl{bbox} across all classes~\cite{Redmon2016}.
 
 As shown in Fig.~\ref{fig:YOLOBBOXESProgression}, the input image is divided into an $S \times S$ grid. Since most of the time an object will overlap multiple grid cells, the \emph{main} cell responsible for predicting the object will be the one the center of the object's \gls{bbox} falls into. Each \gls{bbox} prediction is evaluated by a confidence level computed as $\prob{\text{object}} \cdot \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}$, with $\vect{b}_{pred}$ and $\vect{b}_{truth}$ being the prediction and ground truth, respectively. If no object exists in a particular cell, the confidence should be equal to $0$. Each grid cell prediction also encapsulates $C$ conditional probabilities for each class under the assumption that the object is present, mathematically stated as $\probgiven{{\text{class}}_i}{\text{object}}$. But only one set of class probabilities is predicted per grid cell, regardless of the value of the hyperparameter $B$. This description can be concisely conveyed by the equation below:
-
 \begin{equation}
     \begin{aligned}
         \label{eq:YOLOCOnfidenceScores}
@@ -82,8 +81,7 @@ As shown in Fig.~\ref{fig:YOLOBBOXESProgression}, the input image is divided int
         \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}.
     \end{aligned}
 \end{equation}
-
-\noindent This equality gives the class-specific confidence score which basically encodes both the probability of the $i$-th class appearing in a particular \gls{bbox} in conjunction with how well this predicted box fits the object.
+This equality gives the class-specific confidence score which basically encodes both the probability of the $i$-th class appearing in a particular \gls{bbox} in conjunction with how well this predicted box fits the object.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/yolo_general_idea.pdf}}
@@ -105,7 +103,7 @@ The network design reflects a standard practice in deep learning-based computer 
     \label{fig:YOLOArchitecture}
 \end{figure}
 
-% ########################################
+% ##################################################
 \subsection{Faster R-CNN}
 \label{ssec:FasterRCNN}
 
@@ -127,7 +125,7 @@ As the endeavor is to diminish unnecessary computations, the proposals are not c
     \label{fig:FasterRCNNRPN}
 \end{figure}
 
-% ########################################
+% ##################################################
 \subsection{Fully Convolutional Object Detection}
 \label{ssec:FullyConvolutioanlObjectDetection}
 
