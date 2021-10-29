@@ -3,7 +3,7 @@
 
 To track objects in a video, there is a requirement to resolve the object's position in two consecutive frames. An ineffective brute-force approach would be to exploit the matching technique in the pixel space of the entire image, imposing an extreme computational overhead~\cite{Jalal2012}. Generally speaking, it is safe to assume that the object does not change its position abruptly. In case of vehicles, this is even more so. Tracking a jumping ball in a room that is constantly bouncing off the walls presents a greater challenge in terms of sudden change in trajectory than tracking a vehicle. Given this assumption, a physical model of the object can be utilized to reduce the region in the frame where the object should be searched for. Moreover, having a physical model backing up the visual tracking is essential as it may help determine potential failure if predictions of physical as well as visual models do not match up to a specific degree of confidence.
 
-As we have mentioned numerous times, occlusion handling is of primary concern for us, and being able to predict a probability distribution over possible object's positions if visual input is absent is vital. We could potentially use filtering approaches, specifically Kalman filter (\cref{ssec:KalmanFiler}) or particle filter (\cref{ssec:ParticleFilter}) described later. These algorithms could model the vehicle's speed and acceleration. Filtering is an engineering terminology describing the extraction of information about a signal from partial and noisy observations (measurements)~\cite{Kunsch2013}.
+As we have mentioned numerous times, occlusion handling is of primary concern for us, and being able to predict a probability distribution over possible object's positions if visual input is absent is vital. We could potentially use filtering approaches, specifically Kalman filter (section~\ref{ssec:KalmanFiler}) or particle filter (section~\ref{ssec:ParticleFilter}) described later. These algorithms could model the vehicle's speed and acceleration. Filtering is an engineering terminology describing the extraction of information about a signal from partial and noisy observations (measurements)~\cite{Kunsch2013}.
 
 % ########################################
 \subsection{Trivial Motion Model}
@@ -24,9 +24,9 @@ Let $\func{p}{t}$ be the current position at time $t$, and $\func{v}{t}$ be the 
 
 Kalman filter~\cite{Kalman1960, welch1995introduction} is a linear predictive filter and widely applied in the computer vision community for object tracking~\cite{Jalal2012}. It has proven to be good at predicting the state in the presence of noise. This noise has to be of Gaussian probability distribution for the best performance, which can be viewed as a disadvantage in many practical, nonlinear scenarios. However, to handle such situations, the Extended Kalman Filter was proposed~\cite{welch1995introduction}, a nonlinear version of the original Kalman Filter. The major contribution is that the state transition and observation models do not need to be linear functions of the state, but they may be nonlinear instead.
 
-Kalman Filter consists of two steps, namely \emph{prediction}, and \emph{correction} (\cref{fig:KalmanFilterDiagram}). In the prediction phase, the future system's state is predicted using only the variables describing the previous state. Later on, when a new observation is made, the correction step ensues and the internal state variables are updated accordingly.
+Kalman Filter consists of two steps, namely \emph{prediction}, and \emph{correction} (see Fig.~\ref{fig:KalmanFilterDiagram}). In the prediction phase, the future system's state is predicted using only the variables describing the previous state. Later on, when a new observation is made, the correction step ensues and the internal state variables are updated accordingly.
 
-Another problematic property of the Kalman Filter is its inability to simultaneously model multiple hypotheses~\cite{welch1995introduction}. This is due to the inherent, unimodal nature of the Gaussian probability distribution. This limitation is overcome by the particle Filter (\cref{ssec:ParticleFilter}) discussed next.
+Another problematic property of the Kalman Filter is its inability to simultaneously model multiple hypotheses~\cite{welch1995introduction}. This is due to the inherent, unimodal nature of the Gaussian probability distribution. This limitation is overcome by the particle Filter (section~\ref{ssec:ParticleFilter}) discussed next.
 
 State estimation of linear dynamical systems can be performed using the Kalman Filter~\cite{kim2018introduction}. Let $t$ denote the time. The evolution of the state from time $t - 1$ to time $t$ in the process model is given by
 
@@ -44,7 +44,7 @@ Since the internal process model is periodically updated as new observations (me
 
 \noindent with $\mtx{H}$ being the measurement matrix, $\vect{v}_t$, such that $\vect{v}_{t} \sim \mathcal{N} \rbrackets{0, \mtx{R}}$, be a zero mean, normally distributed noise vector with a related covariance matrix $\mtx{R}$~\cite{kim2018introduction}.
 
-In this regard, the role of the Kalman Filter is to compute an estimate of the state vector $\vect{x}_t$, provided some initial estimate $\vect{x}_0$, followed by series of individual measurements, $\vect{z}_1, \vect{z}_2, \dots, \vect{z}_t$ (see \cref{fig:KalmanFilterDiagram}). The system's behavior and state are described by matrices $\mtx{F}, \mtx{B}, \mtx{H}, \mtx{Q}$ and $\mtx{R}$, which are assumed to be time-invariant (hence the absence of indexing). Furthermore, the real covariance captured by matrices $\mtx{Q}$ and $\mtx{R}$ is also unknown, which means that the user can consider these matrices as adjustable parameters to reach the desired performance~\cite{kim2018introduction}.
+In this regard, the role of the Kalman Filter is to compute an estimate of the state vector $\vect{x}_t$, provided some initial estimate $\vect{x}_0$, followed by series of individual measurements, $\vect{z}_1, \vect{z}_2, \dots, \vect{z}_t$ (see Fig.~\ref{fig:KalmanFilterDiagram}). The system's behavior and state are described by matrices $\mtx{F}, \mtx{B}, \mtx{H}, \mtx{Q}$ and $\mtx{R}$, which are assumed to be time-invariant (hence the absence of indexing). Furthermore, the real covariance captured by matrices $\mtx{Q}$ and $\mtx{R}$ is also unknown, which means that the user can consider these matrices as adjustable parameters to reach the desired performance~\cite{kim2018introduction}.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/kalman_filter_diagram.pdf}}
@@ -84,7 +84,7 @@ Assume that $\probgiven{\vect{x}_{t - 1}}{\vect{z}_{1:t - 1}}$ has already been 
     \probgiven{\vect{x}_t}{\vect{z}_{1:t - 1}} = \int \probgiven{\vect{x}_t}{\vect{x}_{t - 1}} \probgiven{\vect{x}_{t - 1}}{\vect{z}_{1:t - 1}} d\vect{x}_{t - 1}.
 \end{equation}
 
-\noindent The \cref{eq:BayesianOptimPrediction} exploits the Markov assumption which in this context states that $\probgiven{\vect{x}_t}{\vect{x}_{t - 1}, \vect{z}_{1:t - 1}} = \probgiven{\vect{x}_t}{\vect{x}_{t - 1}}$. The state evolution is defined in \cref{eq:ProbModelStateEvolution}. At time step $t$, when a measurement $\vect{z}_t$ is obtained, the update stage follows to update the prior belief using the Bayes' rule
+\noindent The equation~\ref{eq:BayesianOptimPrediction} exploits the Markov assumption which in this context states that $\probgiven{\vect{x}_t}{\vect{x}_{t - 1}, \vect{z}_{1:t - 1}} = \probgiven{\vect{x}_t}{\vect{x}_{t - 1}}$. The state evolution is defined in equation~\ref{eq:ProbModelStateEvolution}. At time step $t$, when a measurement $\vect{z}_t$ is obtained, the update stage follows to update the prior belief using the Bayes' rule
 
 \begin{equation}
     \probgiven{\vect{x}_t}{\vect{z}_{1:t}} =
@@ -106,7 +106,7 @@ Assume that $\probgiven{\vect{x}_{t - 1}}{\vect{z}_{1:t - 1}}$ has already been 
     d\vect{x}_t.
 \end{equation}
 
-\noindent It must be noted that this recursive propagation of the posterior density is only conceptual and is practically intractable. Nonetheless, there are restrictive cases where solutions do exists using for instance Kalman (\cref{ssec:KalmanFiler}) or particle Filter~\cite{Arulampalam2007}.
+\noindent It must be noted that this recursive propagation of the posterior density is only conceptual and is practically intractable. Nonetheless, there are restrictive cases where solutions do exists using for instance Kalman (section~\ref{ssec:KalmanFiler}) or particle Filter~\cite{Arulampalam2007}.
 
 Particle Filter is a technique for implementing a recursive Bayesian filter outlined above through Monte Carlo simulations.  It is a powerful sequential state estimation approach~\cite{doucet2001introduction} based upon Monte Carlo integration techniques~\cite{mihaylova2007object}, so it is also known as the Sequential Monte Carlo algorithm. The core idea is to represent the posterior density function by a set of random samples with corresponding weights. Estimates are computed based on these samples and weights~\cite{Arulampalam2007}. A central characteristic of Monte Carlo simulations is that as the number of samples grows, the approximation also improves, approaching the optimal Bayesian estimate in the limit.
 
@@ -184,4 +184,4 @@ When estimating the optical flow, time starts to play a role. Besides, there are
     0.
 \end{equation}
 
-Gradients of the image with respect to $x$, $y$ and $t$, represented by $\frac{\partial I}{\partial x}$, $\frac{\partial I}{\partial y}$ and $\frac{\partial I}{\partial t}$, can be easily obtained. However, there are two unknowns, namely $\nu_x$ and $\nu_y$ (main components of the velocity, or the optical flow of the image $\func{I}{x, y, t}$) the values of which cannot be solved because only one equation is available. To this end, various methods have been proposed, and the \cref{eq:OpticalFlowEquation} is appropriately called the \emph{optical flow equation}~\cite{fleet2006optical}.
+Gradients of the image with respect to $x$, $y$ and $t$, represented by $\frac{\partial I}{\partial x}$, $\frac{\partial I}{\partial y}$ and $\frac{\partial I}{\partial t}$, can be easily obtained. However, there are two unknowns, namely $\nu_x$ and $\nu_y$ (main components of the velocity, or the optical flow of the image $\func{I}{x, y, t}$) the values of which cannot be solved because only one equation is available. To this end, various methods have been proposed, and equation~\ref{eq:OpticalFlowEquation} is appropriately called the \emph{optical flow equation}~\cite{fleet2006optical}.
