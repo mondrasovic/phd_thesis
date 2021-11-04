@@ -1,7 +1,7 @@
 \chapter{Conclusion}
 \label{chap:Conclusion}
 
-% =================================================================================================
+% ========================================
 The main objective of this work was to summarize our research in the field of visual object tracking. We introduced several concepts regarding object tracking, primarily when dealing with visual input in the form of a video. We have identified a plethora of approaches, but the most promising seems to be Siamese-based fully convolutional trackers.
 
 The concept of Siamese networks is the leading branch of trackers exploiting the properties of similarity learning. The approach of similarity learning facilitates the creation of metric spaces with specific traits. Without loss of generality, these traits are defined during the training by the data that is fed to the neural network model. The aim is to create a space where a trivial distance measurement between feature vectors of the embedded objects reflects their similarity. Such a similarity measure should be invariant to various distortions in lightning and object position, as well as occlusion of varying severity. Still, it should capture enough information to accurately indicate whether two objects are the same one or not. Among multiple problems hindering the performance of object tracking, we have identified the occlusion as the one we will focus on. We believe that the utilization of similarity learning should mitigate the consequences the occlusion has on the tracker's outcome, such as moving the attention from one object to a different one or losing the object completely.

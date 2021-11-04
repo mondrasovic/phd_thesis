@@ -1,10 +1,10 @@
 % Mathematical operators.
-% =================================================================================================
+% ========================================
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 % Vectors
-% =================================================================================================
+% ========================================
 \def\vx{{\mathbf{x}}}
 \def\vy{{\mathbf{y}}}
 \def\vtheta{{\mathbf{\theta}}}
@@ -15,42 +15,43 @@
 \newcommand{\euclnorm}[1]{{\left\Vert {#1} \right\Vert}_2}
 
 % Matrices
-% =================================================================================================
+% ========================================
 \newcommand{\mtx}[1]{\mathbf{#1}}
+\def\H{\mtx{H}}
 
 % Brackets
-% =================================================================================================
+% ========================================
 \newcommand{\rbrackets}[1]{\left( {#1} \right)}
 \newcommand{\cbrackets}[1]{\left\{ {#1} \right\}}
 \newcommand{\sbrackets}[1]{\left[ {#1} \right]}
 \newcommand{\pbrackets}[1]{\left\Vert {#1} \right\Vert}
 
 % Upper or lower index with or without brackets.
-% =================================================================================================
+% ========================================
 \newcommand{\suprbrackets}[2]{{#1}^{\left( {#2} \right)}}
 \newcommand{\supsub}[3]{{#1}_{#2}^{#3}}
 \newcommand{\supsubrbrackets}[3]{{#1}_{#2}^{\left( {#3} \right)}}
 
 % Functions.
-% =================================================================================================
+% ========================================
 \newcommand{\func}[2]{{#1} \left( #2 \right)}
 
 % Probability and statistics.
-% =================================================================================================
+% ========================================
 \newcommand{\prob}[1]{p \left( #1 \right)}
 \newcommand{\probgiven}[2]{p \left( #1 \ | \ #2 \right)}
 
 % Sets.
-% =================================================================================================
+% ========================================
 \newcommand{\mset}[1]{\mathcal{#1}}
 \newcommand{\msetsize}[1]{\left\vert \mathcal{#1} \right\vert}
 
 % Table-related.
-% =================================================================================================
+% ========================================
 \newcommand{\tblcolname}[1]{\textbf{#1}} % Table column name
 
 % Abbreviations that appear in equations often.
-% =================================================================================================
+% ========================================
 \def\TP{{\text{\gls{tp}}}}
 \def\TN{{\text{\gls{tn}}}}
 \def\FP{{\text{\gls{fp}}}}
@@ -62,10 +63,10 @@
 \def\IOU{{\text{\gls{iou}}}}
 
 % Names.
-% =================================================================================================
+% ========================================
 \newcommand{\modelname}[1]{\texttt{#1}} % A general name of a model (an entire network or just its part).
 \newcommand{\datasetname}[1]{\texttt{#1}} % A general name of a dataset.
 
 % Related to external sources: figures, tables, etc.
-% =================================================================================================
+% ========================================
 \newcommand{\externalsrc}[1]{(\textit{source}: {#1})}

@@ -1,0 +1,32 @@
+{
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "workbench.colorTheme": "Monokai Dimmed",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "editor.rulers": [
+        80,
+        100,
+        120
+    ],
+    "workbench.tips.enabled": false,
+    "latex-workshop.view.pdf.viewer": "tab",
+    "vim.useSystemClipboard": true,
+    "editor.wordWrap": "on",
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["j"],
+            "after": ["g", "j"]
+        },
+        {
+            "before": ["k"],
+            "after": ["g", "k"]
+        }
+      ]
+}
