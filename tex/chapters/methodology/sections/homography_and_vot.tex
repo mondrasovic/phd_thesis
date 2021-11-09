@@ -1,7 +1,7 @@
 \section{Homography and Visual Object Tracking}
 \label{sec:HomographyAndVisualObjectTracking}
 
-This section is dedicated to one of our experiments that were not completely related to the \gls{vot} itself, yet we achieved an original scientific contribution in this area when exploring certain solutions that could be applicable to object tracking, especially traffic analysis. Even though we did not set out for homography-based object tracking (explained later) due to limitations of available datasets, still we would like to elaborate on our developed approach. The proposed method was fully described as well as scrupulously tested under difficult conditions. We wrote up the whole research process in a paper called \textbf{Homography Ranking Based on Multiple Groups of Point Correspondences}~\cite{ondrasovic2021homography}, published in journal \textbf{Sensors} (web:~\cite{sensors}), under the category \emph{Physical Sensors}. In what follows, we provide a concise report of our research. For more information, we suggest the reader use our aforementioned article. Moreover, our preliminary discussion of this possibility with initial proposal of the solution can be found in our first paper dubbed \textbf{Foundations for homography estimation in presence of redundant point correspondencies}~\cite{ondravsovivc2020foundations} published in \textbf{Mathematics in Science and Technologies} (web:~\cite{mistconf}) conference.
+This section is dedicated to one of our experiments that were not completely related to the \gls{vot} itself, yet we achieved an original scientific contribution in this area when exploring certain solutions that could potentially be applicable to object tracking, especially traffic analysis. Even though we did not set out for homography-based object tracking (explained later) due to limitations of available datasets, still we would like to elaborate on our developed approach. The proposed method was fully described as well as scrupulously tested under difficult conditions. We wrote up the whole research process in a paper called \textbf{Homography Ranking Based on Multiple Groups of Point Correspondences}~\cite{ondrasovic2021homography}, published in journal \textbf{Sensors} (web:~\cite{sensors}), under the category \emph{Physical Sensors}. In what follows, we provide a concise report of our research. For more information, we suggest the reader use the aforementioned article. Moreover, our preliminary discussion of this possibility with initial proposal of the solution can be found in our first paper dubbed \textbf{Foundations for homography estimation in presence of redundant point correspondencies}~\cite{ondravsovivc2020foundations} published in \textbf{Mathematics in Science and Technologies} (web:~\cite{mistconf}) conference.
 
 \subsection{General Introduction}
 
@@ -17,27 +17,27 @@ Homography is a perspective projection of a plane from one camera view into a di
         h_{31} & h_{32} & h_{33}
     \end{bmatrix}
 \end{equation}
-This transformation is used to achieve the mapping between two views of the same plane, since in the pinhole camera model, any two images of the same planar surface are related to each other by the homography~\cite{hartley2003multiple, hartley1997defense}. More specifically, a single vector $\vectt{u}{u_x, u_y, 1}$, representing a warped keypoint in homogeneous coordinates, is mapped onto the rectified keypoint  $\vectt{\tilde{u}}{\tilde{u}_x, \tilde{u}_y, 1}$ by the homography $\H$ using the transformation $s \vect{\tilde{u}} \approx \H \vect{u}$, with $s$ being the scale factor. In its most general form, homography may achieve mapping between various perspectives. However, for our purposes we focused only on producing a view where perspective distortion is absent, i.e., to rectify the image so that it looks as if the camera was in an orthogonal position with respect to the desired plane in the world when taking the picture.
+This transformation is used to achieve a mapping between two views of the same plane, since in the pinhole camera model any two images of the same planar surface are related to each other by the homography~\cite{hartley2003multiple, hartley1997defense}. More specifically, a single vector $\vectt{u}{u_x, u_y, 1}$, representing a warped keypoint in homogeneous coordinates, is mapped onto the rectified keypoint  $\vectt{\tilde{u}}{\tilde{u}_x, \tilde{u}_y, 1}$ by the homography $\H$ using the transformation $s \vect{\tilde{u}} \approx \H \vect{u}$, with $s$ being the scale factor. In its most general form, homography may achieve mapping between various perspectives. However, for our purposes, we focused only on producing a view where perspective distortion is absent, i.e., to rectify the image so that it looks as if the camera was in an orthogonal position with respect to the desired plane in the world when taking the picture.
 
 Homography is commonly used for rectification of text document images by generating a fronto-parallel view~\cite{lu2005perspective, miao2006perspective}, image stitching~\cite{adel2014image, gao2011constructing}, video stabilization~\cite{liu2015smooth}, extracting metric information from $2$D images~\cite{zhang2000flexible}, pose estimation~\cite{circularmarkerposeestim}, and for various traffic-related applications, e.g., ground-plane detection~\cite{arrospide2010homography}, and bird's-eye view projection~\cite{luo2010low}.
 
 \subsection{Motivation}
 
-The primary motivation to explore the possibility of employing homography for visual object tracking was the fact that as long as a static camera is used and few assumptions that we will discuss later hold, the scene may be easily stripped off the effect of the perspective distoriton. Considering this, the incentive to track vehicles visually using a static camera while exploiting a fronto-parallel view over the road seemed like a plausible extension with possible advantages for traffic analysis. The combination of homography and object tracking is present in the literature, e.g.~\cite{Bose04groundplane, Zhang2012, Mei2009}. To provide more detail, Bose et al.~\cite{Bose04groundplane} presented a fully automated technique for both affine and metric rectification of a given ground plane (up to a scale factor) by simply tracking moving objects. The derivation of the necessary constraints for projective transformation between the image and the ground plane was obtained by observing objects that moved at constant velocity in the world for some part of their trajectory. We conjectured that the extra information about the scene geometry that we may achieve using rectification could aid in making the tracking more accurate. Visual trackers are often supported by motion models such as Kalman filter~\cite{Kalman1960}, so the rationale was to estimate motion model in a orthogonal projection, rather than perspectively distorted one.
+The primary motivation to explore the possibility of employing homography for \gls{vot} was the fact that as long as a static camera is used and few assumptions that we will discuss later hold, the scene may be easily stripped off the effect of the perspective distoriton. Considering this, the incentive to track vehicles visually using a static camera while exploiting a fronto-parallel view over the road seemed like a plausible extension with possible advantages for traffic analysis. Furthermore, the combination of homography and object tracking is present in the literature, e.g.~\cite{Bose04groundplane, Zhang2012, Mei2009}. To provide more detail, Bose et al.~\cite{Bose04groundplane} presented a fully automated technique for both affine and metric rectification of a given ground plane (up to a scale factor) by simply tracking moving objects. The derivation of the necessary constraints for projective transformation between the image and the ground plane was obtained by observing objects that moved at constant velocity in the world for some part of their trajectory. We conjectured that the extra information about the scene geometry that we may achieve using rectification could aid in making the tracking more accurate. Visual trackers are often supported by motion models such as Kalman filter~\cite{Kalman1960}, so the rationale was to estimate motion model in a orthogonal projection, rather than perspectively distorted one.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/methodology/chessboard_marker.jpg}}
-    \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that may serve for a homography transformation. The rectified, fronto-parallel view demonstrates a desired effect that points present on the ``ground'' plane (in this case, the chessboard) are properly projected, whereas other points suffer from substantial distortion.}
+    \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that would serve for a homography transformation. The rectified, fronto-parallel view demonstrates a desired effect that points present on the ``ground'' plane (in this case, the chessboard) are properly projected, whereas other points suffer from substantial distortion. \externalsrc{\cite{homographybasicscode}}}
     \label{fig:ChessboardMarker}
 \end{figure}
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/methodology/homography_road.png}}
-    \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view.}
+    \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view. \externalsrc{\cite{Bose04groundplane}}}
     \label{fig:RoadMarker}
 \end{figure}
 
-A common approach to estimate the homography is to use a set of at least four $2$D point correspondences~\cite{hartley1997defense}. We refer to the points used for establishing the $2$D point correspondences as keypoints. These keypoints may belong to a marker which is an object with a known shape that is either naturally occurring or artificially positioned in the scene. A regular pattern like a chessboard is usually utilized~\cite{zhang2016flexible} (see Fig.~\ref{fig:ChessboardMarker}). A single marker is identified in the image by multiple independent keypoints that have a direct correspondence to its real shape, thus making a group of point correspondences. For the sakes of traffic analysis, the marker may be represented by virtually any points on the image as long as certain conditions are met (see Fig.~\ref{fig:RoadMarker}). However, point correspondences established this way are often noisy and they can introduce errors in the homography estimation. Although $4$ keypoints are satisfactory, often a greater number of keypoints is used, allowing to use optimization to minimize a suitable cost function~\cite{osuna2016multiobjective, mou2013robust}. Then, outlier removal becomes an important step, and algorithms such as RANSAC~\cite{fischler1981random} are usually employed~\cite{osuna2016multiobjective}.
+A common approach to estimate the homography is to use a set of at least four $2$D point correspondences~\cite{hartley1997defense}. We refer to the points used for establishing the $2$D point correspondences as keypoints. These keypoints may belong to a marker which is an object with a known shape that is either naturally occurring or artificially positioned in the scene. A regular pattern like a chessboard is usually utilized~\cite{zhang2016flexible} (see Fig.~\ref{fig:ChessboardMarker}). A single marker is identified in the image by multiple independent keypoints that have a direct correspondence to its real shape, thus making a group of point correspondences. For the sakes of traffic analysis, the marker may be represented by virtually any points on the image as long as certain conditions are met (see Fig.~\ref{fig:RoadMarker}). However, point correspondences established this way are often noisy and they can introduce errors in the homography estimation. Although $4$ keypoints are satisfactory, often a greater number of keypoints is used, allowing to use optimization to minimize a suitable cost function~\cite{osuna2016multiobjective, mou2013robust}. Then, outlier removal becomes an important step, and algorithms such as RANSAC~\cite{fischler1981random} are usually employed.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/methodology/homography_motivation_diagram.pdf}}
@@ -45,12 +45,14 @@ A common approach to estimate the homography is to use a set of at least four $2
     \label{fig:HomographyMotivationDiagram}
 \end{figure}
 
+This work was motivated by a real-world application of generating a bird's-eye view over a road (see Fig.~\ref{fig:RoadRectification}) from a video recording when we could not use a large marker to cover a sufficient portion of the road (see Fig.~\ref{fig:MultipleMarkersOnRoad}). Homography estimation based on a single small marker was inaccurate. Therefore, we tried to use multiple small markers and measure their relative positions. However, their position measurements were highly noisy at best. Thus, the proposed method was used, instead. It is important to note that our method can also be adopted in a situation when the marker placed at various positions on the same planar surface is visible at different frames using a static camera. Stacking the frames onto each other yields a view with multiple markers.
+
 Let us now describe the underlying incentive for developing our approach. Assume a presence of a sole marker in the scene (Fig.~\ref{fig:RoadMarker}). Even though the marker is distorted under perspective, the knowledge of its real shape makes it possible to compute the homography. When multiple copies of the same marker are visible, but their positions in the world are unknown, the knowledge of the shape is not enough to incorporate all the keypoints in the estimation. In the absence of position information, existing approaches for homography estimation based on point correspondences fail because the projection has to preserve the proportional positions. Thus, estimating the homography without knowing the ground-truth layout of the keypoints up to an arbitrary scale does not guarantee the correct result.
 
 Under the aforementioned constraints, existing methods can only generate an isolated homography for each marker based on the one-to-one point correspondence (see Fig.~\ref{fig:HomographyMotivationDiagram}). Each homography may be affected by different sources of noise, e.g., low resolution, blur, or keypoint detection. Thus, the outcome of rectification may vary. Additionally, in many practical applications, a single marker usually covers a small portion of the image which increases susceptibility to noise. The trivial solution would be to use a bigger marker that covers the majority of the estimated plane in the image. However, this solution is often impractical. Furthermore, it is not possible to simply ``merge'' multiple isolated homographies together.
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/methodology/road_rectification.png}}
+    \centerline{\includegraphics[width=0.8\linewidth]{figures/methodology/road_rectification.png}}
     \caption[Road rectification]{A demonstration of the rectification process when obtaining a fronto-parallel view over the road using homography. \externalsrc{\cite{Luo2010}}}
     \label{fig:RoadRectification}
 \end{figure}
@@ -61,9 +63,16 @@ Under the aforementioned constraints, existing methods can only generate an isol
     \label{fig:MultipleMarkersOnRoad}
 \end{figure}
 
-This work was motivated by a real-world application of generating a bird's-eye view over a road (see Fig.~\ref{fig:RoadRectification}) from a video recording when we could not use a large marker to cover a sufficient portion of the road (see Fig.~\ref{fig:MultipleMarkersOnRoad}). Homography estimation based on a single small marker was inaccurate. Therefore, we tried to use multiple small markers and measure their relative positions. However, their position measurements were highly noisy at best. Thus, the proposed method was used, instead. It is important to note that our method can also be adopted in a situation when the marker placed at various positions on the same planar surface is visible at different frames using a static camera. Stacking the frames onto each other yields a view with multiple markers.
-
 \subsection{Developed Method}
+
+The goal of our work was to offer a systematic way to select the ``best'' homography according to the proposed score function without any other prior knowledge about the quality of individual markers.
+
+The method works like this. Each homography is induced by one independent marker. The input to our method is multiple sets (groups) of point correspondences between the warped and the ground-truth markers. So each set represents a marker. Our method can rank multiple homographies and select the best performing one according to the tailor-made score function. Thus, we require a homography matrix for each marker (a set of point correspondences). To compute these matrices, any state-of-the-art method can be utilized. The advantage of our method is that it can rank the referred homographies without the knowledge of absolute or relative positions of markers in the world. We did not propose any method to simultaneously estimate multiple homographies. We build upon the existing homography matrices.
+
+Since we assume no knowledge about the arrangement of markers in the scene, we cannot virtually create one compound marker consisting of all the keypoints. If we could, then we would employ RANSAC or any other sophisticated algorithm to select the best subset of keypoints to estimate the homography. Our approach would be useless. But we only have information about the relative position of marker’s keypoints, not markers themselves. The point correspondence is globally indeterminate. We can only establish a local point correspondence between a single marker and its ground-truth shape. To obtain the isolated homographies, we suggest the user chooses the best method available. 
+
+The homography estimation between existing point correspondences is a standard problem and we heavily rely on its solutions. But we did not contribute to it in terms of improving the homography estimation itself. We provided a way to rank the resulting homographies according to our score function. We developed a way to,
+under certain circumstances, choose the ``best'' homography from multiple existing ones. Therefore, our method could not even be compared to RANSAC, because we tackle a different problem.
 
 The proposed method is based on the following assumptions:
 \begin{enumerate}
@@ -88,6 +97,47 @@ We exploited the properties of homography and similarity transformations and exp
 \end{figure}
 
 Our algorithm is invariant to the underlying homography estimation method. It can thus serve as an extension to approaches that handle point correspondences, either as part of run time or a post-processing stage. Moreover, it is computationally very efficient, as it scales well with a quadratic complexity $\func{\Theta}{m^2}$.
+
+\def\hmatrices{\boldsymbol{\bar{H}}}
+\def\scoref{\mathcal{F}}
+
+\begin{algorithm}[t]
+    \caption{Homography Ranking}
+    \label{alg:homography_ranking}
+    \begin{algorithmic}[1]
+        \State $\hmatrices \gets \arraydef \left[ m \right]$
+        \Comment{output array of homographies}
+        
+        \State $\scores \gets \arraydef \left[ m \right]$
+        \Comment{array of scores}
+        
+        \For{$i \gets 1, \dots , m$}
+        
+            \State $\hmatrices \left[ i \right] \gets$
+            \Call{homography}{$\suprbrackets{\mtx{W}}{i}$, $\mtx{T}$}
+            \Comment{retrieve or estimate perspective}
+            
+            \State $\suprbrackets{\mtx{\bar{S}}}{i} \gets \mtx{I}_{3 \times 3}$
+            
+            \State $\mset{\bar{S}} \gets \cbrackets{\suprbrackets{\mtx{\bar{S}}}{i}}$
+            \Comment{set of similarity matrices}
+            
+            \ForAll{$j$ : $\cbrackets{1, \dots, m} - \cbrackets{i}$}
+            
+                \State $\suprbrackets{\mtx{\bar{S}}}{j} \gets$ \Call{similarity}{$\hmatrices \left[ i \right] \cdot \suprbrackets{\mtx{W}}{j}$, $\mtx{T }$}
+                
+                \State$\mset{\bar{S}} \gets \mset{\bar{S}} \cup \suprbrackets{\mtx{\bar{S}}}{j}$
+            \EndFor
+            
+            \State $\scores \left[ i \right] \gets \func{\scoref}{\hmatrices \left[ i \right], \mset{\bar{S}}}$
+            \Comment{evaluate score function \eqref{eq:score_function}}
+        \EndFor
+        \State $\sortres \gets \Call{argsort}{\scores}$
+        \Comment{indirect sort}
+        
+        \State \Return $\hmatrices, \sortres$
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection{Experiments and Discussion}
 

@@ -88,9 +88,11 @@ The precision-recall curve summarizes the trade-off between precision and recall
 \subsubsection{Intersection Over Union}
 \label{sssec:IntersectionOverUnion}
 
+\glslocalreset{iou}
+
 \Gls{iou} measures the overlap between two boundaries. For our purposes, we will use \gls{iou} as a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see figure \ref{fig:IntersectionOverUnion}).
 
-Let $\supsub{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\supsub{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+Let $\supsub{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\supsub{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
 \begin{aligned}
     \vect{b}_1 \cap \vect{b}_2 =
@@ -111,7 +113,7 @@ Then, the final \gls{iou} metric between $\vect{b_1}$ and $\vect{b_2}$ is comput
     \func{\IOU}{\vect{b}_1, \vect{b}_2} =
     \frac{\vect{b}_1 \cap \vect{b}_2}{\vect{b}_1 \cup \vect{b}_2},
 \end{equation}
-where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0$ represents no intersection, while value of $1$ represents a complete overlap. An \gls{iou} threshold, $t$, such that $0 \leq t \leq 1$, can be associated with this metric, denoting the decision boundary whether the prediction is a \gls{tp} or a \gls{tn}.
+where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0$ represents no intersection, while value of $1$ represents a complete overlap. In terms of object detection or object tracking evaluation, an \gls{iou} threshold, $t$, such that $0 \leq t \leq 1$, can be associated with this metric, denoting the decision boundary whether the prediction is a \gls{tp} or a \gls{tn}.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.25\linewidth]{figures/theoretical_foundations/intersection_over_union.pdf}}
@@ -122,6 +124,8 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 % ##################################################
 \subsection{Mean Average Precision}
 \label{ssec:MeanAveragePrecision}
+
+\glslocalreset{map}
 
 \Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, PASCAL \gls{voc}~\cite{Everingham10} and MS \gls{coco}~\cite{Lin2014} challenge.
 
