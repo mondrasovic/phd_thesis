@@ -74,15 +74,40 @@ Let $M_t = \cbrackets{\rbrackets{h_i, o_j}}$ be the set of mappings made up to t
 
 \subsection{Mapping Procedure}
 
+In what follows, we will describe a recipe for the mapping procedure based on the previously discussed foundations. 
 
+Let $M_0 = \cbrackets{\cdot}$. For each time frame $t$:
+\begin{enumerate}
+    \item Verify if every mapping in $\rbrackets{h_i, o_j}$ in $M_{t - 1}$ is still valid. Such pair is deemed valid as long as the hypothesis $h_i$ exists at time $t$, the object $o_j$ is still visible while the distance between the two does not exceed $T$. If these conditions hold, establish a correspondence.
+    \item If there are objects for which no correspondence has been made so far, then a suitable matching hypothesis is searched for. This step involves one-to-one matching for pairs the distance of which does not exceed the threshold $T$. The matching procedure is formulated as minimum cost assignment problem and Munkres's algorithm~\cite{Munkres1957Assignment} can be adopted. In case there happens to be a correspondence that contradicts a mapping $\sbrackets{h_i, o_j}$ as part of $M_{t - 1}$, then replace the previous pair $\sbrackets{h_i, o_j}$ with $\sbrackets{h_k, o_j}$ and treat such an occurrence as a mismatch error. For simplicity, let $mme_t$ be the number of the mismatch errors for the frame $t$.
+    \item The two previous steps guaratee that a complete set of matching pairs has been generated for the current time $t$. At this point, we may start calculating values that will be utilized later on for computing the final metrics. So, let $c_t$ be the number of matches found for time $t$. For each such match, compute the distance (once again, up to the designer's choice) between the object $o_j$ and the corresponding hypothesis, denoted by $d_{ti}$.
+    \item Every hypothesis that is not part of any pair up to this point is reckoned as false positive. Likewise, all the remaining objects are marked as misses, i.e., false negatives. Thus, let $fp_t$ and $m_t$ be the number of false positives and misses, respectively. For sakes of computation, let us define $g_t$ as the number of ground-truth objects visible at time $t$.
+\end{enumerate}
+
+Please note that no mismatch errors can occurr at the initial frame as the set of mappings $M_0$ is empty and therefore all correspondences are treated as initializations.
 
 \subsection{Performance Metrics}
 
-The tracking performance can be intuitively expressed using two quantities, namely the ``tracking precision'' and ``tracking accuracy''. In general terms, the role of tracking precision is to measure the alignment between the predicted object position (e.g., its \gls{bbox}) and the groud-truth position only for the positive sample. With that being said, precision is not influenced by the ability (or lack thereof) of the tracker to detect objects properly. It is designed to evaluate the proper delineation of the object \gls{bbox} the detection of which was correct in the first place. The 
-\gls{motp} metric can thus be defined as follows.
-\begin{equation}
-    \text{MOTP} = \frac{\sum_{i=0}^{n}}{}
-\end{equation}
-The equation above represents the total error in the estimated position for the pairs where the object-hypothesis relationship was correctly determined averaged over the total number of such matches made. As stated above, it gauges the ability of the tracker to estimate precise object positions regardless of its capability of recognizing them or keeping their trajectories consistent.
+In light of the previously described procedure and introduced notation, here we present the two most relevant performance metrics by which the tracking performance can be intuitively expressed using two quantities, namely the ``tracking precision'' and ``tracking accuracy''. Even though it could be argued whether such expression is sufficient.
 
-Conversely, the accuracy attempts to show the number of mistakes the tracker made in terms of misses, false positives, object mismatches, failures to recover already established tracks, and so forth. Given this description, the \gls{mota} metric can be expressed as/
+In general terms, the role of tracking precision is to measure the alignment between the predicted object position (e.g., its \gls{bbox}) and the groud-truth position only for the positive sample. With that being said, precision is not influenced by the ability (or lack thereof) of the tracker to detect objects properly. It is designed to evaluate the suitability of the delineation of the object \gls{bbox} the detection of which was correct in the first place. The \gls{motp} metric can thus be defined as
+\begin{equation}
+    \label{eq:MOTPMetric}
+    \text{MOTP} = \frac{\sum_{\forall t} \sum_{\forall i} d_{ti}}{\sum_{\forall t} c_t},
+\end{equation}
+The equation~\ref{eq:MOTPMetric} represents the total error in the estimated position for the pairs where the object-hypothesis relationship was correctly determined averaged over the total number of such matches made. As stated above, it gauges the ability of the tracker to estimate precise object positions regardless of its capability of recognizing them or keeping their trajectories consistent.
+
+Conversely, the accuracy metric attempts to reflect the number of mistakes the tracker made in terms of misses, false positives, object mismatches, failures to recover already established tracks, and so forth. Given this description, the \gls{mota} metric can be expressed as
+\begin{equation}
+    \label{eq:MOTAMetric}
+    \text{MOTA} = 1 - \frac{\sum_{\forall t} \rbrackets{m_t + fp_t + mme_t}}{\sum_{\forall t} g_t},
+\end{equation}
+the possible values of which lie within the interval $\sbrackets{-\infty, 1}$. For example, if a tracker produces a lot of false positives, the value in the sum may actually exceed one, and therefore, the final metric would be negative.
+
+We would like to emphasize that the errors have to be first summed up across all the frames before computing the ratios rather than evaluating the ratio locally. Independent computation of the given ratios (in both equations~\ref{eq:MOTPMetric}~and~\ref{eq:MOTAMetric}) would lead to non-intuitive outcome (see Fig.~\ref{fig:LocalGlobalRatioEval} for details).
+
+\begin{figure}[t]
+    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/local_vs_global_ratio_evaluation.pdf}}
+    \caption[Local vs. global ratio evaluation]{Computing of error ratios needs to be performed on a global level, rather than on a local, frame level. Assume a sequence consisting of $8$ frames. Moreover, assume that objects $o_1, \dots, o_4$ are visible on the frames from $t_1$ to $t_4$, but none of them is being tracked. The situation changes at frame $t_4$ where only the object $o_4$ is being tracked properly by the hypothesis $h_1$. As a result, in frames $t_1, \dots, t_4$, the resulting miss rate is $100\%$, whereas in frames $t_5, \dots, t_8$ it is exactly $0\%$. Applying arithmetic average to these values yields a global miss rate of $\frac{1}{8} \rbrackets{4 \cdot 100 + 4 \cdot 0} = \frac{1}{2}$, or, $50\%$. Conversely, performing summation prior to quantifying the final global ratio produces far more intuitive result of $16$ out of $20$ misses, or the miss rate of $80\%$. \externalsrc{\cite{Bernardin2008}}}
+    \label{fig:LocalGlobalRatioEval}
+\end{figure}
