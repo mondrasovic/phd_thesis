@@ -18,6 +18,10 @@
 % Matrices
 % ========================================
 \newcommand{\mtx}[1]{\mathbf{#1}}
+\newcommand{\mtxsup}[2]{\mathbf{#1}^{#2}}
+\newcommand{\mtxsub}[2]{\mathbf{#1}_{#2}}
+\newcommand{\mtxsubsup}[3]{\mathbf{#1}_{#2}^{#3}}
+
 \def\H{\mtx{H}}
 
 % Brackets
@@ -30,13 +34,15 @@
 % Upper or lower index with or without brackets.
 % ========================================
 \newcommand{\suprbrackets}[2]{{#1}^{\left( {#2} \right)}}
-\newcommand{\supsub}[3]{{#1}_{#2}^{#3}}
-\newcommand{\supsubrbrackets}[3]{{#1}_{#2}^{\left( {#3} \right)}}
+\newcommand{\subsup}[3]{{#1}_{#2}^{#3}}
+\newcommand{\subsuprbrackets}[3]{{#1}_{#2}^{\left( {#3} \right)}}
 
 % Functions.
 % ========================================
 \newcommand{\func}[2]{{#1} \left( #2 \right)}
+
 \def\scoref{\mathcal{F}}
+\def\lossf{\mathcal{L}}
 
 % Probability and statistics.
 % ========================================

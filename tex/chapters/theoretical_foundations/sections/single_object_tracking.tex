@@ -124,14 +124,14 @@ where the no. of elements of $\zeta$ is equal to the no. of channels in $\func{f
     \label{fig:TwofoldSiameseNetAttentionModule}
 \end{figure}
 
-When training the \modelname{S-Net} branch, only the fusion and the attention modules are updated. No fine-tuning techniques are taken advantage of, regardless of the potential improvement of the semantic branch alone. Authors informed about such experiments, and they resulted in diminished overall performance thanks to \modelname{A-Net} and \modelname{S-Net} becoming less heterogeneous. Let $\rbrackets{\supsub{z}{i}{s}, X_i}$ with their corresponding ground-truth response map $Y_i$, for $i = 1, \dots, N$, be the $N$ chosen training samples. The parameters $\theta_s$ of the \modelname{S-Net} model are fitted using the logistic loss function $\func{\mathcal{L}}{\cdot}$ (equal to equation~\ref{eq:ANetModelTraining})
+When training the \modelname{S-Net} branch, only the fusion and the attention modules are updated. No fine-tuning techniques are taken advantage of, regardless of the potential improvement of the semantic branch alone. Authors informed about such experiments, and they resulted in diminished overall performance thanks to \modelname{A-Net} and \modelname{S-Net} becoming less heterogeneous. Let $\rbrackets{\subsup{z}{i}{s}, X_i}$ with their corresponding ground-truth response map $Y_i$, for $i = 1, \dots, N$, be the $N$ chosen training samples. The parameters $\theta_s$ of the \modelname{S-Net} model are fitted using the logistic loss function $\func{\mathcal{L}}{\cdot}$ (equal to equation~\ref{eq:ANetModelTraining})
 \begin{equation}
     \label{eq:SNetModelTraining}
     \underset{\theta_s}{\argmin}
     \frac{1}{N}
     \cbrackets{
         \func{\mathcal{L}}{
-            \func{h_a}{\supsub{z}{i}{s}, X_i; \theta_a},
+            \func{h_a}{\subsup{z}{i}{s}, X_i; \theta_a},
             Y_i
         }
     }.
@@ -147,9 +147,9 @@ The series of Siamese-based architectures for tracking continued with the idea o
 The region proposal subnetwork contains a pair-wise correlation section as well as a supervision section. Let $k$ denote the number of anchors. Then, the model has to output $2k$ channels for the classification and $4k$ channels for the regression. Following the established notation, the Siamese subnetwork produces feature maps $\func{\gamma}{z}$ and $\func{\gamma}{x}$. The pair-wise correlation splits $\func{\gamma}{z}$ into $\sbrackets{\func{\gamma}{z}}_{cls}$ and $\sbrackets{\func{\gamma}{z}}_{reg}$ while increasing the no. of channels (Fig.~\ref{fig:SiamRPNNetArchitecture}). Conversely, $\func{\gamma}{x}$ is also split into $\sbrackets{\func{\gamma}{x}}_{cls}$ and $\sbrackets{\func{\gamma}{x}}_{reg}$, but the no. of channels remains unchanged. The correlation, when computed on both branches, is given by
 \begin{equation}
     \begin{aligned}
-        \supsub{A}{w \times h \times 2k}{cls} &=
+        \subsup{A}{w \times h \times 2k}{cls} &=
         \sbrackets{\func{\gamma}{x}}_{cls} \star \sbrackets{\func{\gamma}{z}}_{cls},\\
-        \supsub{A}{w \times h \times 4k}{reg} &=
+        \subsup{A}{w \times h \times 4k}{reg} &=
         \sbrackets{\func{\gamma}{x}}_{reg} \star \sbrackets{\func{\gamma}{z}}_{reg},
     \end{aligned}
 \end{equation}
@@ -201,7 +201,7 @@ In this setting, this objective function can be re-written in terms of the Siame
         }
     }.
 \end{equation}
-The template branch provides training parameters to predict the kernel for the detection task, a typical example of the \emph{learning to learn} process. The template branch, therefore, embeds necessary category information into the kernel that is subsequently utilized for detection (Fig.~\ref{fig:SiamRPNOneShotDetection}). The last thing to consider is how to propose and then select the regions. One strategy is to discard boxes too far away from the object's center. A possible implementation is to keep $g \times g$ subregion of the $\supsub{A}{w \times h \times 2k}{cls}$ feature map resulting in $g \times g \times k$ anchors instead of $w \times h \times k$. This idea is the beginning of a further refined notion in future papers of the so-called \emph{centerness} that plays an important role in weighting \glspl{bbox}. Another strategy would be to use a cosine window to help in computing a penalty bound to a too large displacement in size and ratio. Afterwards, the \gls{nms} (section~\ref{ssec:NonMaximumSuppression}) is applied to get the final tracking \gls{bbox}.
+The template branch provides training parameters to predict the kernel for the detection task, a typical example of the \emph{learning to learn} process. The template branch, therefore, embeds necessary category information into the kernel that is subsequently utilized for detection (Fig.~\ref{fig:SiamRPNOneShotDetection}). The last thing to consider is how to propose and then select the regions. One strategy is to discard boxes too far away from the object's center. A possible implementation is to keep $g \times g$ subregion of the $\subsup{A}{w \times h \times 2k}{cls}$ feature map resulting in $g \times g \times k$ anchors instead of $w \times h \times k$. This idea is the beginning of a further refined notion in future papers of the so-called \emph{centerness} that plays an important role in weighting \glspl{bbox}. Another strategy would be to use a cosine window to help in computing a penalty bound to a too large displacement in size and ratio. Afterwards, the \gls{nms} (section~\ref{ssec:NonMaximumSuppression}) is applied to get the final tracking \gls{bbox}.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/siam_rpn_one_shot_detection.pdf}}
@@ -237,9 +237,9 @@ Let $z$ and $x$ be the exemplar and the search image, respectively. Then, these 
     \label{eq:SiamMaskCrossCorrelation}
     \func{g_\theta}{z, x} = \func{f_\theta}{z} \star \func{f_\theta}{x}.
 \end{equation}
-Authors contrived the term \gls{row} to represent each spatial element of the response map given by the left hand side of equation~\ref{eq:SiamMaskCrossCorrelation}. In that regard, the similarity between the exemplar $z$ and the $n$-th candidate window in $x$ is declared as $\func{\supsub{g}{\theta}{n}}{z, x}$. Throughout the training phase, $w \times h$ binary masks (one for each \gls{row}) using a trivial two-layer neural network $h_\phi$ are predicted. Let $\mtx{M_n}$ be the predicted segmentation mask corresponding to the $n$-th \gls{row},
+Authors contrived the term \gls{row} to represent each spatial element of the response map given by the left hand side of equation~\ref{eq:SiamMaskCrossCorrelation}. In that regard, the similarity between the exemplar $z$ and the $n$-th candidate window in $x$ is declared as $\func{\subsup{g}{\theta}{n}}{z, x}$. Throughout the training phase, $w \times h$ binary masks (one for each \gls{row}) using a trivial two-layer neural network $h_\phi$ are predicted. Let $\mtx{M_n}$ be the predicted segmentation mask corresponding to the $n$-th \gls{row},
 \begin{equation}
-    \mtx{M_n} = \func{h_\phi}{\func{\supsub{g}{\theta}{n}}{z, x}}.
+    \mtx{M_n} = \func{h_\phi}{\func{\subsup{g}{\theta}{n}}{z, x}}.
 \end{equation}
 A ground-truth binary label $y_n \in \cbrackets{\pm 1}$ is assigned to each \gls{row} as well as pixel-wise ground-trith mask $\mtx{C_n}$ with dimensions $w \times h$. Let $\mtx{C}_n^{i,j} \in \cbrackets{\pm 1}$ denote the label corresponding to pixel at position $\rbrackets{i, j}$ within the segmentation mask in the $n$-th \gls{row}. The mask prediction task is driven by the binary logistic regression loss function $\mathcal{L}_{mask}$ over all \glspl{row}:
 \begin{equation}
@@ -277,7 +277,7 @@ Assume a dataset of $N$ points, $\mset{A} = \cbrackets{\rbrackets{x_1, y_1}, \rb
     \caption[Ellipse notation]{Ellipse notation: $\rbrackets{x_0, y_0}$ is the center point around which the ellipse with semi-major axis $m$ and semi-minor axis $n$ is rotated by the angle $\theta$ in counter-clockwise direction. \externalsrc{\cite{Chen2019}}}
     \label{fig:FastVOTRotBBOXEllipse}
 \end{figure}
-where $\vect{x}^T = \sbrackets{\supsub{x}{i}{2}, x_i y_i, \supsub{y}{i}{2}, x_i, y_i, 1}$ and $\mset{A}_i = \rbrackets{x_i, y_i}$.
+where $\vect{x}^T = \sbrackets{\subsup{x}{i}{2}, x_i y_i, \subsup{y}{i}{2}, x_i, y_i, 1}$ and $\mset{A}_i = \rbrackets{x_i, y_i}$.
 
 For the upcoming description, we advise to follow the description for Fig.~\ref{fig:FastVOTRotBBOXFitting}. Once the coefficients are estimated, the rotation angle $\theta$ around the center point $\rbrackets{x_0, y_0}$ with semi-major $m$ and semi-minor axis $n$ are trivial to obtain (Fig.~\ref{fig:FastVOTRotBBOXEllipse}). The 2D affine transformation matrix
 \begin{equation}
@@ -414,7 +414,7 @@ An indispensable part of localization are low-level features like edges, corners
 \end{equation}
 The resulting $\func{\gamma}{X}$ contains $3 \times 255$ channels since all $\func{F_i}{X}, \forall i = 3, 4, 5$, include $256$ channels. The response map $R$ is then convoluted with $1 \times 1$ kernel to reduce its dimension to $256$ channels, giving the reduced response map $R^*$.
 
-At a later stage, the response map $\supsub{R}{w \times h \times m}{*}$ extracted by the Siamese subnetwork serves for classification and regression branches, producing feature maps $\supsub{A}{w \times h \times 2}{cls}$ and $\supsub{A}{w \times h \times 4}{reg}$, respectively. Each point $\rbrackets{i, j, :}$ in $\supsub{A}{w \times h \times 2}{cls}$ contains a $2D$ vector representing the foreground and background scores. Analogically, each point $\rbrackets{i, j, :}$ in $\supsub{A}{w \times h \times 4}{reg}$ contains a $4D$ vector $\vectt{t_{i, j}}{l, t, r, b}$ specifying distance from the corresponding location to the $4$ sides of the \gls{bbox} in the input search region. Let $\rbrackets{x_0, y_0}$ and $\rbrackets{x_1, y_1}$ denote the top-left and bottom-right corners of the ground-truth \gls{bbox} and $\rbrackets{x, y}$ the corresponding location of a point $\rbrackets{i, j}$. The regression target $\vect{\tilde{t}_{i, j}}$ at $\supsub{A}{w \times h \times 4}{reg} \rbrackets{i, j, :}$ can be computed as:
+At a later stage, the response map $\subsup{R}{w \times h \times m}{*}$ extracted by the Siamese subnetwork serves for classification and regression branches, producing feature maps $\subsup{A}{w \times h \times 2}{cls}$ and $\subsup{A}{w \times h \times 4}{reg}$, respectively. Each point $\rbrackets{i, j, :}$ in $\subsup{A}{w \times h \times 2}{cls}$ contains a $2D$ vector representing the foreground and background scores. Analogically, each point $\rbrackets{i, j, :}$ in $\subsup{A}{w \times h \times 4}{reg}$ contains a $4D$ vector $\vectt{t_{i, j}}{l, t, r, b}$ specifying distance from the corresponding location to the $4$ sides of the \gls{bbox} in the input search region. Let $\rbrackets{x_0, y_0}$ and $\rbrackets{x_1, y_1}$ denote the top-left and bottom-right corners of the ground-truth \gls{bbox} and $\rbrackets{x, y}$ the corresponding location of a point $\rbrackets{i, j}$. The regression target $\vect{\tilde{t}_{i, j}}$ at $\subsup{A}{w \times h \times 4}{reg} \rbrackets{i, j, :}$ can be computed as:
 \begin{equation}
     \vectt{\tilde{t}_{i, j}}{x - x_0, y - y_0, x_1 - x, y_1 - y}.
 \end{equation}
@@ -427,7 +427,7 @@ The regression loss is consequently computed using the \gls{iou} (section~\ref{s
     \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}
     \func{\mathcal{L}_{IOU}}{\func{A^{reg}}{i, j, :}, \vect{\tilde{t}_{i, j}}},
 \end{equation}
-which was proposed as part of loss function (given by $\func{\mathcal{L}_{IOU}}{\cdot}$) in~\cite{Yu2016}. The indicator function $\func{\mathbbm{1}}{\cdot}$ evaluated to $1$ if the given location lies within a ground truth \gls{bbox}, otherwise the value is $0$. An important observation was made that locations further away from the object center may aggravate the predicted box as they can be considered of low-quality. To diminish the effect of such locations, another branch alongside the classification branch to suppress the outliers is introduced, based on the concept of \emph{centerness} (section~\ref{ssec:FullyConvolutioanlObjectDetection}, Fig.~\ref{fig:FCOSCenterness}) borrowed from the~\cite{Tian2019}. This branch outputs a feature map $\supsub{A}{w \times h \times 1}{cen}$, where each point indicates the \emph{centerness} score for the corresponding location. The \emph{centerness} is optimized as
+which was proposed as part of loss function (given by $\func{\mathcal{L}_{IOU}}{\cdot}$) in~\cite{Yu2016}. The indicator function $\func{\mathbbm{1}}{\cdot}$ evaluated to $1$ if the given location lies within a ground truth \gls{bbox}, otherwise the value is $0$. An important observation was made that locations further away from the object center may aggravate the predicted box as they can be considered of low-quality. To diminish the effect of such locations, another branch alongside the classification branch to suppress the outliers is introduced, based on the concept of \emph{centerness} (section~\ref{ssec:FullyConvolutioanlObjectDetection}, Fig.~\ref{fig:FCOSCenterness}) borrowed from the~\cite{Tian2019}. This branch outputs a feature map $\subsup{A}{w \times h \times 1}{cen}$, where each point indicates the \emph{centerness} score for the corresponding location. The \emph{centerness} is optimized as
 
 \begin{equation}
     \begin{aligned}
@@ -440,12 +440,12 @@ which was proposed as part of loss function (given by $\func{\mathcal{L}_{IOU}}{
         \Big[
         \func{C}{i, j}
         \func{\log}{
-            \func{\supsub{A}{w \times h \times 1}{cen}}{i, j}
+            \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
         }
         +\\
         &\rbrackets{1 - \func{C}{i, j}}
         \func{\log}{
-            1 - \func{\supsub{A}{w \times h \times 1}{cen}}{i, j}
+            1 - \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
         }
         \Big]
     \end{aligned},

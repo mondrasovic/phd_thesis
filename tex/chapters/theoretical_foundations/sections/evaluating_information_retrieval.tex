@@ -92,7 +92,7 @@ The precision-recall curve summarizes the trade-off between precision and recall
 
 \Gls{iou} measures the overlap between two boundaries. For our purposes, we will use \gls{iou} as a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see figure \ref{fig:IntersectionOverUnion}).
 
-Let $\supsub{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\supsub{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
 \begin{aligned}
     \vect{b}_1 \cap \vect{b}_2 =

@@ -83,8 +83,8 @@ Let $m$ be the number of markers and $k$ be the number of keypoints of each mark
 \begin{equation}
     \suprbrackets{\mtx{W}}{i} =
     \begin{bmatrix}
-        \supsubrbrackets{x}{1}{i} & \supsubrbrackets{x}{2}{i} & \dots & \supsubrbrackets{x}{k}{i}\\
-        \supsubrbrackets{y}{1}{i} & \supsubrbrackets{y}{2}{i} & \dots & \supsubrbrackets{y}{k}{i}\\
+        \subsuprbrackets{x}{1}{i} & \subsuprbrackets{x}{2}{i} & \dots & \subsuprbrackets{x}{k}{i}\\
+        \subsuprbrackets{y}{1}{i} & \subsuprbrackets{y}{2}{i} & \dots & \subsuprbrackets{y}{k}{i}\\
         1                         & 1                         & \dots & 1
     \end{bmatrix},
     i = 1, \dots, m.
@@ -104,7 +104,7 @@ Let $m$ be the number of markers and $k$ be the number of keypoints of each mark
 \noindent with the point correspondence being
 
 \begin{equation}
-    \supsubrbrackets{x}{j}{i} \simeq \tilde{x}_j, \supsubrbrackets{y}{j}{i} \simeq \tilde{y}_j, i = 1, \dots, m, j = 1, \dots, k.
+    \subsuprbrackets{x}{j}{i} \simeq \tilde{x}_j, \subsuprbrackets{y}{j}{i} \simeq \tilde{y}_j, i = 1, \dots, m, j = 1, \dots, k.
 \end{equation}
 
 \section{Developed Method}
@@ -158,7 +158,7 @@ Let $r$ be the index of the reference marker. The $3 \times 3$ matrices describi
                 0 & 0 & 1
             \end{bmatrix} & \text{if } i = r\\
             &\begin{bmatrix}
-                \supsubrbrackets{\mtx{R}}{2 \times 2}{i} & \supsubrbrackets{\mtx{T}}{2 \times 1}{i}\\
+                \subsuprbrackets{\mtx{R}}{2 \times 2}{i} & \subsuprbrackets{\mtx{T}}{2 \times 1}{i}\\
                 \mathbf{0}_{1 \times 2} & 1
             \end{bmatrix} & \text{if }i \neq r\\
         \end{aligned}
@@ -168,19 +168,19 @@ Let $r$ be the index of the reference marker. The $3 \times 3$ matrices describi
 \noindent for $i = 1, \dots, m$, where
 
 \begin{equation}
-    \supsubrbrackets{\mtx{R}}{2 \times 2}{i} =
+    \subsuprbrackets{\mtx{R}}{2 \times 2}{i} =
     \begin{bmatrix}
         \suprbrackets{s}{i} \cdot \func{\cos}{\suprbrackets{\theta}{i}} & -\suprbrackets{s}{i} \cdot \func{\sin}{\suprbrackets{\theta}{i}}\\
         \suprbrackets{s}{i} \cdot \func{\sin}{\suprbrackets{\theta}{i}} & \suprbrackets{s}{i} \cdot \func{\cos}{\suprbrackets{\theta}{i}}
     \end{bmatrix}, \quad
-    \supsubrbrackets{\mtx{T}}{2 \times 1}{i} =
+    \subsuprbrackets{\mtx{T}}{2 \times 1}{i} =
     \begin{bmatrix}
-        \supsubrbrackets{t}{x}{i}\\
-        \supsubrbrackets{t}{y}{i}
+        \subsuprbrackets{t}{x}{i}\\
+        \subsuprbrackets{t}{y}{i}
     \end{bmatrix}.
 \end{equation}
 
-\noindent This transformation (except for the identity) consists of $4$ DoF: single rotation angle $\suprbrackets{\theta}{i}$, two $x$ and $y$ translation coefficients $\supsubrbrackets{t}{x}{i}$, $\supsubrbrackets{t}{y}{i}$, and a scale coefficient $\suprbrackets{s}{i}$. A full affine transformation with $6$ DoF would be responsible for horizontal and vertical
+\noindent This transformation (except for the identity) consists of $4$ DoF: single rotation angle $\suprbrackets{\theta}{i}$, two $x$ and $y$ translation coefficients $\subsuprbrackets{t}{x}{i}$, $\subsuprbrackets{t}{y}{i}$, and a scale coefficient $\suprbrackets{s}{i}$. A full affine transformation with $6$ DoF would be responsible for horizontal and vertical
 scales, shear and rotation, and $x$, $y$ offsets~\cite{barath2016novel}. The application of homography that rectifies an image produces a frontal plane which is related to the ground-truth plane by similarity transformation~\cite{hartley2003multiple, beck2016planar}. Thus, we do not include the shear and we only support uniform scaling.
 
 Since all the markers share the same planar surface, any homography has to provide a valid perspective projection, but all perspective projections are subjected to different noise. Our goal is to quantify which homography estimation provides the best perspective projection for the whole plane in the image. To do so, we propose a score function based on the aforementioned constraints. The score function computes a score for individual homographies in conjunction with estimated similarity matrices corresponding to auxiliary markers as
@@ -325,7 +325,7 @@ To simulate a noisy point correspondence, we applied a random noise (translation
 \def\warpedpix{\vect{w}}
 \def\origpix{\vect{g}}
 
-We evaluated the accuracy of our method by measuring the reprojection error using the Euclidean distance between the original and the rectified pixel positions. To obtain an error over the entire image, we computed the error for each pixel. Let $w$ and $h$ be the width and height of the image, respectively. The $3$D rotation of a point in the image around the image center that produces perspective distortion is represented by $\func{\varphi}{\cdot}$. Let $\supsub{\origpix}{i,j}{T} = \sbrackets{j, i, 1}$ be the original (ground-truth) pixel position at the $i$-th row and $j$-th column, and let $\warpedpix_{i, j} = \func{\varphi}{\origpix_{i, j}}$ be the analogically defined warped pixel position, for $i = 1, \dots, h, j = 1, \dots, w$. We then compute the $2$D reprojection error grid (a $h \times w$ matrix) for the given homography $\H$ as
+We evaluated the accuracy of our method by measuring the reprojection error using the Euclidean distance between the original and the rectified pixel positions. To obtain an error over the entire image, we computed the error for each pixel. Let $w$ and $h$ be the width and height of the image, respectively. The $3$D rotation of a point in the image around the image center that produces perspective distortion is represented by $\func{\varphi}{\cdot}$. Let $\subsup{\origpix}{i,j}{T} = \sbrackets{j, i, 1}$ be the original (ground-truth) pixel position at the $i$-th row and $j$-th column, and let $\warpedpix_{i, j} = \func{\varphi}{\origpix_{i, j}}$ be the analogically defined warped pixel position, for $i = 1, \dots, h, j = 1, \dots, w$. We then compute the $2$D reprojection error grid (a $h \times w$ matrix) for the given homography $\H$ as
 
 \begin{equation}
     \label{eq:reprojection_error_grid}
