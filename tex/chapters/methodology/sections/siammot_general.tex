@@ -115,7 +115,35 @@ The loss function for this model consists of multiple parts and for its complete
     }
     \end{aligned}.
 \end{equation}
-In the expression above, the pairs $\rbrackets{x, y}$ enumerate all valid position within the $\subsup{S}{i}{t + \delta}$ region. The loss function dedicated to regression task, i.e., $l_{\text{reg}}$, is formulated as the \gls{iou} loss for regression~\cite{danelljan2019atom, Yu2016UnitBox}. To address the class-balance problem in an effective way, the focal loss for classification~\cite{lin2018focal} given by the term $l_{\text{focal}}$ is employed, too.
+In the expression above, the pairs $\rbrackets{x, y}$ enumerate all valid position within the $\subsup{S}{i}{t + \delta}$ region. The loss function dedicated to regression task, i.e., $l_{\text{reg}}$, is formulated as the \gls{iou} loss for regression~\cite{danelljan2019atom, Yu2016UnitBox}. To address the class-balance problem in an effective way, the focal loss for classification~\cite{lin2018focal} given by the term $l_{\text{focal}}$ is employed, too. All ground-truth values are marked by the $*$ character. So,
+\begin{equation}    
+    \func{\mtxsubsup{v}{i}{*}}{x, y} =
+    \begin{cases}
+        \begin{aligned}
+            &1 & \text{if } \rbrackets{x, y} \text{ is within } \subsup{R}{i}{*, t + \delta}\\
+            &0 & \text{otherwise}\\
+        \end{aligned}
+    \end{cases},
+\end{equation}
+and
+\begin{equation}
+    \func{\mtxsubsup{p}{i}{*}}{x, y} =
+    \sbrackets{
+        x - \subsup{x}{0}{*},
+        y - \subsup{y}{0}{*},
+        \subsup{x}{1}{*} - x,
+        \subsup{y}{1}{*} - y
+    },
+\end{equation}
+where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x}{1}{*}, \subsup{y}{1}{*}}$ correspond to the top-left and bottom-right coordinates of the ground-truth \gls{bbox} $\subsup{R}{i}{t + \delta}$, respectively. Following the line of inspiration from the \gls{fcos} tracker, the regression loss $l_{\text{reg}}$ is additionally modulated by computing the ``centerness'' for every location. The ``centerness'' coefficient $\func{w}{x, y}$ is calculated for each pixel with respect to the target instance $\subsup{R}{i}{t + \delta}$ as
+\begin{equation}
+    \func{w}{x, y} =
+    \sqrt{
+        \frac{\minf{x - x_0, x_1 - x}}{\maxf{x - x_0, x_1 - x}}
+        \cdot
+        \frac{\minf{y - y_0, y_1 - y}}{\maxf{y - y_0, y_1 - y}}
+    }.
+\end{equation}
 
 \subsection{Training Phase}
 
