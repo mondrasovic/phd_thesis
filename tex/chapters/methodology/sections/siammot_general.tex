@@ -1,11 +1,11 @@
 \section{Siamese Multi-Object Tracking}
 \label{sec:SiamMOT}
 
-This section is dedicated to the most important tracker we have encountered during our research, called \modelname{SiamMOT}~\cite{shuai2021siammot}. Its importance stems from the fact that the majority of our experiments adopted this model. Even though this section could be part of the theoretical foundations chapter, we found it more comprehensible to provide the description of the base architecture closer to the description of our methods and experiments.
+This section is dedicated to the most important tracker we have encountered during our research, called \siammot{}~\cite{shuai2021siammot}. Its importance stems from the fact that the majority of our experiments adopted this model. Even though this section could be part of the theoretical foundations chapter, we found it more comprehensible to provide the description of the base architecture closer to the description of our methods and experiments.
 
 \subsection{General Description}
 
-The authors of~\cite{shuai2021siammot} tracker focused on improving online \gls{mot}. As far as their methodology was concerned, they employed region-based approach~\cite{Ren2017} in conjunction with a Siamese multi-object tracking network, hence the name \modelname{SiamMOT}. Broadly speaking, this architecture employes Siamese tracker for motion estimation between two frames. We would like to note that all the principles so far discussed regarding Siamese trackers apply here. However, as already suggested, the adoption of \gls{rpn} enables this framework to have more information available. Not only there is the motion prediction from the Siamese tracker, there are also detections produced by the \modelname{Faster R-CNN} object detector~\cite{Ren2017} that is integrated within the whole architecture. Subsequently, an online solver is utilized to merge these prediction obtained from the tracker and detector heads. It is no surprise that such a framework that exploits modern approaches (more on that later) to object detection and Siamese tracking produces \gls{sota} performance.
+The authors of~\cite{shuai2021siammot} tracker focused on improving online \gls{mot}. As far as their methodology was concerned, they employed region-based approach~\cite{Ren2017} in conjunction with a Siamese multi-object tracking network, hence the name \siammot{}. Broadly speaking, this architecture employes Siamese tracker for motion estimation between two frames. We would like to note that all the principles so far discussed regarding Siamese trackers apply here. However, as already suggested, the adoption of \gls{rpn} enables this framework to have more information available. Not only there is the motion prediction from the Siamese tracker, there are also detections produced by the \modelname{Faster R-CNN} object detector~\cite{Ren2017} that is integrated within the whole architecture. Subsequently, an online solver is utilized to merge these prediction obtained from the tracker and detector heads. It is no surprise that such a framework that exploits modern approaches (more on that later) to object detection and Siamese tracking produces \gls{sota} performance.
 
 We will disect this framewrok in great detail since we studied it scrupulously. We performed multiple experiments, many of which did not yield expected improvements. Nevertheless, the practical part of our work was focused on contributing to the open source repository dedicated to this project developed by several Amazon researchers~\cite{siammotoriggithub}. We followed a standard path of how contributing to open source projects should be done in a transparent and, more importantly, compatible fashion. We initialized a fresh fork of this project on our personal GitHub account~\cite{siammotforkgithub} to preserve as much compatibility with the original software as possible and to not strip ourselves of the opportunity to easily receive potential updates from the original repository.
 
@@ -13,7 +13,7 @@ During our development we often engaged in discussions related to this project i
 
 \subsection{Model Architecture}
 
-The two key aspects of the the \modelname{SiamMOT} architecture are \modelname{Faster R-CNN}~\cite{Ren2017} object detector and Siamese tracker. The salient element of the \modelname{Faster R-CNN} is the \gls{rpn}. Simply put, \modelname{SiamMOT} adds a region-based Siamese tracker along the standard $2$-stage object detection pipeline in order to model instance-level motion.
+The two key aspects of the the \siammot{} architecture are \modelname{Faster R-CNN}~\cite{Ren2017} object detector and Siamese tracker. The salient element of the \modelname{Faster R-CNN} is the \gls{rpn}. Simply put, \siammot{} adds a region-based Siamese tracker along the standard $2$-stage object detection pipeline in order to model instance-level motion.
 
 As depicted in Fig.~\ref{fig:SiamMOTArchitecture}, the input consists of two frames, namely $\mtxsup{I}{t}$ and $\mtxsup{I}{t + \delta}$, accompanied by a set of detected object instances $\mtxsup{R}{t} = \cbrackets{\subsup{R}{1}{t}, \subsup{R}{2}{t}, \dots, \subsup{R}{i}{t}, \dots}$ at time $t$. During the inference process, the detection head produces a set of detected object instances $\mtxsup{R}{t + \delta}$ whilst the tracker's task is to propage the detections $\mtxsup{R}{t}$ to time $t + \delta$, and thus yielding the tracker output denoted as $\mtxsup{\tilde{R}}{t + \delta}$. Please note that it is not the output of the entire tracker, only of the Siamese tracker itself. These instances have to be further processed. Explained next.
 
@@ -35,7 +35,7 @@ where $\mathcal{T}$ is a module (head) represented by the Siamese tracker with l
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/methodology/siammot_architecture.pdf}
-    \caption[\modelname{SiamMOT} architecture]{The base architecture of the \modelname{SiamMOT} model. This tracker detects and associates object instances simultaneously. The Siamese tracker situated in the top branch serves the purpose of predicting motion of objects across frames, thus faciliates temporal linking of objects in an online fashion. Simply put, the Siamese tracker module can be thought of as a single object tracker with all the pros and cons we have discussed so far. On the other hand, a $2$-stage object detection is performed as part of the bottom branch. These two branches are then merged using a solver that spatially and temporally attemps to match tracker and detector predictions to produce the tracker output. We have to emphasize that the spatial matching and solver blocks are only used during the inference and are not differentiable. Note that the feature map corresponding to the frame $\mtxsup{I}{t}$ is shrunk to $\nicefrac{1}{2}$ of its actual size to fit the figure. Backbone features are identical in terms of tensor shapes for both inputs. \externalsrc{\cite{shuai2021siammot}}}
+    \caption[\siammot{} architecture]{The base architecture of the \siammot{} model. This tracker detects and associates object instances simultaneously. The Siamese tracker situated in the top branch serves the purpose of predicting motion of objects across frames, thus faciliates temporal linking of objects in an online fashion. Simply put, the Siamese tracker module can be thought of as a single object tracker with all the pros and cons we have discussed so far. On the other hand, a $2$-stage object detection is performed as part of the bottom branch. These two branches are then merged using a solver that spatially and temporally attemps to match tracker and detector predictions to produce the tracker output. We have to emphasize that the spatial matching and solver blocks are only used during the inference and are not differentiable. Note that the feature map corresponding to the frame $\mtxsup{I}{t}$ is shrunk to $\nicefrac{1}{2}$ of its actual size to fit the figure. Backbone features are identical in terms of tensor shapes for both inputs. \externalsrc{\cite{shuai2021siammot}}}
     \label{fig:SiamMOTArchitecture}
 \end{figure}
 
@@ -46,11 +46,11 @@ The authors conjectured that motion modeling is of paramount importance for onli
 \end{enumerate}
 In order to tackle the problems outlined above, the Siamese tracker exploits various \gls{sota} techniques developed in the single-object Siamese tracking community. We affirmatively approve of the authors decisions, since we deliberately elaborated on multiple aspects that this tracker heavily relies upon in our survey on Siamese tracking~\cite{Ondrasovic2021Siamese}.
 
-As far as the Siamese part of the \modelname{SiamMOT} is concerned, the authors dubbed their technique as ``explicit motion modeling''. They also worked with ``implicit motion modeling'', but that branch of experiments was neither sufficiently expanded in the paper nor it is of particular importance for our research due to its inferior performance. It only servered the purpose of having a baseline to overcome during evaluation.
+As far as the Siamese part of the \siammot{} is concerned, the authors dubbed their technique as ``explicit motion modeling''. They also worked with ``implicit motion modeling'', but that branch of experiments was neither sufficiently expanded in the paper nor it is of particular importance for our research due to its inferior performance. It only servered the purpose of having a baseline to overcome during evaluation.
 
 \subsubsection{Explicit Motion Modeling}
 
-The most fundamental aspect of Siamese trackers is the cross-correlation operator (Section~\ref{}) to generate a pixel-level $2$D response map. In \modelname{SiamMOT}, this operation correlation each location of the search feature map (belonging to the search region) $\mtxsubsup{f}{S_i}{t + \delta}$ with the exemplar (target) feature map $\mtxsubsup{f}{R_i}{t}$ to produce a response map
+The most fundamental aspect of Siamese trackers is the cross-correlation operator (Section~\ref{}) to generate a pixel-level $2$D response map. In \siammot{}, this operation correlation each location of the search feature map (belonging to the search region) $\mtxsubsup{f}{S_i}{t + \delta}$ with the exemplar (target) feature map $\mtxsubsup{f}{R_i}{t}$ to produce a response map
 \begin{equation}
     \mtxsub{r}{i} = \mtxsubsup{f}{S_i}{t + \delta} \star \mtxsubsup{f}{R_i}{t}.
 \end{equation}
@@ -145,17 +145,41 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
     }.
 \end{equation}
 
-\subsection{Training Phase}
+\subsection{Training and Inference Phases}
 
-\subsection{Inference Phase}
+The \siammot{} model can be trained in an end-to-end fashion, which is one of its great advantages in terms of usability, among others. The general loss function can be formulated as
+\begin{equation}
+    \label{eq:SiamMOTGeneralLoss}
+    \lossf = l_{\text{rpn}} + l_{\text{detect}} + l_{\text{motion}},
+\end{equation}
+where the $l_{\text{rpn}}$ as well as the $l_{\text{detect}}$ are standard \gls{rpn}~\cite{Ren2017} and detection-subnetwork~\cite{girshick2015fast} losses, respectively. The $l_{\text{motion}}$ loss is used to train the Siamese tracker.
+
+For better understanding, we suggest the reader follow the diagram in Fig.~\ref{fig:SiamMOTInference}. At inference, the well-established \gls{iou}-based \gls{nms} operation (Section~\ref{ssec:NonMaximumSuppression} is exploited to process the outputs of the detection and tracker subnetwork independently. The subsequent process aimed at spatial-matching is used to merge detections with the tracker output. This stage also involves the already mentioned \gls{iou}-based \gls{nms} operation (thus, in total, it is used three times during the inference).
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/methodology/siammot_inference_diagram.pdf}
-    \caption[\modelname{SiamMOT} inference diagram]{Visualization of the inference pipeline in the \modelname{SiamMOT} architecture. The entire framework efficiently reuses as much information as possible, making it fast and accurate. Backbone features that are a result of intricate \gls{dla} and \gls{fpn} processing are fed into detector and the tracker. Please note that the predictions from the tracker are once again refined using the detector head. Two two aforementioned heads function on top of backbone features through the lens of \gls{roi} align operations. During the inference phase, the ``online solver'' works only with the final \glspl{bbox} produced by the tracker and the object detector. It utilizes a simple caching mechanism to store the backbone features belonging to active or dormant objects. The decision making regarding initialization, suspension and complete removal of track is performed within the ``track pool'' module.}
+    \caption[\siammot{} inference diagram]{Visualization of the inference pipeline in the \siammot{} architecture. The entire framework efficiently reuses as much information as possible, making it fast and accurate. Backbone features that are a result of intricate \gls{dla} and \gls{fpn} processing are fed into detector and the tracker. Please note that the predictions from the tracker are once again refined using the detector head. Two two aforementioned heads function on top of backbone features through the lens of \gls{roi} align operations. During the inference phase, the ``online solver'' works only with the final \glspl{bbox} produced by the tracker and the object detector. It utilizes a simple caching mechanism to store the backbone features belonging to active or dormant objects. The decision making regarding initialization, suspension and complete removal of track is performed within the ``track pool'' module.}
     \label{fig:SiamMOTInference}
 \end{figure}
 
+The spatial-maching is followed by a standard \emph{online} solver that has been widely adopted in numerous works, such as~\cite{bawley2016simple, wojke2017simple, zhou2020tracking, bergmann2019tracking}. In its essence, this solver is simple yet very effective. As our experiments will later demonstrate, it is exceedingly difficult to surpass its performance in general by a significant margin. This solver is governed by the following rules listed below. Let $\subsup{v}{i}{t}$ be the visibility confidence, then
+\begin{enumerate}
+     \item the object's trajectory is continued as long as its visibility confidence is above a specific threshold $\alpha$, otherwise this trajecotry becomes dormant,
+     \item a new trajectory is spawned in case there is a non-matched detection (during the spatial-matching process) and its visibility confidence is above a threshold $\beta$,
+     \item a dormant trajectory is terminated, i.e., the object ID will never be used once again, it its visibility confidence is below $\alpha$ for $\tau$ consecutive frames.
+\end{enumerate}
+
+\subsubsection{Short-term Occlusion Handling}
+
+This model also attempts to tackle short-term occlusion. It is one of the key incentives that led us to consider this architecture for our experiments, which is the model's ability to handle occlusion in an efficient and trivial manner. At the beginning, we guessed that this phase could be improved upon due to its inherent simplicity. However, regardless of how rudimentary their approach may seem, it implicitly addresses a great deal of frequent cases that apprear in object tracking in a competent way. Our endeavors later described often involved a minor improvement in rare situations with simultaneous minor detriments to common situations. Therefore, the outcome of perfoming worse than the baseline on average was usually inescapable.
+
+A short-term occlusion can be defined as having the visibility confidence for the currently tracker object below the threshold $\alpha$. In \siammot{}, instead of definitely ceaseing the track's existence, the relevant information are kept in memory and thus the search for the exemplar continued until $\tau > 1$ frames have been processed in hope of re-instatiating the object. The most recently predicted location and its corresponding feature frames extracted from the backbone are utilized as the searching template. 
+
 \subsection{Implementation Details}
+
+\subsection{Relevant Implementation-Related Remarks}
+
+In this short section, we would like to summarize several relevant remarks related to the \siammot{} model. Overall, the model is not difficult to train, however, it requires a great deal of GPU VRAM available in order to use sufficiently large minibatches. As far as our development experience with the \siammot{} model is concerned, we used the \texttt{NVidia RTX 2080Ti} graphics cards which provides $4352$ CUDA cores together with $11$GB of GDDR6 memory. For traning, we often exploited an existing backbone model pre-trained on ImageNet~\cite{imagenet_cvpr09} dataset provided by the authors. Even though there is the entire model available pre-trained on \gls{coco}~\cite{Lin2014} dataset, we decided to avoid it due to conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, e.g., pedestrians.
 
 \subsection{Experimental Analysis}
