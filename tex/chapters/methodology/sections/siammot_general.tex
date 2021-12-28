@@ -182,6 +182,33 @@ The \siammot{} model is a paragon of feature pooling.
 
 \subsection{Relevant Implementation-Related Remarks}
 
-In this short section, we would like to summarize several relevant remarks related to the \siammot{} model. Overall, the model is not difficult to train, however, it requires a great deal of GPU VRAM available in order to use sufficiently large minibatches. As far as our development experience with the \siammot{} model is concerned, we used the \texttt{NVidia~\cite{webnvidia} RTX 2080Ti} graphics cards which provides $4352$ CUDA cores together with $11$GB of GDDR6 memory. For traning, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \gls{coco}~\cite{lin2014mscoco} dataset, we decided to avoid it due to conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, e.g., pedestrians.
+In this short section, we would like to summarize several relevant remarks related to the \siammot{} model. 
+
+\subsubsection{Pre-training}
+
+Overall, the model is not difficult to train. By difficult training we mainly mean instability and sensitivity to hyperparameters. However, the training itself requires a great deal of GPU VRAM available in order to use sufficiently large minibatches. As far as our development experience with the \siammot{} model is concerned, we used the \texttt{NVidia}~\cite{webnvidia} \texttt{RTX 2080Ti} graphics cards which provides $4352$ CUDA cores together with $11$GB of GDDR6 memory. For traning, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \gls{coco}~\cite{lin2014mscoco} dataset, we decided to avoid it due to conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, e.g., pedestrians.
+
+\subsubsection{Gradient Accumulation}
+
+Since majority of our experiments involved expanding the model by adding additional heads, we often struggled with the amount of available GPU VRAM in order to preserve reasonable size of minibatches. To this end, we also experimented with gradient accumulation. This technique allows the user to postpone the model weight updating after more minibatches have been processed. Therefore, the programmer may simulate using larger minibatches than actually are utilized. We emphasize the importance of not updating the model variables must during the accumulation phase so as to to ensure that all the mini-batches are processed by the same model variable values to calculate their gradients. Only after accumulating the gradients of the values of the model weights can be adjusted accordingly.
+
+For a brief illustration, let $w$ be a single weight we want to update with respect to the computed gradient using the loss function $f$. Our goal is to adjust the weight at time $t$ and thus produce the weight at time $t + 1$. The learning rate is denoted by $\alpha$. So, the gradient update is usually performed as
+\begin{equation}
+    w^{t + 1} = w^t - \alpha \nabla \func{f}{w^t}.
+\end{equation}
+When using gradient accumulation, the update step is modified as
+\begin{equation}
+    w^{t + 1} = w^t - \alpha \sum_{i = 1}^{n} \nabla \func{f}{w^t}_i,
+\end{equation}
+where $n$ is the number of accumulated minibatches.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/methodology/gradient_accumulation.png}
+    \caption[Gradient accumulation]{Gradient accumulation is a mechanism that allows splitting the minibatch of samples — used for training a neural network — into several even smaller mini-batches of samples that will be processed sequentially. \externalsrc{\cite{webgradaccumulation}}}
+    \label{fig:GradientAccumulation}
+\end{figure}
+
+Considering the advantages outlined above, it is necessary to acknowledge the potential drawbacks. For example, if batch normalization~\cite{ioffe2015batchnorm} layers are used within the model, then the use of gradient accumulation may possibly have a detrimental effect upon their performance. The reason is that batch normalization layers compute the statistics with respect to a single minibatch. These layers, in their standard formulation and commonly adopted implementation, are incapable of accomodating their innerworkings to adequately administer multiple sequential minibatches. However, there is ongoing research in the direction of group normalization as well, namely works of~\cite{wu2018groupnorm}~and~\cite{zhou2020batchgroupnorm}.
 
 \subsection{Experimental Analysis}
