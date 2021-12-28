@@ -67,7 +67,7 @@ where $\func{\mtx{p}}{x, y} = \sbrackets{l, t, r, b}$, i.e., individual corner o
         &\subsup{\tilde{R}}{i}{t + \delta} =
         \func{\mathcal{R}}{\func{\mtxsub{p}{i}}{x^*, y^*}}\\
         &\subsup{v}{i}{t + \delta} = \func{\mtxsub{v}{i}}{x^*, y^*}\\
-        \text{s. t. } \quad &\rbrackets{x^*, y^*} = \underset{x, y}{\text{argmax}} \rbrackets{\mtxsub{v}{i} \odot \mtxsub{\eta}{i}},
+        \text{s. t. } \quad &\rbrackets{x^*, y^*} = \underset{x, y}{\argmax} \rbrackets{\mtxsub{v}{i} \odot \mtxsub{\eta}{i}},
     \end{aligned}
 \end{equation}
 in which $\odot$ symbolizes the element-wise multiplication, $\mtxsub{\eta}{i}$ incurs a non-negative penalty score throughout the entire candidate region computed as
@@ -186,7 +186,7 @@ In this short section, we would like to summarize several relevant remarks relat
 
 \subsubsection{Pre-training}
 
-Overall, the model is not difficult to train. By difficult training we mainly mean instability and sensitivity to hyperparameters. However, the training itself requires a great deal of GPU VRAM available in order to use sufficiently large minibatches. As far as our development experience with the \siammot{} model is concerned, we used the \texttt{NVidia}~\cite{webnvidia} \texttt{RTX 2080Ti} graphics cards which provides $4352$ CUDA cores together with $11$GB of GDDR6 memory. For traning, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \gls{coco}~\cite{lin2014mscoco} dataset, we decided to avoid it due to conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, e.g., pedestrians.
+Overall, the model is not difficult to train. By difficult training we mainly mean instability and sensitivity to hyperparameters. However, the training itself requires a great deal of GPU VRAM available in order to use sufficiently large minibatches. As far as our development experience with the \siammot{} model is concerned, we used the \texttt{NVidia}~\cite{webnvidia} \texttt{RTX 2080Ti} graphics cards which provides $4352$ CUDA cores together with $11$GB of GDDR6 memory. For traning, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \mscoco{}~\cite{lin2014mscoco} dataset, we decided to avoid it due to conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, e.g., pedestrians.
 
 \subsubsection{Gradient Accumulation}
 

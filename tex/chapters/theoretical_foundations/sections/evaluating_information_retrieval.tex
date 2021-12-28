@@ -127,7 +127,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 
 \glslocalreset{map}
 
-\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, PASCAL \gls{voc}~\cite{everingham2010pascalvoc} and MS \gls{coco}~\cite{lin2014mscoco} challenge.
+\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, \pascalvoc{}~\cite{everingham2010pascalvoc} and \mscoco{}~\cite{lin2014mscoco} challenge.
 
 \subsubsection{Object Re-Identification}
 \label{sssec:ObjectReIdentification}
@@ -148,7 +148,7 @@ where $Q$ is the total number of query images, as described in~\cite{kuma2019veh
 
 \subsubsection{Object Detection}
 
-Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (section \ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the PASCAL \gls{voc} challenge~\cite{everingham2010pascalvoc}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
+Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (section \ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the \pascalvoc{} challenge~\cite{everingham2010pascalvoc}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
 
 In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve (section \ref{sssec:PrecisionRecallCurve}) can be plotted~\cite{salton1983introduction}. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{everingham2010pascalvoc}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
 \begin{equation}
