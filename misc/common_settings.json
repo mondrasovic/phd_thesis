@@ -28,5 +28,14 @@
             "before": ["k"],
             "after": ["g", "k"]
         }
-      ]
+    ],
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "remote.SSH.remotePlatform": {
+        "158.193.146.199": "linux"
+    }
 }
