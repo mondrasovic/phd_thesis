@@ -20,7 +20,7 @@ In order to put the meaning of \gls{map} (section~\ref{ssec:MeanAveragePrecision
         \hline
     \end{tabular}
     
-    \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{Davis2016}}}
+    \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{davis2016prcurves}}}
     \label{tab:ConfusionMatrix}
 \end{table}
 
@@ -64,7 +64,7 @@ In order to put the meaning of \gls{map} (section~\ref{ssec:MeanAveragePrecision
         \hline
     \end{tabular}
     
-    \caption[Measures of binary classification]{Elementary measures for evaluating binary classification. \externalsrc{\cite{Davis2016}}}
+    \caption[Measures of binary classification]{Elementary measures for evaluating binary classification. \externalsrc{\cite{davis2016prcurves}}}
     \label{tab:ElementaryMetrics}
 \end{table}
 
@@ -75,11 +75,11 @@ In order to put the meaning of \gls{map} (section~\ref{ssec:MeanAveragePrecision
 \subsubsection{Precision-Recall Curve}
 \label{sssec:PrecisionRecallCurve}
 
-The precision-recall curve summarizes the trade-off between precision and recall for a given predictive model using different thresholds of probability. The precision-recall curve is appropriate for imbalanced datasets, i.e., datasets where the number of instances in each class may differ considerably (large skew in the class distribution~\cite{Davis2016}).
+The precision-recall curve summarizes the trade-off between precision and recall for a given predictive model using different thresholds of probability. The precision-recall curve is appropriate for imbalanced datasets, i.e., datasets where the number of instances in each class may differ considerably (large skew in the class distribution~\cite{davis2016prcurves}).
 
 \subsubsection{ROC Curve}
 
-\cite{James2013} describes the \gls{roc} curve as simultaneously displaying two types of errors for all possible thresholds. It summarizes the trade-off between the true positive rate and false positive rate for a given predictive model using different thresholds of probability. The overall performance of a classifier is given by the \gls{auc} of the \gls{roc}. This curve is appropriate to use when the observations are balanced between each class in terms of the number of occurrences (as opposed to the aforementioned precision-recall curve).
+\cite{james2013itslwithr} describes the \gls{roc} curve as simultaneously displaying two types of errors for all possible thresholds. It summarizes the trade-off between the true positive rate and false positive rate for a given predictive model using different thresholds of probability. The overall performance of a classifier is given by the \gls{auc} of the \gls{roc}. This curve is appropriate to use when the observations are balanced between each class in terms of the number of occurrences (as opposed to the aforementioned precision-recall curve).
 
 % ##################################################
 \subsection{Evaluating Bounding Box Prediction}
@@ -92,7 +92,7 @@ The precision-recall curve summarizes the trade-off between precision and recall
 
 \Gls{iou} measures the overlap between two boundaries. For our purposes, we will use \gls{iou} as a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see figure \ref{fig:IntersectionOverUnion}).
 
-Let $\supsub{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\supsub{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
 \begin{aligned}
     \vect{b}_1 \cap \vect{b}_2 =
@@ -127,7 +127,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 
 \glslocalreset{map}
 
-\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, PASCAL \gls{voc}~\cite{Everingham10} and MS \gls{coco}~\cite{Lin2014} challenge.
+\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, \pascalvoc{}~\cite{everingham2010pascalvoc} and \mscoco{}~\cite{lin2014mscoco} challenge.
 
 \subsubsection{Object Re-Identification}
 \label{sssec:ObjectReIdentification}
@@ -144,13 +144,13 @@ where $\func{P}{k}$ represents precision at rank $k$, $\func{N_{gt}}{q}$ is the 
     \label{eq:MeanAveragePrecision}
     \MAP = \frac{1}{Q} \sum_q \func{\AP}{q},
 \end{equation}
-where $Q$ is the total number of query images, as described in~\cite{Kuma2019}. The equation \ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in equation \ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to the query $q$.
+where $Q$ is the total number of query images, as described in~\cite{kuma2019vehiclereid}. The equation \ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in equation \ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to the query $q$.
 
 \subsubsection{Object Detection}
 
-Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (section \ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the PASCAL \gls{voc} challenge~\cite{Everingham10}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
+Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (section \ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the \pascalvoc{} challenge~\cite{everingham2010pascalvoc}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
 
-In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve (section \ref{sssec:PrecisionRecallCurve}) can be plotted~\cite{salton_introduction_1983}. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{Everingham10}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
+In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve (section \ref{sssec:PrecisionRecallCurve}) can be plotted~\cite{salton1983introduction}. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{everingham2010pascalvoc}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
 \begin{equation}
     \AP = \frac{1}{11} \sum_{r \in \cbrackets{0.0, 0.1, \dots, 1.0}} \func{p_{interp}}{r},
 \end{equation}
@@ -158,4 +158,4 @@ where the precision at each recall level $r$ is interpolated by taking the maxim
 \begin{equation}
     \func{p_{interp}}{r} = \underset{\tilde{r}:\tilde{r} \geq r}{\max} \quad \func{p}{\tilde{r}},
 \end{equation}
-with $\func{p}{\tilde{r}}$ representing the measures precision at a specific recall level $\tilde{r}$~\cite{Everingham10, salton_introduction_1983}.
+with $\func{p}{\tilde{r}}$ representing the measures precision at a specific recall level $\tilde{r}$~\cite{everingham2010pascalvoc, salton1983introduction}.

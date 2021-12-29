@@ -18,6 +18,10 @@
 % Matrices
 % ========================================
 \newcommand{\mtx}[1]{\mathbf{#1}}
+\newcommand{\mtxsup}[2]{\bm{#1}^{#2}}
+\newcommand{\mtxsub}[2]{\bm{#1}_{#2}}
+\newcommand{\mtxsubsup}[3]{\bm{#1}_{#2}^{#3}}
+
 \def\H{\mtx{H}}
 
 % Brackets
@@ -30,13 +34,17 @@
 % Upper or lower index with or without brackets.
 % ========================================
 \newcommand{\suprbrackets}[2]{{#1}^{\left( {#2} \right)}}
-\newcommand{\supsub}[3]{{#1}_{#2}^{#3}}
-\newcommand{\supsubrbrackets}[3]{{#1}_{#2}^{\left( {#3} \right)}}
+\newcommand{\subsup}[3]{{#1}_{#2}^{#3}}
+\newcommand{\subsuprbrackets}[3]{{#1}_{#2}^{\left( {#3} \right)}}
 
 % Functions.
 % ========================================
 \newcommand{\func}[2]{{#1} \left( #2 \right)}
+\newcommand{\minf}[1]{\text{min} \left( #1 \right)}
+\newcommand{\maxf}[1]{\text{max} \left( #1 \right)}
+
 \def\scoref{\mathcal{F}}
+\def\lossf{\mathcal{L}}
 
 % Probability and statistics.
 % ========================================
@@ -77,6 +85,13 @@
 \newcommand{\modelname}[1]{\texttt{#1}} % A general name of a model (an entire network or just its part).
 \newcommand{\datasetname}[1]{\texttt{#1}} % A general name of a dataset.
 
+\def\siammot{\modelname{SiamMOT}}
+\def\fasterrcnn{\modelname{Faster R-CNN}}
+
+\def\uadetrac{\datasetname{UA-DETRAC}}
+\def\mscoco{\datasetname{MS-COCO}}
+\def\pascalvoc{\datasetname{PASCAL-VOC}}
+
 % Related to external sources: figures, tables, etc.
 % ========================================
 \newcommand{\externalsrc}[1]{(\textit{source}: {#1})}
@@ -84,6 +99,8 @@
 % Other
 % =================================================================================================
 % Image description.
-\newcommand{\imgpartdesc}[1]{(#1)}
+\newcommand{\imgpartdesc}[1]{\textbf{({#1})}}
 
 \def\boxplotimgwidth{0.75\linewidth}
+
+\def\etal{\textit{et al.}}

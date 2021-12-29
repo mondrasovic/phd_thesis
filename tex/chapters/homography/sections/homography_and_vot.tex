@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:HomographyIntroduction}
 
-This section is dedicated to one of our experiments that were not completely related to the \gls{vot} itself, yet we achieved an original scientific contribution in this area when exploring certain solutions that could potentially be applicable to object tracking, especially traffic analysis. Even though we did not set out for homography-based object tracking (explained later) due to limitations of available datasets, still we would like to elaborate on our developed approach. The proposed method was fully described as well as scrupulously tested under difficult conditions. We wrote up the whole research process in a paper called \textbf{Homography Ranking Based on Multiple Groups of Point Correspondences}~\cite{ondrasovic2021homography}, published in journal \textbf{Sensors} (web:~\cite{sensors}), under the category \emph{Physical Sensors}. In what follows, we provide a concise report of our research. For more information, we suggest the reader use the aforementioned article, even though a great deal of information is duplicated here. Moreover, our preliminary discussion of this possibility with initial proposal of the solution can be found in our first paper dubbed \textbf{Foundations for homography estimation in presence of redundant point correspondencies}~\cite{ondravsovivc2020foundations} published in \textbf{Mathematics in Science and Technologies} (web:~\cite{mistconf}) conference.
+This section is dedicated to one of our experiments that were not completely related to the \gls{vot} itself, yet we achieved an original scientific contribution in this area when exploring certain solutions that could potentially be applicable to object tracking, especially traffic analysis. Even though we did not set out for homography-based object tracking (explained later) due to limitations of available datasets, still we would like to elaborate on our developed approach. The proposed method was fully described as well as scrupulously tested under difficult conditions. We wrote up the whole research process in a paper called \textbf{Homography Ranking Based on Multiple Groups of Point Correspondences}~\cite{ondrasovic2021homography}, published in journal \textbf{websensors} (web:~\cite{websensors}), under the category \emph{Physical websensors}. In what follows, we provide a concise report of our research. For more information, we suggest the reader use the aforementioned article, even though a great deal of information is duplicated here. Moreover, our preliminary discussion of this possibility with initial proposal of the solution can be found in our first paper dubbed \textbf{Foundations for homography estimation in presence of redundant point correspondencies}~\cite{ondrasovic2020foundations} published in \textbf{Mathematics in Science and Technologies} (web:~\cite{webmistconf}) conference.
 
 \section{Motivation}
 \label{sec:HomographyMotivation}
@@ -20,19 +20,19 @@ Homography is a perspective projection of a plane from one camera view into a di
 \end{equation}
 This transformation is used to achieve a mapping between two views of the same plane, since in the pinhole camera model any two images of the same planar surface are related to each other by the homography~\cite{hartley2003multiple, hartley1997defense}. More specifically, a single vector $\vectt{u}{u_x, u_y, 1}$, representing a warped keypoint in homogeneous coordinates, is mapped onto the rectified keypoint  $\vectt{\tilde{u}}{\tilde{u}_x, \tilde{u}_y, 1}$ by the homography $\H$ using the transformation $s \vect{\tilde{u}} \approx \H \vect{u}$, with $s$ being the scale factor. In its most general form, homography may achieve mapping between various perspectives. However, for our purposes, we focused only on producing a view where perspective distortion is absent, i.e., to rectify the image so that it looks as if the camera was in an orthogonal position with respect to the desired plane in the world when taking the picture.
 
-Homography is commonly used for rectification of text document images by generating a fronto-parallel view~\cite{lu2005perspective, miao2006perspective}, image stitching~\cite{adel2014image, gao2011constructing}, video stabilization~\cite{liu2015smooth}, extracting metric information from $2$D images~\cite{zhang2000flexible}, pose estimation~\cite{circularmarkerposeestim}, and for various traffic-related applications, e.g., ground-plane detection~\cite{arrospide2010homography}, and bird's-eye view projection~\cite{luo2010low}.
+Homography is commonly used for rectification of text document images by generating a fronto-parallel view~\cite{lu2005perspective, miao2006perspective}, image stitching~\cite{adel2014image, gao2011constructing}, video stabilization~\cite{liu2015smooth}, extracting metric information from $2$D images~\cite{zhang2000flexible}, pose estimation~\cite{mariyanayagam2018poseestim}, and for various traffic-related applications, e.g., ground-plane detection~\cite{arrospide2010homography}, and bird's-eye view projection~\cite{luo2010low}.
 
-The primary motivation to explore the possibility of employing homography for \gls{vot} was the fact that as long as a static camera is used and few assumptions that we will discuss later hold, the scene may be easily stripped off the effect of the perspective distoriton. Considering this, the incentive to track vehicles visually using a static camera while exploiting a fronto-parallel view over the road seemed like a plausible extension with possible advantages for traffic analysis. Furthermore, the combination of homography and object tracking is present in the literature, e.g.~\cite{Bose04groundplane, Zhang2012, Mei2009}. To provide more detail, Bose et al.~\cite{Bose04groundplane} presented a fully automated technique for both affine and metric rectification of a given ground plane (up to a scale factor) by simply tracking moving objects. The derivation of the necessary constraints for projective transformation between the image and the ground plane was obtained by observing objects that moved at constant velocity in the world for some part of their trajectory. We conjectured that the extra information about the scene geometry that we may achieve using rectification could aid in making the tracking more accurate. Visual trackers are often supported by motion models such as Kalman filter~\cite{Kalman1960}, so the rationale was to estimate motion model in a orthogonal projection, rather than perspectively distorted one.
+The primary motivation to explore the possibility of employing homography for \gls{vot} was the fact that as long as a static camera is used and few assumptions that we will discuss later hold, the scene may be easily stripped off the effect of the perspective distoriton. Considering this, the incentive to track vehicles visually using a static camera while exploiting a fronto-parallel view over the road seemed like a plausible extension with possible advantages for traffic analysis. Furthermore, the combination of homography and object tracking is present in the literature, e.g.~\cite{bose2004groundplane, zhang2012homographytrack, Mei2009}. To provide more detail, Bose~\etal{}~\cite{bose2004groundplane} presented a fully automated technique for both affine and metric rectification of a given ground plane (up to a scale factor) by simply tracking moving objects. The derivation of the necessary constraints for projective transformation between the image and the ground plane was obtained by observing objects that moved at constant velocity in the world for some part of their trajectory. We conjectured that the extra information about the scene geometry that we may achieve using rectification could aid in making the tracking more accurate. Visual trackers are often supported by motion models such as Kalman filter~\cite{kalman1960linearfilter}, so the rationale was to estimate motion model in a orthogonal projection, rather than perspectively distorted one.
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/homography/chessboard_marker.jpg}}
-    \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that would serve for a homography transformation. The rectified, fronto-parallel view demonstrates a desired effect that points present on the ``ground'' plane (in this case, the chessboard) are properly projected, whereas other points suffer from substantial distortion. \externalsrc{\cite{homographybasicscode}}}
+    \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that would serve for a homography transformation. The rectified, fronto-parallel view demonstrates a desired effect that points present on the ``ground'' plane (in this case, the chessboard) are properly projected, whereas other points suffer from substantial distortion. \externalsrc{\cite{webhomographybasiccode}}}
     \label{fig:ChessboardMarker}
 \end{figure}
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/homography/homography_road.png}}
-    \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view. \externalsrc{\cite{Bose04groundplane}}}
+    \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view. \externalsrc{\cite{bose2004groundplane}}}
     \label{fig:RoadMarker}
 \end{figure}
 
@@ -52,7 +52,7 @@ Under the aforementioned constraints, existing methods can only generate an isol
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.8\linewidth]{figures/homography/road_rectification.png}}
-    \caption[Road rectification]{A demonstration of the rectification process when obtaining a fronto-parallel view over the road using homography. \externalsrc{\cite{Luo2010}}}
+    \caption[Road rectification]{A demonstration of the rectification process when obtaining a fronto-parallel view over the road using homography. \externalsrc{\cite{luo2010lowcost}}}
     \label{fig:RoadRectification}
 \end{figure}
 
@@ -83,8 +83,8 @@ Let $m$ be the number of markers and $k$ be the number of keypoints of each mark
 \begin{equation}
     \suprbrackets{\mtx{W}}{i} =
     \begin{bmatrix}
-        \supsubrbrackets{x}{1}{i} & \supsubrbrackets{x}{2}{i} & \dots & \supsubrbrackets{x}{k}{i}\\
-        \supsubrbrackets{y}{1}{i} & \supsubrbrackets{y}{2}{i} & \dots & \supsubrbrackets{y}{k}{i}\\
+        \subsuprbrackets{x}{1}{i} & \subsuprbrackets{x}{2}{i} & \dots & \subsuprbrackets{x}{k}{i}\\
+        \subsuprbrackets{y}{1}{i} & \subsuprbrackets{y}{2}{i} & \dots & \subsuprbrackets{y}{k}{i}\\
         1                         & 1                         & \dots & 1
     \end{bmatrix},
     i = 1, \dots, m.
@@ -104,7 +104,7 @@ Let $m$ be the number of markers and $k$ be the number of keypoints of each mark
 \noindent with the point correspondence being
 
 \begin{equation}
-    \supsubrbrackets{x}{j}{i} \simeq \tilde{x}_j, \supsubrbrackets{y}{j}{i} \simeq \tilde{y}_j, i = 1, \dots, m, j = 1, \dots, k.
+    \subsuprbrackets{x}{j}{i} \simeq \tilde{x}_j, \subsuprbrackets{y}{j}{i} \simeq \tilde{y}_j, i = 1, \dots, m, j = 1, \dots, k.
 \end{equation}
 
 \section{Developed Method}
@@ -158,7 +158,7 @@ Let $r$ be the index of the reference marker. The $3 \times 3$ matrices describi
                 0 & 0 & 1
             \end{bmatrix} & \text{if } i = r\\
             &\begin{bmatrix}
-                \supsubrbrackets{\mtx{R}}{2 \times 2}{i} & \supsubrbrackets{\mtx{T}}{2 \times 1}{i}\\
+                \subsuprbrackets{\mtx{R}}{2 \times 2}{i} & \subsuprbrackets{\mtx{T}}{2 \times 1}{i}\\
                 \mathbf{0}_{1 \times 2} & 1
             \end{bmatrix} & \text{if }i \neq r\\
         \end{aligned}
@@ -168,19 +168,19 @@ Let $r$ be the index of the reference marker. The $3 \times 3$ matrices describi
 \noindent for $i = 1, \dots, m$, where
 
 \begin{equation}
-    \supsubrbrackets{\mtx{R}}{2 \times 2}{i} =
+    \subsuprbrackets{\mtx{R}}{2 \times 2}{i} =
     \begin{bmatrix}
         \suprbrackets{s}{i} \cdot \func{\cos}{\suprbrackets{\theta}{i}} & -\suprbrackets{s}{i} \cdot \func{\sin}{\suprbrackets{\theta}{i}}\\
         \suprbrackets{s}{i} \cdot \func{\sin}{\suprbrackets{\theta}{i}} & \suprbrackets{s}{i} \cdot \func{\cos}{\suprbrackets{\theta}{i}}
     \end{bmatrix}, \quad
-    \supsubrbrackets{\mtx{T}}{2 \times 1}{i} =
+    \subsuprbrackets{\mtx{T}}{2 \times 1}{i} =
     \begin{bmatrix}
-        \supsubrbrackets{t}{x}{i}\\
-        \supsubrbrackets{t}{y}{i}
+        \subsuprbrackets{t}{x}{i}\\
+        \subsuprbrackets{t}{y}{i}
     \end{bmatrix}.
 \end{equation}
 
-\noindent This transformation (except for the identity) consists of $4$ DoF: single rotation angle $\suprbrackets{\theta}{i}$, two $x$ and $y$ translation coefficients $\supsubrbrackets{t}{x}{i}$, $\supsubrbrackets{t}{y}{i}$, and a scale coefficient $\suprbrackets{s}{i}$. A full affine transformation with $6$ DoF would be responsible for horizontal and vertical
+\noindent This transformation (except for the identity) consists of $4$ DoF: single rotation angle $\suprbrackets{\theta}{i}$, two $x$ and $y$ translation coefficients $\subsuprbrackets{t}{x}{i}$, $\subsuprbrackets{t}{y}{i}$, and a scale coefficient $\suprbrackets{s}{i}$. A full affine transformation with $6$ DoF would be responsible for horizontal and vertical
 scales, shear and rotation, and $x$, $y$ offsets~\cite{barath2016novel}. The application of homography that rectifies an image produces a frontal plane which is related to the ground-truth plane by similarity transformation~\cite{hartley2003multiple, beck2016planar}. Thus, we do not include the shear and we only support uniform scaling.
 
 Since all the markers share the same planar surface, any homography has to provide a valid perspective projection, but all perspective projections are subjected to different noise. Our goal is to quantify which homography estimation provides the best perspective projection for the whole plane in the image. To do so, we propose a score function based on the aforementioned constraints. The score function computes a score for individual homographies in conjunction with estimated similarity matrices corresponding to auxiliary markers as
@@ -279,7 +279,7 @@ Fig.~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with re
 
 We evaluated the proposed homography ranking algorithm in various conditions. We tested cases involving various similarity transformations applied to original markers as well as noisy point correspondence, e.g., errors in marker detection since these are the expected problems in real-world scenarios.
 
-We demonstrated that the proposed solution is robust in presence of noise in the point correspondences. These correspondences can be either algorithmically found using feature-matching algorithms (e.g., SIFT~\cite{lowe1999object}, SURF~\cite{bay2008speeded}) or annotated manually. But even human annotations are often inaccurate. We also showed the robustness of our method to a varying number of markers and a change in shape.
+We demonstrated that the proposed solution is robust in presence of noise in the point correspondences. These correspondences can be either algorithmically found using feature-matching algorithms (e.g., SIFT~\cite{lowel1999objrecognition}, SURF~\cite{bay2008speeded}) or annotated manually. But even human annotations are often inaccurate. We also showed the robustness of our method to a varying number of markers and a change in shape.
 
 All our test scenarios demonstrated the following trend. On average, the homography with the highest score improved the relative performance to the baseline performance the most (both median and mean above $60$\%). The lowest-ranked homography often led to a lot worse performance (median and mean around $-90$\%). These values varied slightly across different setups. The shape and number of markers had the greatest influence. All the improvements in between steadily decreased, reached $0$\% improvement at around $\nicefrac{2}{3}~m$, where $m$ is the number of markers. A general claim is that the first half of ranked homographies yields a better reprojection compared to the baseline on average. The baseline performance was given by an average OpenCV~\cite{bradski2008learning} reprojection error under the assumption of no prior preference of specific markers, hence the random marker selection.
 
@@ -325,7 +325,7 @@ To simulate a noisy point correspondence, we applied a random noise (translation
 \def\warpedpix{\vect{w}}
 \def\origpix{\vect{g}}
 
-We evaluated the accuracy of our method by measuring the reprojection error using the Euclidean distance between the original and the rectified pixel positions. To obtain an error over the entire image, we computed the error for each pixel. Let $w$ and $h$ be the width and height of the image, respectively. The $3$D rotation of a point in the image around the image center that produces perspective distortion is represented by $\func{\varphi}{\cdot}$. Let $\supsub{\origpix}{i,j}{T} = \sbrackets{j, i, 1}$ be the original (ground-truth) pixel position at the $i$-th row and $j$-th column, and let $\warpedpix_{i, j} = \func{\varphi}{\origpix_{i, j}}$ be the analogically defined warped pixel position, for $i = 1, \dots, h, j = 1, \dots, w$. We then compute the $2$D reprojection error grid (a $h \times w$ matrix) for the given homography $\H$ as
+We evaluated the accuracy of our method by measuring the reprojection error using the Euclidean distance between the original and the rectified pixel positions. To obtain an error over the entire image, we computed the error for each pixel. Let $w$ and $h$ be the width and height of the image, respectively. The $3$D rotation of a point in the image around the image center that produces perspective distortion is represented by $\func{\varphi}{\cdot}$. Let $\subsup{\origpix}{i,j}{T} = \sbrackets{j, i, 1}$ be the original (ground-truth) pixel position at the $i$-th row and $j$-th column, and let $\warpedpix_{i, j} = \func{\varphi}{\origpix_{i, j}}$ be the analogically defined warped pixel position, for $i = 1, \dots, h, j = 1, \dots, w$. We then compute the $2$D reprojection error grid (a $h \times w$ matrix) for the given homography $\H$ as
 
 \begin{equation}
     \label{eq:reprojection_error_grid}
