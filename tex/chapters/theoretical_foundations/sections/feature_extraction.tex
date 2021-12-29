@@ -66,3 +66,30 @@ Fig.~\ref{fig:FPNVariousApproaches} compares competing methods of feature aggreg
 
 \subsection{Deep Layer Aggregation}
 \label{ssec:DeepLayerAggregation}
+
+A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architecture extension emphasizes the importance of feature aggregation across multiple levels in order to merge information from different stages of input processing. Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}, to name a few. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two different approaches to \gls{dla}, namely \gls{ida} and \gls{hda}. These structures are expressed through an architectural framework, which is, more importantly, independent of the choice of backbone, thus preserving the compatibility with current and future networks.
+
+\subsubsection{Iterative Deep Aggregation}
+
+% https://medium.com/@mikeliao/deep-layer-aggregation-combining-layers-in-nn-architectures-2744d29cab8
+% https://arxiv.org/pdf/1707.06484.pdf
+
+\gls{ida} aims at resolution and scale fusion. The process starts at the smallest scale and then iteratively merges larger (deeper) scales.
+
+\begin{equation}
+    \label{eq:IterativeDeepAggregation}
+    \func{I}{\vect{x}_1, \vect{x}_2, \vect{x}_3, \dots, \vect{x}_n} =
+    \begin{cases}
+        &\vect{x}_1 \text{ if } n = 1\\
+        &\func{I}{\func{N}{\vect{x}_1, \vect{x}_2}, \vect{x}_3, \dots, \vect{x}_n} \text{ otherwise}
+    \end{cases},
+\end{equation}
+where
+
+\subsubsection{Hierarchical Deep Aggregation}
+
+\gls{hda} focuses on feature merging across all modules as well as channels. The process of aggregation exploits a tree-like structure to combine layers that span multiple levels of a feature hierarchy.
+
+\subsubsection{Combination of Both Approaches}
+
+The two approaches above are independent as well as compatible enough to facilitate combining the two together for even richer feature aggregation.
