@@ -64,10 +64,10 @@ Inspired by the \gls{fcos} visual object detector, this tracker adopts fully-con
 where $\func{\mtx{p}}{x, y} = \sbrackets{l, t, r, b}$, i.e., individual corner offsets. This map is then decoded as
 \begin{equation}
     \begin{aligned}
-        &\subsup{\tilde{R}}{i}{t + \delta} =
-        \func{\mathcal{R}}{\func{\mtxsub{p}{i}}{x^*, y^*}}\\
-        &\subsup{v}{i}{t + \delta} = \func{\mtxsub{v}{i}}{x^*, y^*}\\
-        \text{s. t. } \quad &\rbrackets{x^*, y^*} = \underset{x, y}{\argmax} \rbrackets{\mtxsub{v}{i} \odot \mtxsub{\eta}{i}},
+                            & \subsup{\tilde{R}}{i}{t + \delta} =
+        \func{\mathcal{R}}{\func{\mtxsub{p}{i}}{x^*, y^*}}                                                                      \\
+                            & \subsup{v}{i}{t + \delta} = \func{\mtxsub{v}{i}}{x^*, y^*}                                        \\
+        \text{s. t. } \quad & \rbrackets{x^*, y^*} = \underset{x, y}{\argmax} \rbrackets{\mtxsub{v}{i} \odot \mtxsub{\eta}{i}},
     \end{aligned}
 \end{equation}
 in which $\odot$ symbolizes the element-wise multiplication, $\mtxsub{\eta}{i}$ incurs a non-negative penalty score throughout the entire candidate region computed as
@@ -88,40 +88,40 @@ Here, the letter $\lambda$, such that $0 \leq \lambda \leq 1$, is a weighting co
 The loss function for this model consists of multiple parts and for its completeness it requires a triplet $\rbrackets{\subsup{R}{i}{t}, \subsup{S}{i}{t + \delta}, \subsup{R}{i}{t + \delta}}$. The following function is minimized during the training phase:
 \begin{equation}
     \begin{aligned}
-    \lossf =
-    &\sum_{\forall \rbrackets{x, y}}
-    \func{l_{\text{focal}}}{
-        \func{\mtxsub{v}{i}}{
-            x, y
-        },
-        \func{\mtxsubsup{v}{i}{*}}{
-            x, y
+        \lossf =
+         & \sum_{\forall \rbrackets{x, y}}
+        \func{l_{\text{focal}}}{
+            \func{\mtxsub{v}{i}}{
+                x, y
+            },
+            \func{\mtxsubsup{v}{i}{*}}{
+                x, y
+            }
+        } +                                \\
+         & \sum_{\forall \rbrackets{x, y}}
+        \mathbbm{1}
+        \sbrackets{
+            \func{\mtxsubsup{v}{i}{*}}{
+                x, y
+            } = 1
         }
-    } +\\
-    &\sum_{\forall \rbrackets{x, y}}
-    \mathbbm{1}
-    \sbrackets{
-        \func{\mtxsubsup{v}{i}{*}}{
-            x, y
-        } = 1
-    }
-    \rbrackets{
-        \func{w}{x, y}
-        \cdot
-        \func{l_{\text{reg}}}{
-            \func{\mtxsub{p}{i}}{x, y},
-            \func{\mtxsubsup{p}{i}{*}}{x, y}
+        \rbrackets{
+            \func{w}{x, y}
+            \cdot
+            \func{l_{\text{reg}}}{
+                \func{\mtxsub{p}{i}}{x, y},
+                \func{\mtxsubsup{p}{i}{*}}{x, y}
+            }
         }
-    }
     \end{aligned}.
 \end{equation}
 In the expression above, the pairs $\rbrackets{x, y}$ enumerate all valid position within the $\subsup{S}{i}{t + \delta}$ region. The loss function dedicated to regression task, i.e., $l_{\text{reg}}$, is formulated as the \gls{iou} loss for regression~\cite{danelljan2019atom, yu2016unitbox}. To address the class-balance problem in an effective way, the focal loss for classification~\cite{lin2018focal} given by the term $l_{\text{focal}}$ is employed, too. All ground-truth values are marked by the $*$ character. So,
-\begin{equation}    
+\begin{equation}
     \func{\mtxsubsup{v}{i}{*}}{x, y} =
     \begin{cases}
         \begin{aligned}
-            &1 & \text{if } \rbrackets{x, y} \text{ is within } \subsup{R}{i}{*, t + \delta}\\
-            &0 & \text{otherwise}\\
+             & 1 & \text{if } \rbrackets{x, y} \text{ is within } \subsup{R}{i}{*, t + \delta} \\
+             & 0 & \text{otherwise}                                                            \\
         \end{aligned}
     \end{cases},
 \end{equation}
@@ -165,16 +165,16 @@ For better understanding, we suggest the reader follow the diagram in Fig.~\ref{
 
 The spatial-maching is followed by a standard \emph{online} solver that has been widely adopted in numerous works, such as~\cite{bawley2016simple, wojke2017simple, zhou2020tracking, bergmann2019tracking}. In its essence, this solver is simple yet very effective. As our experiments will later demonstrate, it is exceedingly difficult to surpass its performance in general by a significant margin. This solver is governed by the following rules listed below. Let $\subsup{v}{i}{t}$ be the visibility confidence, then
 \begin{enumerate}
-     \item the object's trajectory is continued as long as its visibility confidence is above a specific threshold $\alpha$, otherwise this trajecotry becomes dormant,
-     \item a new trajectory is spawned in case there is a non-matched detection (during the spatial-matching process) and its visibility confidence is above a threshold $\beta$,
-     \item a dormant trajectory is terminated, i.e., the object ID will never be used once again, it its visibility confidence is below $\alpha$ for $\tau$ consecutive frames.
+    \item the object's trajectory is continued as long as its visibility confidence is above a specific threshold $\alpha$, otherwise this trajecotry becomes dormant,
+    \item a new trajectory is spawned in case there is a non-matched detection (during the spatial-matching process) and its visibility confidence is above a threshold $\beta$,
+    \item a dormant trajectory is terminated, i.e., the object ID will never be used once again, it its visibility confidence is below $\alpha$ for $\tau$ consecutive frames.
 \end{enumerate}
 
 \subsubsection{Short-term Occlusion Handling}
 
 This model also attempts to tackle short-term occlusion. It is one of the key incentives that led us to consider this architecture for our experiments, which is the model's ability to handle occlusion in an efficient and trivial manner. At the beginning, we guessed that this phase could be improved upon due to its inherent simplicity. However, regardless of how rudimentary their approach may seem, it implicitly addresses a great deal of frequent cases that apprear in object tracking in a competent way. Our endeavors later described often involved a minor improvement in rare situations with simultaneous minor detriments to common situations. Therefore, the outcome of perfoming worse than the baseline on average was usually inescapable.
 
-A short-term occlusion can be defined as having the visibility confidence for the currently tracker object below the threshold $\alpha$. In \siammot{}, instead of definitely ceaseing the track's existence, the relevant information are kept in memory and thus the search for the exemplar continued until $\tau > 1$ frames have been processed in hope of re-instatiating the object. The most recently predicted location and its corresponding feature frames extracted from the backbone are utilized as the searching template. 
+A short-term occlusion can be defined as having the visibility confidence for the currently tracker object below the threshold $\alpha$. In \siammot{}, instead of definitely ceaseing the track's existence, the relevant information are kept in memory and thus the search for the exemplar continued until $\tau > 1$ frames have been processed in hope of re-instatiating the object. The most recently predicted location and its corresponding feature frames extracted from the backbone are utilized as the searching template.
 
 \subsection{Implementation Details}
 
@@ -182,7 +182,7 @@ The \siammot{} model is a paragon of feature pooling.
 
 \subsection{Relevant Implementation-Related Remarks}
 
-In this short section, we would like to summarize several relevant remarks related to the \siammot{} model. 
+In this short section, we would like to summarize several relevant remarks related to the \siammot{} model.
 
 \subsubsection{Pre-training}
 
@@ -204,7 +204,7 @@ where $n$ is the number of accumulated minibatches.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.7\linewidth]{figures/methodology/gradient_accumulation.png}
+    \includegraphics[width=0.6\linewidth]{figures/methodology/gradient_accumulation.png}
     \caption[Gradient accumulation]{Gradient accumulation is a mechanism that allows splitting the minibatch of samples — used for training a neural network — into several even smaller mini-batches of samples that will be processed sequentially. \externalsrc{\cite{webgradaccumulation}}}
     \label{fig:GradientAccumulation}
 \end{figure}
