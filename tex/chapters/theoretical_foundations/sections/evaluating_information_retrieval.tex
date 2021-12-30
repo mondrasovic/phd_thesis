@@ -1,7 +1,7 @@
 \section{Evaluating Information Retrieval}
 \label{sec:EvaluatingInformationRetrieval}
 
-% ##################################################
+% ##############################################################################
 \subsection{Elementary Measures of Classification}
 \label{ssec:ElementaryMeasuresOfClassification}
 
@@ -9,66 +9,66 @@ In order to put the meaning of \gls{map} (section~\ref{ssec:MeanAveragePrecision
 
 \begin{table}[t]
     \centering
-    
+
     \begin{tabular}{|c|c|c|}
         \hline
-                                        & \tblcolname{Actual positive} & \tblcolname{Actual negative}\\
+                                        & \tblcolname{Actual positive} & \tblcolname{Actual negative} \\
         \hline
-        \tblcolname{Predicted positive} & \gls{tp}                     & \gls{fp}\\
+        \tblcolname{Predicted positive} & \gls{tp}                     & \gls{fp}                     \\
         \hline
-        \tblcolname{Predicted negative} & \gls{fn}                     & \gls{tn}\\
+        \tblcolname{Predicted negative} & \gls{fn}                     & \gls{tn}                     \\
         \hline
     \end{tabular}
-    
+
     \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{davis2016prcurves}}}
     \label{tab:ConfusionMatrix}
 \end{table}
 
 \begin{table}[t]
     \centering
-    
+
     \begin{tabular}{|p{0.2\linewidth}|p{0.2\linewidth}|p{0.5\linewidth}|}
         \hline
-            
-        \tblcolname{Measure} & \tblcolname{Formula} & \tblcolname{Description}\\
+
+        \tblcolname{Measure}                      & \tblcolname{Formula} & \tblcolname{Description}                                 \\
         \hline
-        
-        accuracy &
+
+        accuracy                                  &
         $\frac{\TP + \TN}{\TP + \TN + \FP + \FN}$ &
-        percentage of all the correct outcomes, a measure of statistical bias (systematic errors)\\
+        percentage of all the correct outcomes, a measure of statistical bias (systematic errors)                                   \\
         \hline
-        
-        precision &
-        $\frac{\TP}{\TP + \FP}$ &
-        the percentage of predictions that are correct, useful when the costs of \gls{fp} are high\\
+
+        precision                                 &
+        $\frac{\TP}{\TP + \FP}$                   &
+        the percentage of predictions that are correct, useful when the costs of \gls{fp} are high                                  \\
         \hline
-        
-        recall &
-        $\frac{\TP}{\TP + \FN}$ &
-        a.k.a sensitivity, it's the percentage of correctly spotted positives, useful when the costs of \gls{fn} are high\\
+
+        recall                                    &
+        $\frac{\TP}{\TP + \FN}$                   &
+        a.k.a sensitivity, it's the percentage of correctly spotted positives, useful when the costs of \gls{fn} are high           \\
         \hline
-        
-        true positive rate &
-        $\frac{\TP}{\TP + \FN}$ &
-        equal to recall\\
+
+        true positive rate                        &
+        $\frac{\TP}{\TP + \FN}$                   &
+        equal to recall                                                                                                             \\
         \hline
-        
-        false positive rate &
-        $\frac{\FP}{\FP + \TN}$ &
-        the percentage of negative instances incorrectly classified as positives (\gls{fp}), often referred to as \emph{alarm rate}\\
+
+        false positive rate                       &
+        $\frac{\FP}{\FP + \TN}$                   &
+        the percentage of negative instances incorrectly classified as positives (\gls{fp}), often referred to as \emph{alarm rate} \\
         \hline
-        
-        positive predictive value &
-        $\frac{\TP}{\TP + \FP}$ &
-        equal to precision\\
+
+        positive predictive value                 &
+        $\frac{\TP}{\TP + \FP}$                   &
+        equal to precision                                                                                                          \\
         \hline
     \end{tabular}
-    
+
     \caption[Measures of binary classification]{Elementary measures for evaluating binary classification. \externalsrc{\cite{davis2016prcurves}}}
     \label{tab:ElementaryMetrics}
 \end{table}
 
-% ##################################################
+% ##############################################################################
 \subsection{Important Curves}
 \label{ssec:ImportantCurves}
 
@@ -81,7 +81,7 @@ The precision-recall curve summarizes the trade-off between precision and recall
 
 \cite{james2013itslwithr} describes the \gls{roc} curve as simultaneously displaying two types of errors for all possible thresholds. It summarizes the trade-off between the true positive rate and false positive rate for a given predictive model using different thresholds of probability. The overall performance of a classifier is given by the \gls{auc} of the \gls{roc}. This curve is appropriate to use when the observations are balanced between each class in terms of the number of occurrences (as opposed to the aforementioned precision-recall curve).
 
-% ##################################################
+% ##############################################################################
 \subsection{Evaluating Bounding Box Prediction}
 \label{ssec:EvaluatingBoundingBoxPrediction}
 
@@ -94,14 +94,14 @@ The precision-recall curve summarizes the trade-off between precision and recall
 
 Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
-\begin{aligned}
-    \vect{b}_1 \cap \vect{b}_2 =
-    &\max \cbrackets{0,
-                    \min \cbrackets{x_1 + w_1, x_2 + w_2} - \max \cbrackets{x_1, x_2} + 1}
-    \times\\
-    &\max \cbrackets{0,
-                    \min \cbrackets{y_1 + h_1, y_2 + h_2} - \max \cbrackets{y_1, y_2} + 1},
-\end{aligned}
+    \begin{aligned}
+        \vect{b}_1 \cap \vect{b}_2 =
+         & \max \cbrackets{0,
+            \min \cbrackets{x_1 + w_1, x_2 + w_2} - \max \cbrackets{x_1, x_2} + 1}
+        \times                \\
+         & \max \cbrackets{0,
+            \min \cbrackets{y_1 + h_1, y_2 + h_2} - \max \cbrackets{y_1, y_2} + 1},
+    \end{aligned}
 \end{equation}
 and the area of their union is given by
 \begin{equation}
@@ -121,7 +121,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
     \label{fig:IntersectionOverUnion}
 \end{figure}
 
-% ##################################################
+% ##############################################################################
 \subsection{Mean Average Precision}
 \label{ssec:MeanAveragePrecision}
 

@@ -46,7 +46,7 @@ The motivation for the utilization of different convolutional layers was that ex
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fully_cnn_tracking_feature_maps_3.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[Fully convolutional tracking]{A \gls{cnn} model trained on image classification task carries spatial information. (a) Input image with an associated ground truth mask. (b) Visualization of feature maps from convolutional layers placed at the bottom of the model, capturing differences between foreground and background of a particular object instance. (c) As opposed to the previous group of images, a more holistic, abstract view on the object category itself is provided by feature maps from top convolutional layers. The top row in the (b) and (c) represents feature maps, whereas the bottom row represents the corresponding saliency map with spatial information of the category. \externalsrc{\cite{wang2015votcnn}}}
+    \caption[Fully convolutional tracking]{A \gls{cnn} model trained on image classification task carries spatial information. \imgpartdesc{a} Input image with an associated ground truth mask. \imgpartdesc{b} Visualization of feature maps from convolutional layers placed at the bottom of the model, capturing differences between foreground and background of a particular object instance. \imgpartdesc{c} As opposed to the previous group of images, a more holistic, abstract view on the object category itself is provided by feature maps from top convolutional layers. The top row in the \imgpartdesc{b} and \imgpartdesc{c} represents feature maps, whereas the bottom row represents the corresponding saliency map with spatial information of the category. \externalsrc{\cite{wang2015votcnn}}}
     \label{fig:FullyCNNTrackingFeatureMaps}
 \end{figure}
 
@@ -147,9 +147,9 @@ The series of Siamese-based architectures for tracking continued with the idea o
 The region proposal subnetwork contains a pair-wise correlation section as well as a supervision section. Let $k$ denote the number of anchors. Then, the model has to output $2k$ channels for the classification and $4k$ channels for the regression. Following the established notation, the Siamese subnetwork produces feature maps $\func{\gamma}{z}$ and $\func{\gamma}{x}$. The pair-wise correlation splits $\func{\gamma}{z}$ into $\sbrackets{\func{\gamma}{z}}_{cls}$ and $\sbrackets{\func{\gamma}{z}}_{reg}$ while increasing the no. of channels (Fig.~\ref{fig:SiamRPNNetArchitecture}). Conversely, $\func{\gamma}{x}$ is also split into $\sbrackets{\func{\gamma}{x}}_{cls}$ and $\sbrackets{\func{\gamma}{x}}_{reg}$, but the no. of channels remains unchanged. The correlation, when computed on both branches, is given by
 \begin{equation}
     \begin{aligned}
-        \subsup{A}{w \times h \times 2k}{cls} &=
-        \sbrackets{\func{\gamma}{x}}_{cls} \star \sbrackets{\func{\gamma}{z}}_{cls},\\
-        \subsup{A}{w \times h \times 4k}{reg} &=
+        \subsup{A}{w \times h \times 2k}{cls} & =
+        \sbrackets{\func{\gamma}{x}}_{cls} \star \sbrackets{\func{\gamma}{z}}_{cls}, \\
+        \subsup{A}{w \times h \times 4k}{reg} & =
         \sbrackets{\func{\gamma}{x}}_{reg} \star \sbrackets{\func{\gamma}{z}}_{reg},
     \end{aligned}
 \end{equation}
@@ -228,7 +228,7 @@ As always, the \modelname{SiamFC}~\cite{bertinetto2016siamfc} was employed as th
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/siam_mask_architecture_2_branch_head.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[\modelname{Siam-Mask} architecture]{A schematic illustration of the two \modelname{Siam-Mask} variants: (a) a three-branch architecture (full), (b) a two-branch architecture (head). Depth-wise correlation layers are adopted again. \externalsrc{\cite{wang2019siammask}}}
+    \caption[\modelname{Siam-Mask} architecture]{A schematic illustration of the two \modelname{Siam-Mask} variants: \imgpartdesc{a} a three-branch architecture (full), \imgpartdesc{b} a two-branch architecture (head). Depth-wise correlation layers are adopted again. \externalsrc{\cite{wang2019siammask}}}
     \label{fig:SiamMaskArchitecture}
 \end{figure}
 
@@ -246,10 +246,10 @@ A ground-truth binary label $y_n \in \cbrackets{\pm 1}$ is assigned to each \gls
     \func{\mathcal{L}_{mask}}{\theta, \phi} =
     \sum_n
     \rbrackets{
-        \frac{1 + y_n}{2wh}
-        \sum_{i}
-        \sum_{j}
-        \func{\log}{1 + e^{-\mtx{C}_n^{i,j} \mtx{M}_n^{i,j}}}
+    \frac{1 + y_n}{2wh}
+    \sum_{i}
+    \sum_{j}
+    \func{\log}{1 + e^{-\mtx{C}_n^{i,j} \mtx{M}_n^{i,j}}}
     }.
 \end{equation}
 
@@ -285,7 +285,7 @@ For the upcoming description, we advise to follow the description for Fig.~\ref{
     \begin{bmatrix}
         \func{\cos}{\theta} &
         \func{\sin}{\theta} &
-        \rbrackets{1 - \func{\cos}{\theta}}x_0 - \func{\sin}{\theta} y_0\\
+        \rbrackets{1 - \func{\cos}{\theta}}x_0 - \func{\sin}{\theta} y_0 \\
         -\func{sin}{\theta} &
         \func{\cos}{\theta} &
         \func{\sin}{\theta} x_0 - \rbrackets{1 - \func{\cos}{\theta}} y_0
@@ -308,12 +308,12 @@ Computing the \gls{bbox} $\vect{G}$ into which the ellipse after being transform
 Considering the extreme values for coordinates $x$ and $y$ below:
 \begin{equation}
     \begin{aligned}
-        &x_{min} = \min \cbrackets{x\ |\ \forall x \in \mset{M'}},
+         & x_{min} = \min \cbrackets{x\ |\ \forall x \in \mset{M'}},
         \quad
-        &x_{max} = \max \cbrackets{x\ |\ \forall x \in \mset{M'}},\\
-        &y_{min} = \min \cbrackets{y\ |\ \forall y \in \mset{M'}},
+         & x_{max} = \max \cbrackets{x\ |\ \forall x \in \mset{M'}}, \\
+         & y_{min} = \min \cbrackets{y\ |\ \forall y \in \mset{M'}},
         \quad
-        &y_{max} = \max \cbrackets{y\ |\ \forall y \in \mset{M'}},
+         & y_{max} = \max \cbrackets{y\ |\ \forall y \in \mset{M'}},
     \end{aligned}
 \end{equation}
 then the the min-max axis-aligned \gls{bbox} $\vect{B}$ is given by
@@ -392,7 +392,7 @@ The last step, the conversion of the transformed coordinates back to the origina
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_07.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[Rotated \gls{bbox} by ellipse fitting]{(a) Edge pixels of the input segmentation mask, (b) ellipse fitting, (c) the affine transformation is computed and the points belonging to the mask are rotated and translated, (d) the ellipse is then inscribed into a rectangular box, (e) this box is then intersected with the min-max rectangular box, (f) the intersection box, (g) inverse affine transformation. \externalsrc{\cite{chen2019rotbboxes}}}
+    \caption[Rotated \gls{bbox} by ellipse fitting]{\imgpartdesc{a} Edge pixels of the input segmentation mask, \imgpartdesc{b} ellipse fitting, \imgpartdesc{c} the affine transformation is computed and the points belonging to the mask are rotated and translated, \imgpartdesc{d} the ellipse is then inscribed into a rectangular box, \imgpartdesc{e} this box is then intersected with the min-max rectangular box, \imgpartdesc{f} the intersection box, \imgpartdesc{g} inverse affine transformation. \externalsrc{\cite{chen2019rotbboxes}}}
     \label{fig:FastVOTRotBBOXFitting}
 \end{figure}
 
@@ -433,21 +433,21 @@ which was proposed as part of loss function (given by $\func{\mathcal{L}_{IOU}}{
     \begin{aligned}
         \label{eq:SiamCARCenLoss}
         \mathcal{L}_{cen} =
-        &\frac{-1}{\sum \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}}
+         & \frac{-1}{\sum \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}}
         \sum_{
             \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}} = 1
         }
         \Big[
-        \func{C}{i, j}
-        \func{\log}{
-            \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
-        }
-        +\\
-        &\rbrackets{1 - \func{C}{i, j}}
-        \func{\log}{
-            1 - \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
-        }
-        \Big]
+            \func{C}{i, j}
+            \func{\log}{
+                \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
+            }
+        +                                                              \\
+         & \rbrackets{1 - \func{C}{i, j}}
+            \func{\log}{
+                1 - \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
+            }
+            \Big]
     \end{aligned},
 \end{equation}
 where $\func{C}{i, j}$ computes the \emph{centerness} only for valid objects:

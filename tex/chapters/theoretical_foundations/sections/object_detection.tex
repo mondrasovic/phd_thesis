@@ -9,7 +9,7 @@ Historically speaking, object detection in its early stages of development depen
 
 Object detection is by its very nature a difficult task, because the number of objects is unknown in advance, which means, that the number of outputs of the model is variable. In terms of a standard deep learning model as described in section~\ref{ssec:ArtificialNeuralNetworks}, this represents a nuisance. A plethora of attempts have been proposed to evade this inherent shortage of standard neural networks. An obvious solution is to only produce a constant number of \glspl{bbox}, as utilized by \gls{ssd} and \gls{yolo}, for instance. But methods based on region proposals try to circumvent the obstacle of having to predict only a fixed set of \glspl{bbox}. Other differences between object detectors stem from the architecture itself, whether the training is an end-to-end pipeline or the model consists of various parts. Fully convolutional architectures are also becoming more prevalent and the latest results are promising~\cite{tian2019fcos}. We will also review fully convolutional trackers in great detail in section \ref{ssec:FullyConvolutionalTracking}.
 
-% ##################################################
+% ##############################################################################
 \subsection{Non-Maximum Suppression}
 \label{ssec:NonMaximumSuppression}
 
@@ -21,35 +21,35 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
 
 \begin{algorithmic}[1]
     \Function{NMS}{$\mset{B}$, $\mset{S}$, $\lambda$}
-    
-        \State $\mset{B}_{nms}$ $\gets$ $\emptyset$
-        \Comment{initialize the output (filtered) set of region proposals}
-        
-        \While {$\mset{B} \neq \emptyset$}
-            \Comment{loop until all the proposals are processed}
-            
-            \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
-            \Comment{find an index of a proposal with the highest score}
-            
-            \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$
-            \Comment{remove the proposal}
-            
-            \State $\mset{B}_{nms} \gets \mset{B}_{nms} \cup \vect{b_m}$
-            \Comment{save the proposal with the highest score}
-            
-            \For{$i \gets 1$ to $\msetsize{B}$}
-            \Comment{iterate through remaining proposals}
-            
-                \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \lambda$}
-                \Comment{\gls{iou} (equation~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
-                
-                    \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$
-                    \Comment{remove the proposal}
-                \EndIf
-            \EndFor
-        \EndWhile
-        
-        \State \Return $\mset{B}_{nms}$
+
+    \State $\mset{B}_{nms}$ $\gets$ $\emptyset$
+    \Comment{initialize the output (filtered) set of region proposals}
+
+    \While {$\mset{B} \neq \emptyset$}
+    \Comment{loop until all the proposals are processed}
+
+    \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
+    \Comment{find an index of a proposal with the highest score}
+
+    \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$
+    \Comment{remove the proposal}
+
+    \State $\mset{B}_{nms} \gets \mset{B}_{nms} \cup \vect{b_m}$
+    \Comment{save the proposal with the highest score}
+
+    \For{$i \gets 1$ to $\msetsize{B}$}
+    \Comment{iterate through remaining proposals}
+
+    \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \lambda$}
+    \Comment{\gls{iou} (equation~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
+
+    \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$
+    \Comment{remove the proposal}
+    \EndIf
+    \EndFor
+    \EndWhile
+
+    \State \Return $\mset{B}_{nms}$
     \EndFunction
 \end{algorithmic}
 
@@ -59,7 +59,7 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
     \label{fig:NonMaximumSuppression}
 \end{figure}
 
-% ##################################################
+% ##############################################################################
 \subsection{YOLO}
 \label{ssec:YouLookOnlyOnce}
 
@@ -71,13 +71,13 @@ As shown in Fig.~\ref{fig:YOLOBBOXESProgression}, the input image is divided int
 \begin{equation}
     \begin{aligned}
         \label{eq:YOLOCOnfidenceScores}
-        &\probgiven{{\text{class}}_i}{\text{object}}
+         & \probgiven{{\text{class}}_i}{\text{object}}
         \cdot
         \prob{\text{object}}
         \cdot
         \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}
-        =\\
-        &\prob{{\text{class}}_i}
+        =                                              \\
+         & \prob{{\text{class}}_i}
         \cdot
         \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}.
     \end{aligned}
@@ -104,7 +104,7 @@ The network design reflects a standard practice in deep learning-based computer 
     \label{fig:YOLOArchitecture}
 \end{figure}
 
-% ##################################################
+% ##############################################################################
 \subsection{Faster R-CNN}
 \label{ssec:FasterRCNN}
 
@@ -126,7 +126,7 @@ As the endeavor is to diminish unnecessary computations, the proposals are not c
     \label{fig:FasterRCNNRPN}
 \end{figure}
 
-% ##################################################
+% ##############################################################################
 \subsection{Fully Convolutional Object Detection}
 \label{ssec:FullyConvolutionalObjectDetection}
 

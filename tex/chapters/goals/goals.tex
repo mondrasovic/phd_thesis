@@ -1,7 +1,7 @@
 \chapter{Dissertation Thesis Goals}
 \label{chap:Goals}
 
-% ========================================
+% ==============================================================================
 \Gls{vot} is increasingly studied in recent years due to its real-world applications. Given the elaboration provided in chapter \ref{chap:TheoreticalFoundations}, we believe that investing research and development time into the topic of object tracking is worthwhile. The results presented so far are by no means everything that could be said about this topic. Quite to the contrary, the research area is vast, very active, and encompasses a broad range of approaches. Deep learning has occupied a great deal of the time that we spent studying and researching. The intention to build a working solution and incrementally advance the domain of object tracking has been the main incentive behind the choice for the topic of this dissertation thesis. With this in mind, \textbf{the general goal of this dissertation thesis is to improve the accuracy of visual object tracking using deep machine learning tools}.
 
 Tracking of objects using visual features may produce the output in many forms, the usual axis-aligned \glspl{bbox}, rotated \glspl{bbox}~\cite{chen2019rotbboxes}, segmentation masks~\cite{wang2019siammask}, or even object contours~\cite{yang2016encoderdecoder}. We plan to primarily focus on solutions producing axis-aligned \glspl{bbox}. Another variation is the speed at which the tracker processes the input. We have mentioned several times our intention to deal with traffic-related scenarios. So far, there have been no restrictions as to why our tracker would have to run at real-time speed. Many of our real-world applications have involved camera recorded videos that were processed offline. The decision to deal with traffic-related scenarios is also driven by projects supported by the University of Žilina. Companies of the private or public sector are interested in the automated analysis of traffic. Currently, a great deal of work such as vehicle counting is performed with human intervention. The author of this thesis as well as one of the supervisors are actively involved in solving problems related to tracking and traffic analysis using recorded videos.
@@ -17,7 +17,7 @@ In order to accomplish the aforementioned goals, this dissertation thesis should
     \item Adequate data preprocessing, either as a modification of existing datasets or creating new ones for object tracking, particularly in traffic-related scenarios.
     \item Analysis of the current \gls{sota} approaches dealing with visual tracking of objects.
     \item Review of the modern methods of \gls{reid} based on similarity learning. Assessment of the contrastive-based and triplet-based training paradigms.
-    \item The exploitation of recent advances in object \gls{reid} to handle object occlusion and dynamic conditions in terms of illuminance and object position. 
+    \item The exploitation of recent advances in object \gls{reid} to handle object occlusion and dynamic conditions in terms of illuminance and object position.
     \item Design and implementation of a method for visual object tracking adopting advances in deep machine learning.
     \item Evaluation of the implemented method with respect to official benchmarks.
     \item Summarization and dissemination of the achieved results followed by recommendations for their practical applications.

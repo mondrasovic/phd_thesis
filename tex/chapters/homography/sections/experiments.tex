@@ -1,0 +1,226 @@
+\section{Experiments and Discussion}
+\label{sec:HomographyExperiments}
+
+Fig.~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with respect to the marker position. We can see that the marker position can be deduced by looking at the heatmap representing the pixel-wise reprojection error over the image. The transformation achieves the best accuracy in the marker neighborhood and steadily decreases for more distant pixels. However, not all markers are subjected to the same pattern of error variation. This observation was the core motivation for our solution. We aim to choose the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints.
+
+\begin{figure}[t]
+    \centerline{\includegraphics[width=\linewidth]{figures/homography/heatmaps_best_worst.pdf}}
+    \caption[Homography ranking heatmaps]{Distribution of pixel-wise reprojection error. The heat map together with corresponding contours demonstrate the varying distance between the ground truth and rectified pixel position after removing the perspective distortion. The bold square represents the reference marker. We show the result of \imgpartdesc{a} the ``best'' marker and \imgpartdesc{b} the ``worst'' marker. This test scenario includes all similarity transformations as well as noise in point correspondence.}
+    \label{fig:HeatmapsBestWorst}
+\end{figure}
+
+We evaluated the proposed homography ranking algorithm in various conditions. We tested cases involving various similarity transformations applied to original markers as well as noisy point correspondence, e.g., errors in marker detection since these are the expected problems in real-world scenarios.
+
+We demonstrated that the proposed solution is robust in presence of noise in the point correspondences. These correspondences can be either algorithmically found using feature-matching algorithms (e.g., SIFT~\cite{lowel1999objrecognition}, SURF~\cite{bay2008speeded}) or annotated manually. But even human annotations are often inaccurate. We also showed the robustness of our method to a varying number of markers and a change in shape.
+
+All our test scenarios demonstrated the following trend. On average, the homography with the highest score improved the relative performance to the baseline performance the most (both median and mean above $60$\%). The lowest-ranked homography often led to a lot worse performance (median and mean around $-90$\%). These values varied slightly across different setups. The shape and number of markers had the greatest influence. All the improvements in between steadily decreased, reached $0$\% improvement at around $\nicefrac{2}{3}~m$, where $m$ is the number of markers. A general claim is that the first half of ranked homographies yields a better reprojection compared to the baseline on average. The baseline performance was given by an average OpenCV~\cite{bradski2008learning} reprojection error under the assumption of no prior preference of specific markers, hence the random marker selection.
+
+\subsubsection{Implementation Details}
+\label{sssec:HomographyImplementation}
+
+Our proposed algorithm can extend any homography estimation method that exploits point correspondences. For demonstration, we adopted time-tested implementations from the OpenCV~$4.4.0$ library~\cite{bradski2008learning}. Each homography was estimated by the \srcfuncname{findHomography} function which employs DLT~\cite{abdel2015direct} algorithm for $k = 4$ and RANSAC~\cite{fischler1981random} algorithm for $k > 4$, where $k$ is the size of the point correspondences set. Each optimal similarity transformation between two $2$D point sets was estimated by the \srcfuncname{estimateAffinePartial2D}, which also utilizes RANSAC for robustness. We always used default parameters.
+
+\subsection{Dataset Creation}
+\label{ssec:HomographyDatasetCreation}
+
+We created a synthetic dataset to simulate the presence of markers in the scene subjected to perspective distortion. Our experiments were based on a pixel-wise comparison of the reprojection error. The synthetic dataset covered multiple setups named as \mbox{\textbf{test scenarios}}. For each test scenario, we generated $t$ different samples to which we refer as \mbox{\textbf{test instances}}. We set $t = 1\ 000$. Table~\ref{tab:TestScenariosResults} contains description of the generated test scenarios. To create test instances (within test scenarios), we employed the procedures described below (see Figure~\ref{fig:DatasetGenerating}).
+
+We organized the creation of our dataset to allow complete reproducibility of the reported results. Thanks to the synthetic nature of our data, fixing the seed for the used pseudo-random generator was sufficient. The source code for running the experiments is freely available (see supplementary materials at the end).
+
+\subsubsection{Image Initialization}
+Each test instance was initialized as a blank $1024 \times 768$ image. This image served for $m$ randomly generated copies of the same shape (marker) placed in a $3 \times 3$ grid, where $0 < m \leq 9$. We used a uniform border with $20$\% size of the corresponding side to prevent the generated shapes from reaching outside of the image. We experimented with a different number of markers. From the set of $3 \times 3$ possible anchors, we chose $m$ randomly onto which we placed the generated markers. We also studied the effect of $3$, $5$, $7$, and $9$ out of $9$ possible markers, given that all the similarity transformations and noise were applied. Regarding marker shapes, we tested squares or convex, equilateral polygons, with a tight bounding box of size $100 \times 100$ pixels (covering approximately $1.3$\% of the image). However, other similar shapes could be used, too. Their centroids were evenly distributed over the image whilst the grid cells served as anchors. We adopted random generators from a uniform probability distribution. These settings represented the default configuration. Subsequently, we applied further transformations to the generated markers and the image.
+
+\subsubsection{Similarity Transformation}
+We showed the effect of similarity transformations before applying the perspective transformation. The translation and rotation would demonstrate that markers could be positioned arbitrarily in a real environment provided they shared the same planar surface. The change in scale showed that markers could be of different sizes.
+
+To simulate similarity transformation, we applied random rotation from the interval $\left[0, 360\right)$ degrees with origin in the marker center. Then, we generated a random coordinate shift from interval $\sbrackets{-20, 20}$ pixels for translation in $x$ and $y$ direction. However, an identical translation had to be applied to the entire marker to prevent distortion. Then, uniform scaling was performed with the origin in the marker center with a scale factor randomly generated from interval $\sbrackets{0.8, 1.5}$. Due to this range, a ratio of the marker to image area ranged from $1.0$\% to $1.9$\%.
+
+\subsubsection{Perspective Distortion}
+We simulated a $3$D rotation of an image around its center to represent a change in perspective on the plane that contained several markers. We rotated the image around its center in $x$, $y$, and $z$ axis by a random angle from interval $\sbrackets{-20, 20}$ degrees to achieve a change in perspective. The original keypoints were transformed along with the entire image, producing the warped keypoints.
+
+\subsubsection{Noisy Point Correspondence}
+To simulate a noisy point correspondence, we applied a random noise (translation) to each $x$ and $y$ coordinate of the warped keypoints from the interval $\sbrackets{-2, 2}$ pixels. At this stage, each keypoint was modified in isolation to achieve the distortive effect. Thanks to the perspective deformation, the generated random shift represented different levels of noise depending on how much the image had been warped. This step imitated errors in the marker detection, leading to noisy point correspondence.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/homography/dataset_generating.pdf}
+    \caption{Description of how each one of $t$ test instances in a specific test scenario is created. The input is a blank $w \times h$ image over which $m$ markers are initialized in a uniform grid, which produces the original marker keypoints. Depending on the test scenario, a particular subset of similarity transformations is applied to the entire image. Subsequently, warped keypoints are modified by random noise to simulate noisy point correspondence.}
+    \label{fig:DatasetGenerating}
+\end{figure}
+
+\subsection{Evaluation Methodology}
+\label{ssec:evaluation_methodology}
+
+\subsubsection{Error Computation}
+\label{sssec:error_computation}
+
+\def\warpedpix{\vect{w}}
+\def\origpix{\vect{g}}
+
+We evaluated the accuracy of our method by measuring the reprojection error using the Euclidean distance between the original and the rectified pixel positions. To obtain an error over the entire image, we computed the error for each pixel. Let $w$ and $h$ be the width and height of the image, respectively. The $3$D rotation of a point in the image around the image center that produces perspective distortion is represented by $\func{\varphi}{\cdot}$. Let $\subsup{\origpix}{i,j}{T} = \sbrackets{j, i, 1}$ be the original (ground-truth) pixel position at the $i$-th row and $j$-th column, and let $\warpedpix_{i, j} = \func{\varphi}{\origpix_{i, j}}$ be the analogically defined warped pixel position, for $i = 1, \dots, h, j = 1, \dots, w$. We then compute the $2$D reprojection error grid (a $h \times w$ matrix) for the given homography $\H$ as
+
+\begin{equation}
+    \label{eq:reprojection_error_grid}
+    \boldsymbol{\xi}_{wh} =
+    \begin{bmatrix}
+        \func{e}{\warpedpix_{1, 1}, \origpix_{1, 1}} & \dots & \func{e}{\warpedpix_{1, w}, \origpix_{1, w}} \\
+        \dots                                        & \dots & \dots                                        \\
+        \func{e}{\warpedpix_{h, 1}, \origpix_{h, 1}} & \dots & \func{e}{\warpedpix_{h, w}, \origpix_{h, w}}
+    \end{bmatrix},
+\end{equation}
+
+\noindent where
+
+\begin{equation}
+    \func{e}{\warpedpix, \origpix} = \euclnorm{\H \warpedpix - \origpix}.
+\end{equation}
+
+\noindent To express the reprojection error as a single number for the whole image, we adopted an arithmetic mean of all the values in the error grid above, so
+
+\begin{equation}
+    \label{eq:ReprojectionErrorSingle}
+    \xi_{\text{reproj}} =
+    \frac{1}{wh}
+    \sum_{i = 1}^{h}
+    \sum_{j = 1}^{w}
+    \func{e}{\warpedpix_{i, j}, \origpix_{i, j}}.
+\end{equation}
+
+\subsubsection{Evaluation Algorithm}
+\label{sssec:EvaluationAlgorithm}
+
+On the input, we have $m$ markers (section~\ref{ssec:HomographyDatasetCreation}) and thus an $m$-to-$1$ point correspondence. Each marker provides its unique homography. Our goal is to quantify the relative improvement in the reprojection error over the baseline when the $k$-th ranked homography is used for rectification. Even though we are primarily concerned only with the single, top-performing homography, we evaluate the entire ranking to demonstrate stable behavior.
+
+We evaluated our homography ranking in terms of reprojection error improvements against the existing approaches based on the isolated homography estimation represented by OpenCV~\cite{bradski2008learning} implementation. Since our method provides a ranking, we compare our performance against a random marker selection based on uniform probability distribution. We refer to this performance as the ``baseline''; an unbiased marker selection. To obtain the aforementioned baseline, we evaluated the reprojection error \eqref{eq:ReprojectionErrorSingle} for each marker in isolation and computed the arithmetic mean of these values. When we executed our proposed algorithm, we got the full ordering of markers by their score value computed using the proposed criterion \eqref{eq:HomographyScoreFunction}. We expected that if the first marker were used to rectify the image, then the reprojection error would be minimal (and lower than the baseline error). If any subsequent marker in the given order were used instead, the reprojection error would increase.
+
+We computed the relative improvement in \% for each $k$-th homography according to the baseline performance. Each test scenario was evaluated separately. For each test instance, we obtained a $k$-dimensional vector where its elements represented a percentual improvement at each $k$-th position. We represented our data as a $t \times k$ matrix, where $t$ was the number of test instances. We treated each column separately to compute the statistics. Our evaluation algorithm is described in Algorithm~\ref{alg:EvaluationAlgorithm}. For simplicity, show an evaluation of a single instance.
+
+\def\meanerrs{\boldsymbol{e}}
+\def\errdiffs{\boldsymbol{p}}
+\def\arracc{\left[ \right]}
+
+\begin{algorithm}[t]
+    \caption{Evaluation Algorithm}
+    \label{alg:EvaluationAlgorithm}
+    \begin{algorithmic}[1]
+        \State $\hmatrices, \sortres \gets $ \Call{rankhomographies}{\ }
+        \Comment{Algorithm~\ref{alg:HomographyRanking}}
+
+        \State $e_b \gets 0$
+        \Comment{baseline}
+
+        \State $\meanerrs \gets \arraydef \left[ m \right]$
+        \Comment{reprojection errors}
+
+        \State $\errdiffs \gets \arraydef \left[ m \right]$
+        \Comment{relative improvements}
+
+        \For{$i \gets 1, \dots , m$}
+        \State $\meanerrs \left[ i \right] \gets $ $\xi_{\text{reproj}}$
+        \Comment{equation \eqref{eq:ReprojectionErrorSingle}}
+
+        \State $e_b \gets e_b + \meanerrs \left[ i \right]$
+        \EndFor
+
+        \State $e_b \gets e_b / m$
+        \Comment{mean reprojection error}
+
+        \For{$i \gets 1, \dots , m$}
+        \State $k \gets \sortres \left[ i \right]$
+        \Comment{position of $i$-th best homography}
+
+        \State $\errdiffs \left[ i \right] \gets \rbrackets{e_b - \meanerrs \left[ k \right]} / e_b$
+        \Comment{relative improvement}
+        \EndFor
+
+        \State \Return $\errdiffs$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Results}
+\label{ssec:EvaluationResults}
+
+Figure~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with respect to the marker position. We can see that the marker position can be deduced by looking at the heatmap representing the pixel-wise reprojection error over the image. The transformation achieves the best accuracy in the marker neighborhood and steadily decreases for more distant pixels. However, not all markers are subjected to the same pattern of error variation. This observation was the core motivation for our solution. We aim to choose the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints.
+
+All tested scenarios depict similar trends as shown on the plots in Figures~\ref{fig:SimilarityTransformInfluence},~\ref{fig:NoiseInfluence},~\ref{fig:ShapeInfluence}~and~\ref{fig:NMarkersInfluence}. The box plots extend from the lower to upper quartile values, with the thin and thick line representing the median and mean, respectively. The plots discussed further show relative improvements over the baseline OpenCV~\cite{bradski2008learning} method. We evaluated relative improvements for the sake of interpretability. For better comprehension, we suggest to see Table~\ref{tab:TestScenariosResults}. It contains individual test scenarios and their corresponding top performances in percents. Conversely, the reprojection error in absolute terms is difficult to interpret without additional context. Nevertheless, to highlight the differences in reprojection errors we also provide absolute values in Table~\ref{tab:test_scenarios_results}. The presence of noise shifted the errors by multiple magnitudes, but still preserved the pattern of distribution.
+
+\paragraph{Influence of Similarity Transformations}
+In this test scenario, we tested in isolation each allowed similarity transformation, i.e., translation, rotation, and uniform scaling. Figure~\ref{fig:SimilarityTransformInfluence} demonstrates that the relative improvement was circa equal in all situations. Besides, we show that the proposed method is practically invariant to similarity transformations allowing the markers to be in arbitrary positions in a plane. When all similarity transformations were utilized, our method performed even better, showing its stability and robustness.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\boxplotimgwidth]{figures/homography/similarity_transform_influence.pdf}
+    \caption{Influence of similarity transformation on the reprojection error.}
+    \label{fig:SimilarityTransformInfluence}
+\end{figure}
+
+\paragraph{Influence of Noise}
+In Figure~\ref{fig:NoiseInfluence}, we can see the effect of noisy point correspondence that simulated inaccurate keypoint detection. The ranking method preserved the trend of the relative improvement in presence of noise. Absolute reprojection error demonstrated that unless noise was present, the errors varied on sub-pixel levels, so they were practically zero.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\boxplotimgwidth]{figures/homography/noise_influence.pdf}
+    \caption{Influence of noise applied to the warped keypoints representing a noisy point correspondence.}
+    \label{fig:NoiseInfluence}
+\end{figure}
+
+\paragraph{Influence of Variable Shapes}
+We expected that the relative improvement of our method should be invariant to variable shapes as long as they were similar. Figure~\ref{fig:ShapeInfluence} demonstrates that with an increasing number of keypoints our method consistently preserved its capabilities. Introducing more complicated shapes than just rectangles did not exacerbate the outcome of the algorithm.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\boxplotimgwidth]{figures/homography/shape_influence.pdf}
+    \caption{Results for different marker shapes.}
+    \label{fig:ShapeInfluence}
+\end{figure}
+
+\paragraph{Influence of Number of Markers}
+We tested a variable number of markers to demonstrate that our method preserved its improvement. Figure~\ref{fig:NMarkersInfluence} shows that the greater the set of markers, the better the relative improvement of our method. Even when we used just three markers, the proposed method achieved a $46.91$\% median relative improvement.
+While it is beneficial to use a larger number of markers, we believe that the improvement we can obtain from an increasing number of markers has a logarithmic trend. On the extreme side, if we used only one marker, there would be no improvement since there would be only one homography to choose from.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/homography/n_markers_influence.pdf}
+    \caption{Influence of different number of markers on reprojection error. We experimented with \imgpartdesc{a} three, \imgpartdesc{b} five, \imgpartdesc{c} seven, and \imgpartdesc{d} nine markers.}
+    \label{fig:NMarkersInfluence}
+\end{figure*}
+
+\def\tblsccolw{0.06}
+\def\tblrscolw{0.08}
+\begin{table*}[t]
+    \caption{Description of test scenarios in our synthetic dataset with corresponding settings and results for the top-ranked homography. One row represents one test scenario. Four visually separated groups (from top to bottom) are related to experiments shown in Figure~\ref{fig:SimilarityTransformInfluence}~-~\ref{fig:NMarkersInfluence}.}
+    \label{tab:TestScenariosResults}
+    \setlength{\tabcolsep}{3pt}
+    \begin{center}
+        \footnotesize
+        \begin{tabular}{p{\tblsccolw\linewidth}p{\tblsccolw\linewidth}p{\tblsccolw\linewidth}p{\tblsccolw\linewidth}p{\tblsccolw\linewidth}p{\tblsccolw\linewidth}|p{\tblrscolw\linewidth}p{\tblrscolw\linewidth}p{\tblrscolw\linewidth}p{\tblrscolw\linewidth}p{\tblrscolw\linewidth}p{\tblrscolw\linewidth}}
+            \toprule
+            \multirow{2}{2pt}{\textbf{shape}}    &
+            \multirow{2}{2pt}{\textbf{markers}}  &
+            \multirow{2}{2pt}{\textbf{transl.}}  &
+            \multirow{2}{2pt}{\textbf{rotation}} &
+            \multirow{2}{2pt}{\textbf{scale}}    &
+            \multirow{2}{2pt}{\textbf{noise}}    & \multicolumn{3}{l}{\textbf{top relative improvement}} & \multicolumn{3}{l}{\textbf{top absolute improvement}}                                                                                                         \\
+                                                 &                                                       &                                                       &     &     &     & \textbf{median} & \textbf{mean} & \textbf{stdev} &
+            \textbf{median}                      & \textbf{mean}                                         & \textbf{stdev}                                                                                                                                                \\
+            \midrule
+            square                               & 6                                                     & no                                                    & no  & no  & no  & 62.80\%         & 59.63\%       & 19.64\%        & 0.00029  & 0.00030   & 0.00014   \\
+            square                               & 6                                                     & yes                                                   & no  & no  & no  & 62.65\%         & 59.00\%       & 19.72\%        & 0.00028  & 0.00029   & 0.00013   \\
+            square                               & 6                                                     & no                                                    & yes & no  & no  & 66.42\%         & 63.17\%       & 19.11\%        & 0.00041  & 0.00043   & 0.00020   \\
+            square                               & 6                                                     & no                                                    & no  & yes & no  & 63.38\%         & 58.51\%       & 23.97\%        & 0.00024  & 0.00025   & 0.00015   \\
+            \midrule
+            square                               & 6                                                     & yes                                                   & yes & yes & no  & 67.82\%         & 63.66\%       & 20.30\%        & 0.00035  & 0.00037   & 0.00019   \\
+            square                               & 6                                                     & yes                                                   & yes & yes & yes & 64.11\%         & 59.26\%       & 22.12\%        & 22.07813 & 24.31773  & 15.00850  \\
+            \midrule
+            5-poly                               & 6                                                     & yes                                                   & yes & yes & yes & 74.67\%         & 71.19\%       & 21.98\%        & 69.55532 & 336.26534 & 685.74274 \\
+            7-poly                               & 6                                                     & yes                                                   & yes & yes & yes & 71.02\%         & 65.63\%       & 22.99\%        & 46.79390 & 135.65737 & 395.75257 \\
+            9-poly                               & 6                                                     & yes                                                   & yes & yes & yes & 68.97\%         & 65.57\%       & 21.98\%        & 44.97627 & 115.12189 & 309.27201 \\
+            \midrule
+            square                               & 3                                                     & yes                                                   & yes & yes & yes & 46.91\%         & 41.36\%       & 31.58\%        & 14.77504 & 18.11548  & 20.67457  \\
+            square                               & 5                                                     & yes                                                   & yes & yes & yes & 59.03\%         & 53.91\%       & 24.56\%        & 19.76285 & 22.53333  & 16.00804  \\
+            square                               & 7                                                     & yes                                                   & yes & yes & yes & 66.19\%         & 62.41\%       & 19.98\%        & 23.87681 & 27.13637  & 32.28533  \\
+            square                               & 9                                                     & yes                                                   & yes & yes & yes & 69.86\%         & 66.09\%       & 18.18\%        & 25.66452 & 26.68378  & 11.69754  \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+\end{table*}

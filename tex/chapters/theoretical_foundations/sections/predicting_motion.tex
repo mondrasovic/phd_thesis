@@ -5,7 +5,7 @@ To track objects in a video, there is a requirement to resolve the object's posi
 
 As we have mentioned numerous times, occlusion handling is of primary concern for us, and being able to predict a probability distribution over possible object's positions if visual input is absent is vital. We could potentially use filtering approaches, specifically Kalman filter (section~\ref{ssec:KalmanFiler}) or particle filter (section~\ref{ssec:ParticleFilter}) described later. These algorithms could model the vehicle's speed and acceleration. Filtering is an engineering terminology describing the extraction of information about a signal from partial and noisy observations (measurements)~\cite{kunsch2013particlefilter}.
 
-% ##################################################
+% ##############################################################################
 \subsection{Trivial Motion Model}
 \label{ssec:TrivialMotionModel}
 
@@ -18,7 +18,7 @@ Let $\func{p}{t}$ be the current position at time $t$, and $\func{v}{t}$ be the 
     \func{p}{t + 1} = \func{p}{t} + \func{v}{t} = 2\func{p}{t} - \func{p}{t - 1}.
 \end{equation}
 
-% ##################################################
+% ##############################################################################
 \subsection{Kalman Filter}
 \label{ssec:KalmanFiler}
 
@@ -50,7 +50,7 @@ In this regard, the role of the Kalman Filter is to compute an estimate of the s
 
 It is important to note that when dealing with object tracking, the Kalman Filter performs poorly in the presence of significant background clutter (spurious measurements not relating to any particular target). Clutter may introduce multimodal probability distributions over noise, which is tricky to cope with, given the already mentioned unimodal, Gaussian nature of the Kalman Filter. This realization led to the development of the Condensation (Conditional Density Propagation) algorithm, which detects and tracks objects contours in a cluttered environment~\cite{isard1998condensation}. However, this approach is outside of our scope, it just serves as a piece of evidence that sound predictions in the presence of noise are difficult to make with a linear model.
 
-% ##################################################
+% ##############################################################################
 \subsection{Particle Filter}
 \label{ssec:ParticleFilter}
 
@@ -112,7 +112,7 @@ with weights for each particle normalized according to
 
 Further description of derivation of all the equations introduced above, but using our newly established nomenclature according to importance sampling, will be omitted for the sake of clarity. More information can be found in~\cite{arulampalam2007particlefilter}.
 
-% ##################################################
+% ##############################################################################
 \subsection{Optical Flow}
 \label{ssec:OpticalFlow}
 
