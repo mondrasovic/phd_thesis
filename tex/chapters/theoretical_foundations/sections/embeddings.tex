@@ -200,26 +200,3 @@ In this strategy, the goal is to find the hardest positive and hardest negative 
         {\Bigg]}_{+}
     \end{aligned}
 \end{equation}
-
-% ##############################################################################
-\subsection{Training Embeddings Using Adversarial Learning}
-\label{ssec:TrainingEmbeddingsAdversarialLearning}
-
-As we have seen so far, the mining of \emph{hard} samples (pairs or triplets) is crucial for training the embedding model. Nevertheless, as the model improves, it is mandatory to provide \emph{harder} samples every time. It can be observed in the contrastive (equation~\ref{eq:ContrastiveLoss}) or the triplet loss (equation~\ref{eq:TripletLoss}) functions. Once the negative sample is \emph{pushed} beyond the margin boundary, this sample incurs a $0$ contribution to the loss. It, therefore, is appropriate to constantly provide \emph{harder} samples as the model progresses, but the number of hard samples within the training set naturally decreases. One way to achieve this is to utilize adversarial training, the concept introduced by Goodfellow~\etal{}~\cite{goodfellow2014gans}. An architecture called the Embedding Adversarial Learning Network, proposed by Lou~\etal{}~\cite{lou2019embreid} is capable of generating synthetic samples in the embedding space. The advantage of harnessing this scheme is that instead of mining abundant \emph{hard} samples from the training set, which may be remarkably laborious, if not impossible, the automatically generated \emph{hard} samples can greatly improve the network's capability for discriminating similar objects~\cite{lou2019embreid}. Since Lou~\etal{}~\cite{lou2019embreid} also deal with the problem of vehicle \gls{reid}, their approach improves the robustness of the embedding model to queries with different views of vehicles, because they employ \emph{hard negative} mining and \emph{cross-view} generation during the training. Identification of the corresponding rear viewpoint of a vehicle given only its front viewpoint and vice versa casts a challenge for the \gls{reid} methods.
-
-Their contribution encompasses a novel adversarial scheme based on feature distance within the embedding space. Following the notation from~\cite{lou2019embreid}, let $x$ be an input sample, and $\func{G}{x}$ be a generated sample using the generator $G$. $\func{G}{x}$ is constrained to be close to the given sample $x$, within a relative positive margin $\alpha$, in the target embedding space. On the contrary, let $D_{emb}$ be the discriminator the purpose of which is to push the $\func{G}{x}$ away from $x$ while aiming to make the relative distance to be greater than $\alpha$. Simply put, the generator $G$ attempts to minimize the feature distance while the discriminator $D_{emb}$ tries to maximize it (\figstr{}~\ref{fig:EALNDiscriminatorGeneratorScheme}). This adversarial scheme can be formulated as follows,
-\begin{equation}
-    \begin{aligned}
-         & \underset{G}{\min} \ \underset{D_{emb}}{\max} \ \mathbb{E}_{x \sim \func{pdata}{x}} \max \cbrackets{\func{d}{x, \func{G}{x}} - \alpha, 0}, \\
-         & \func{d}{x, \func{G}{x}} = \euclnorm{\func{D_{emb}}{x} - \func{D_{emb}}{\func{G}{x}}}^2,
-    \end{aligned}
-\end{equation}
-with $\func{D_{emb}}{x}$ being the mapping of $x$ to the embedding space through the discriminator $D_{emb}$~\cite{lou2019embreid}. As~\cite{goodfellow2014gans} proposed in his initiative work on \glspl{gan}, the generator and the discriminator are trained alternatively in this scheme as well.
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/ealn_discriminator_generator_scheme.pdf}}
-    \caption[Embedding adversarial learning architecture]{Adversarial learning between the generator $G$ and the discriminator $D_{emb}$. The generator $G$ tries to produce samples close to the given sample $x$ in the embedding space, while the discriminator $D_{emb}$ tries to push those samples far away from each other, beyond the margin $\alpha$~\cite{lou2019embreid}.}
-    \label{fig:EALNDiscriminatorGeneratorScheme}
-\end{figure}
-
-Their approach encompasses multiple stages. The first one is the \emph{embedding adversarial learning}, the design principle of which is manipulating the generation of the samples in the embedding space. Later on, the aforementioned first stage is extended by the \emph{hard negative adversarial learning}, that consists of two parts, i.e., the \emph{embedding adversarial learning} and the \emph{real-fake adversarial learning}. Another concurrent stage is introduced, called the \emph{cross-view adversarial learning}. Based on the \emph{embedding adversarial learning}, the aim is to address the issue of vehicle feature matching between different views via cross-view generation.

@@ -10,5 +10,3 @@ Remove sections:
 Add more information to sections:
     Faster R-CNN
     Siamese Tracking
-
-Make figure short captions even shorter.

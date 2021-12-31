@@ -63,46 +63,7 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
 \subsection{YOLO}
 \label{ssec:YouLookOnlyOnce}
 
-\Gls{yolo} is a very popular object detector thanks to its ability to run in real-time and yet be very accurate. Its speed is primarily a consequence that \emph{it looks only once} at a given input image. Compared to region proposal-based approaches, where each object proposal has to be classified separately, resulting in multiple inferences by a potentially huge neural network model, the authors of \gls{yolo} devised a \gls{cnn} model capable of performing extraction of region proposals as well as classification in a single run~\cite{redmon2016yolo}. Besides, the backbone \gls{cnn} model responsible for handling the visual input processes an entire image during the training and test time, allowing the implicit inclusion of contextual information about classes together with their visual representation. During the testing phase, after the single forward propagation through the neural network is executed, the \gls{nms} algorithm is employed to filter predictions to make sure that each object instance is detected just once. It is needless to say that \Gls{yolo} performs well at learning representations that make the generalization easier, which makes this approach well suited for a general object detector, as long as it has been trained on the target domain~\cite{redmon2016yolo}. Since the initial introduction of this approach~\cite{redmon2016yolo}, multiple updates have been brought forward, either from the main author himself~\cite{redmon2017yolo9000, redmon2018yolov3}, or from other researchers~\cite{wang2020yolov4, wong2019yolonano}. Such an interest supports the assertion that \gls{yolo} has great potential for further research as well as real-world applications. In our work, it is a prominent candidate for an object detector that we would train specifically for detecting vehicles and become a part of the object tracking pipeline.
-
-The main implementation aspect is the unification of separate components of object detection into a single neural network. Training is thus executed in an end-to-end fashion. In the original article~\cite{redmon2016yolo}, the model was pre-trained on ImageNet~\cite{deng2009imagenet} classification task at half the resolution of $224 \times 224$. When detecting, the resolution was doubled to get required $448 \times 448$ (\figstr{}~\ref{fig:YOLOGeneralIdea}). The network uses features from the entire image for the prediction of each \gls{bbox}. It also simultaneously predicts all \glspl{bbox} across all classes~\cite{redmon2016yolo}.
-
-As shown in \figstr{}~\ref{fig:YOLOBBOXESProgression}, the input image is divided into an $S \times S$ grid. Since most of the time an object will overlap multiple grid cells, the \emph{main} cell responsible for predicting the object will be the one the center of the object's \gls{bbox} falls into. Each \gls{bbox} prediction is evaluated by a confidence level computed as $\prob{\text{object}} \cdot \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}$, with $\vect{b}_{pred}$ and $\vect{b}_{truth}$ being the prediction and ground truth, respectively. If no object exists in a particular cell, the confidence should be equal to $0$. Each grid cell prediction also encapsulates $C$ conditional probabilities for each class under the assumption that the object is present, mathematically stated as $\probgiven{{\text{class}}_i}{\text{object}}$. But only one set of class probabilities is predicted per grid cell, regardless of the value of the hyperparameter $B$. This description can be concisely conveyed by the equation below:
-\begin{equation}
-    \begin{aligned}
-        \label{eq:YOLOCOnfidenceScores}
-         & \probgiven{{\text{class}}_i}{\text{object}}
-        \cdot
-        \prob{\text{object}}
-        \cdot
-        \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}
-        =                                              \\
-         & \prob{{\text{class}}_i}
-        \cdot
-        \func{IOU}{\vect{b}_{pred}, \vect{b}_{truth}}.
-    \end{aligned}
-\end{equation}
-This equality gives the class-specific confidence score which basically encodes both the probability of the $i$-th class appearing in a particular \gls{bbox} in conjunction with how well this predicted box fits the object.
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/yolo_general_idea.pdf}}
-    \caption[\Gls{yolo} processing pipeline]{Processing of images using \gls{yolo} requires the input image to have the resolution of $448 \times 448$ pixels. Then, a single run of the convolutional network happens, followed by the thresholding of the resulting detections according to their confidence. \externalsrc{\cite{redmon2016yolo}}}
-    \label{fig:YOLOGeneralIdea}
-\end{figure}
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/yolo_bboxes_progression.pdf}}
-    \caption[\Gls{yolo} detections]{This model treats detections as a regression problem. The image is divided into $S \times S$ grids, for each grid $B$ \glspl{bbox} are predicted with associated confidence, and for each box $C$ class probabilities are inferred. The prediction tensor has therefore size of $S^2 \times \rbrackets{5B + C}$. \externalsrc{\cite{redmon2016yolo}}}
-    \label{fig:YOLOBBOXESProgression}
-\end{figure}
-
-The network design reflects a standard practice in deep learning-based computer vision model, where a \gls{cnn} backbone is used to extract features followed by fully connected layers. In this case, the two fully connected layers are in charge of prediction of the output probabilities and coordinates (\figstr{}~\ref{fig:YOLOArchitecture}).
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/yolo_architecture.pdf}}
-    \caption[\Gls{yolo} architecture]{The \gls{yolo} model architecture consisting of 24 convoutional layers followed by two fully connected layers at the end. The alternation of $1 \times 1$ convolutional layers is used to reduce the feature space size. \externalsrc{\cite{redmon2016yolo}}}
-    \label{fig:YOLOArchitecture}
-\end{figure}
+\Gls{yolo} is a very popular single-stage object detector thanks to its ability to run in real-time and yet be very accurate. Its speed is primarily a consequence that \emph{it looks only once} at a given input image. Compared to region proposal-based approaches, where each object proposal has to be classified separately, resulting in multiple inferences by a potentially huge neural network model, the authors of \gls{yolo} devised a \gls{cnn} model capable of performing extraction of region proposals as well as classification in a single run~\cite{redmon2016yolo}. Besides, the backbone \gls{cnn} model responsible for handling the visual input processes an entire image during the training and test time, allowing the implicit inclusion of contextual information about classes together with their visual representation. During the testing phase, after the single forward propagation through the neural network is executed, the \gls{nms} algorithm is employed to filter predictions to make sure that each object instance is detected just once. Since the initial introduction of this approach~\cite{redmon2016yolo}, multiple updates have been brought forward, either from the main author himself~\cite{redmon2017yolo9000, redmon2018yolov3}, or from other researchers~\cite{wang2020yolov4, wong2019yolonano}. Such an interest supports the assertion that \gls{yolo} has great potential for further research as well as real-world applications. Despite its populality, for our experiments, we employed the paragon of two-stage object detection, discussed next.
 
 % ##############################################################################
 \subsection{Faster R-CNN}
@@ -126,51 +87,4 @@ As the endeavor is to diminish unnecessary computations, the proposals are not c
     \label{fig:FasterRCNNRPN}
 \end{figure}
 
-% ##############################################################################
-\subsection{Fully Convolutional Object Detection}
-\label{ssec:FullyConvolutionalObjectDetection}
-
-\todo[inline]{Emphasize centerness more since SiamMOT exploited it, too. Also mention Siamese architectures that also used it.}
-
-Recent research shows that utilizing fully convolutional networks provides many advantages. Not only the input can be of arbitrary size thanks to the absence of fully connected layers, but the number of hyperparameters is reduced, too. We will now discuss the \gls{fcos} model. This work was inspired by one-stage detectors such as \gls{yolo} and \gls{ssd} and by how semantic segmentation operates on the level of pixels. The proposed solution by~\cite{tian2019fcos} is anchor-free as well as proposal-free. The elimination of anchors avoids complicated computations related to anchor boxes, such as calculating overlapping regions during training. More importantly, anchor boxes come with many initialization-sensitive hyperparameters, namely their number and dimensions.
-
-\Gls{fcos} is built on top of \gls{fpn}~\cite{li2019weightedfpn}, which aggregates features from the backbone at multiple levels, reminiscing a pyramidal shape. Predictions are thereafter obtained across $5$ feature levels from the \gls{fpn} (\figstr{}~\ref{fig:FCOSFeaturePyramid}). \gls{fpn} makes use of the scale-invariant properties of feature pyramids, which enable object detection over a wide range of scales.
-
-Authors came up with a concept of \emph{centerness}, which describes the amount of deviation of the pixel's location from the object center (\figstr{}~\ref{fig:FCOSCenterness}). The reason for adding this score was to suppress locations that are further away from the object's center, because they produced low-quality \gls{bbox} predictions. This score is then used as a weighting factor for the class prediction score. Let $l^*$, $t^*$, $r^*$ and $b^*$ be the regression targets for the box. Then the \emph{centerness} $\func{C}{\cdot}$ is computed as
-
-\begin{equation}
-    \label{eq:CenternessDetection}
-    \func{C}{l^*, t^*, r^*, b^*} =
-    \sqrt{
-        \frac{
-            \func{\min}{l^*, r^*}
-        }{
-            \func{\max}{l^*, r^*}
-        }
-        \times
-        \frac{
-            \func{\min}{t^*, b^*}
-        }{
-            \func{\max}{t^*, b^*}
-        }
-    }.
-\end{equation}
-
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/theoretical_foundations/fcos_feature_pyramid.pdf}}
-    \caption[\Gls{fcos} architecture]{The network architecture of the \gls{fcos}. Feature maps denoted by $C3$, $C4$ and $C5$ belong to the backbone network. Features at the levels from $P3$ to $P7$ are used to make final predictions. For each of these feature maps, the shared head computes the classification (foreground/background disrimination), the \emph{centerness} score and \gls{bbox} regression. \externalsrc{\cite{tian2019fcos}}}
-    \label{fig:FCOSFeaturePyramid}
-\end{figure}
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.25\linewidth]{figures/theoretical_foundations/fcos_centerness.pdf}}
-    \caption[Centerness visualization]{Red, blue, and other colors denote $1$, $0$ and the values between them, respectively. Center-ness is calculated as given by eqiation~\ref{eq:CenternessDetection} and decays from $1$ to $0$ as the location deviates from the center of the object. Best viewed in color. \externalsrc{\cite{tian2019fcos}}}
-    \label{fig:FCOSCenterness}
-\end{figure}
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/fcos_detection_demo.pdf}}
-    \caption[\Gls{fcos} predictions]{On the left, the model predicts for each pixel in the image a $4D$ vector $\sbrackets{l, t, r, b}^T$ encoding the \gls{bbox} dimensions (supervised by the ground-truth one during the training). On the right, there is a demonstration of possible ambiguity when a pixel resides within more than just one \gls{bbox}. In that case, a decision has to be made which box should be regressed to. \externalsrc{\cite{tian2019fcos}}}
-    \label{fig:FCOSDetectionDemo}
-\end{figure}
+This architecture is especially important for this treatise as it formed a base object detector for the multi-object tracker with which we conducted the majority of our object tracking research.
