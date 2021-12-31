@@ -1,5 +1,14 @@
-Apply \datasetname{} to all the mentionings of datasets.
+Remove sections:
+    YOLO (only mention it briefly)
+    SSD (brief)
+    FCOS (remove it altogether)
+    Training Embeddings Using Advesarial Learning
+    Important Curves
+    Predicting Motion (Kalman and Particle Filter)
+    Optical Flow
 
-Fix the "The key concept of the SSD framework" images (\imgpartdesc{a}, \imgpartdesc{b} and \imgpartdesc{c} are given in the image)/
+Add more information to sections:
+    Faster R-CNN
+    Siamese Tracking
 
-Use $2D$ and $3D$ instead of 2D and 3D.
+Make figure short captions even shorter.

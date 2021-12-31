@@ -18,7 +18,7 @@ All our test scenarios demonstrated the following trend. On average, the homogra
 \subsubsection{Implementation Details}
 \label{sssec:HomographyImplementation}
 
-Our proposed algorithm can extend any homography estimation method that exploits point correspondences. For demonstration, we adopted time-tested implementations from the OpenCV~$4.4.0$ library~\cite{bradski2008learning}. Each homography was estimated by the \srcfuncname{findHomography} function which employs DLT~\cite{abdel2015direct} algorithm for $k = 4$ and RANSAC~\cite{fischler1981random} algorithm for $k > 4$, where $k$ is the size of the point correspondences set. Each optimal similarity transformation between two $2$D point sets was estimated by the \srcfuncname{estimateAffinePartial2D}, which also utilizes RANSAC for robustness. We always used default parameters.
+Our proposed algorithm can extend any homography estimation method that exploits point correspondences. For demonstration, we adopted time-tested implementations from the OpenCV~$4.4.0$ library~\cite{bradski2008learning}. Each homography was estimated by the \srcfuncname{findHomography} function which employs DLT~\cite{abdel2015direct} algorithm for $k = 4$ and RANSAC~\cite{fischler1981ransac} algorithm for $k > 4$, where $k$ is the size of the point correspondences set. Each optimal similarity transformation between two $2$D point sets was estimated by the \srcfuncname{estimateAffinePartial2D}, which also utilizes RANSAC for robustness. We always used default parameters.
 
 \subsection{Dataset Creation}
 \label{ssec:HomographyDatasetCreation}
@@ -68,15 +68,11 @@ We evaluated the accuracy of our method by measuring the reprojection error usin
         \func{e}{\warpedpix_{h, 1}, \origpix_{h, 1}} & \dots & \func{e}{\warpedpix_{h, w}, \origpix_{h, w}}
     \end{bmatrix},
 \end{equation}
-
-\noindent where
-
+where
 \begin{equation}
     \func{e}{\warpedpix, \origpix} = \euclnorm{\H \warpedpix - \origpix}.
 \end{equation}
-
-\noindent To express the reprojection error as a single number for the whole image, we adopted an arithmetic mean of all the values in the error grid above, so
-
+To express the reprojection error as a single number for the whole image, we adopted an arithmetic mean of all the values in the error grid above, so
 \begin{equation}
     \label{eq:ReprojectionErrorSingle}
     \xi_{\text{reproj}} =
@@ -91,7 +87,7 @@ We evaluated the accuracy of our method by measuring the reprojection error usin
 
 On the input, we have $m$ markers (section~\ref{ssec:HomographyDatasetCreation}) and thus an $m$-to-$1$ point correspondence. Each marker provides its unique homography. Our goal is to quantify the relative improvement in the reprojection error over the baseline when the $k$-th ranked homography is used for rectification. Even though we are primarily concerned only with the single, top-performing homography, we evaluate the entire ranking to demonstrate stable behavior.
 
-We evaluated our homography ranking in terms of reprojection error improvements against the existing approaches based on the isolated homography estimation represented by OpenCV~\cite{bradski2008learning} implementation. Since our method provides a ranking, we compare our performance against a random marker selection based on uniform probability distribution. We refer to this performance as the ``baseline''; an unbiased marker selection. To obtain the aforementioned baseline, we evaluated the reprojection error \eqref{eq:ReprojectionErrorSingle} for each marker in isolation and computed the arithmetic mean of these values. When we executed our proposed algorithm, we got the full ordering of markers by their score value computed using the proposed criterion \eqref{eq:HomographyScoreFunction}. We expected that if the first marker were used to rectify the image, then the reprojection error would be minimal (and lower than the baseline error). If any subsequent marker in the given order were used instead, the reprojection error would increase.
+We evaluated our homography ranking in terms of reprojection error improvements against the existing approaches based on the isolated homography estimation represented by OpenCV~\cite{bradski2008learning} implementation. Since our method provides a ranking, we compare our performance against a random marker selection based on uniform probability distribution. We refer to this performance as the ``baseline''; an unbiased marker selection. To obtain the aforementioned baseline, we evaluated the reprojection error \ref{eq:ReprojectionErrorSingle} for each marker in isolation and computed the arithmetic mean of these values. When we executed our proposed algorithm, we got the full ordering of markers by their score value computed using the proposed criterion \ref{eq:HomographyScoreFunction}. We expected that if the first marker were used to rectify the image, then the reprojection error would be minimal (and lower than the baseline error). If any subsequent marker in the given order were used instead, the reprojection error would increase.
 
 We computed the relative improvement in \% for each $k$-th homography according to the baseline performance. Each test scenario was evaluated separately. For each test instance, we obtained a $k$-dimensional vector where its elements represented a percentual improvement at each $k$-th position. We represented our data as a $t \times k$ matrix, where $t$ was the number of test instances. We treated each column separately to compute the statistics. Our evaluation algorithm is described in Algorithm~\ref{alg:EvaluationAlgorithm}. For simplicity, show an evaluation of a single instance.
 
@@ -117,7 +113,7 @@ We computed the relative improvement in \% for each $k$-th homography according 
 
         \For{$i \gets 1, \dots , m$}
         \State $\meanerrs \left[ i \right] \gets $ $\xi_{\text{reproj}}$
-        \Comment{equation \eqref{eq:ReprojectionErrorSingle}}
+        \Comment{equation \ref{eq:ReprojectionErrorSingle}}
 
         \State $e_b \gets e_b + \meanerrs \left[ i \right]$
         \EndFor
