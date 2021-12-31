@@ -13,7 +13,7 @@ In mathematical terms, the goal of a neural network is to approximate some unkno
 The name \emph{feedforward} is derived from the fact that the information flows through the function being evaluated from $\vx$, through the intermediate computations, and ﬁnally to the output $\vy$. Moreover, the feedforward neural networks are called networks since they are typically represented as a composition of multiple different functions. Such a model can be described with a directed acyclic graph denoting the sequential composition of several functions. More concretely, we might have three functions $\suprbrackets{f}{1}$, $\suprbrackets{f}{2}$ and $\suprbrackets{f}{3}$, forming a chain, $\func{f}{\vx} = \func{\suprbrackets{f}{3}}{\func{\suprbrackets{f}{2}}{\func{\suprbrackets{f}{1}}{\vx}}}$. These chain structures are the most commonly used structures in neural network models~\cite{goodfellow2016dl} (see \figstr{}~\ref{fig:webfcarchitecture}). Deep machine learning consists of multiple such layers of neurons stacked onto each other that are trained using the \emph{backpropagation} algorithm~\cite{rumelhart1986backprop}. Our work will rely heavily upon the aforementioned deep neural networks, especially convolutional neural networks, discussed next.
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/typical_fcn_architecture.pdf}}
+    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/typical_fcn_architecture.pdf}}
     \caption[A typical FC architecture]{An illustration of a typical fully connected neural network. \externalsrc{\cite{webfcarchitecture}}}
     \label{fig:webfcarchitecture}
 \end{figure}

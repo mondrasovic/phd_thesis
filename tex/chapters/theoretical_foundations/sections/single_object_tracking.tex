@@ -1,7 +1,7 @@
 \section{Visual Object Tracking}
 \label{sec:VisualObjectTracking}
 
-In this section, we will focus on the \emph{main topic} of this thesis: \textbf{tracking objects visually}. For simplicity, we will first introduce works within the single object tracking category. Section~\ref{sec:MultiObjectTracking} will continue with multiple object tracking.
+In this section, we will focus on the \emph{main topic} of this thesis: \textbf{tracking objects visually}. For simplicity, we will first introduce works within the single object tracking category. \sectionstr{}~\ref{sec:MultiObjectTracking} will continue with multiple object tracking.
 
 Many research activities have been devoted to dealing with tracking of objects where visual input is the only information a model is provided with. Since the field of computer vision as a whole has transitioned from manual feature engineering in combination with shallow machine learning algorithms to using deep neural networks in end-to-end style, \gls{vot} as a subfield is no exception. We are going to discuss primarily \gls{sota} approaches, and if we do mention older, maybe even obsolete methods, it will be only for the sake of reference and historical motivation. Furthermore, unless stated otherwise, we will assume a general object tracking model.
 
@@ -13,7 +13,7 @@ At a time of publishing~\cite{held2016goturn}, most generic object trackers requ
 Given an initial state in a form of a \gls{bbox} belonging to the first frame (a search region), the network then crops a new region in the next frame and tries to find the location of the target object within this region. It practically performs a comparison of the current search region given the predicted target location from the previous frame. The previous frame is cropped and scaled so that it is centered on the target object. A small padding is made to allow for contextual information (see \figstr{}~\ref{fig:GOTURNFramework}). A key concept to highlight is that \gls{goturn} addresses the tracking as a box regression problem. In contrast, as will be presented later, similarity learning performs even better (section~\ref{ssec:TrackingUsingSiameseNetworks}).
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/goturn_framework.pdf}}
+    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/goturn_framework.pdf}}
     \caption[\Gls{goturn} architecture]{The architecture of \gls{goturn} showing the input as a search region from the current frame where the target from the previous frame is to be searched for. The network essentially learns to localize the target within the cropped region. \externalsrc{\cite{held2016goturn}}}
     \label{fig:GOTURNFramework}
 \end{figure}
@@ -74,7 +74,7 @@ Authors of~\cite{bertinetto2016siamfc} approved of the idea that visual feature 
 Let $\gamma$ be a transformation that extracts visual features from the input, and $g$ be the function that combines two representations produced by the function $\gamma$. Siamese networks apply this identical transformation $\gamma$ to both inputs, search image $x$ and exemplar image $z$, and then combine the result as $\func{f}{x, z} = \func{g}{\func{\gamma}{x}, \func{\gamma}{z}}$. As such, when trivial distance or similarity measure is computed by the function $g$, then $\gamma$ can be deemed as the already introduced embedding.
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/fully_cnn_siam_tracking_architecture.pdf}}
+    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/fully_cnn_siam_tracking_architecture.pdf}}
     \caption[\modelname{Siam-FC} architecture]{The fully-convolutional Siamese architecture produces a scalar-valued score map, the size of which depends on the size of the search image. The similarity function is computed for all sub-windows within the search image and stored in a 2D score map, rather than just a pure 1D embedding vector. This computation requires only one evaluation. In this image, the red and blue pixels in the output score map represent similarity values for the two sub-windows on the input. Best viewed in color. \externalsrc{\cite{bertinetto2016siamfc}}}
     \label{fig:FullyCNNSiamTrackingArch}
 \end{figure}

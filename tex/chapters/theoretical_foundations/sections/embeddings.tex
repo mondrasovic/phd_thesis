@@ -53,7 +53,7 @@ The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The
 \subsubsection{Triplet Loss}
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/triplet_loss_model_structure.pdf}}
+    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/triplet_loss_model_structure.pdf}}
     \caption[Triplet loss architecture]{A model structure developed by~\cite{schroff2015facenet}. This network consists of a batch input layer and a deep \gls{cnn} followed by an $L_2$ normalization, which produces the final embedding. A triplet loss is used during the training. \externalsrc{\cite{schroff2015facenet}}}
     \label{fig:TripletLossModelStructure}
 \end{figure}
@@ -79,7 +79,7 @@ to hold true. The triplet loss function is therefore defined as~\cite{schroff201
 During the training using the triplet loss, the model should learn to push negative samples further away from the positive samples, ideally exceeding the margin $\alpha$. Assuming a situation when the negative sample is mapped closer than a positive sample, the training should result in the desired situation of bringing the positive sample closer while pushing the negative one further (see \figstr{}~\ref{fig:TripletLossLearningProcess}).
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/triplet_loss_learning_process.pdf}}
+    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/triplet_loss_learning_process.pdf}}
     \caption[Triplet loss learning]{The objective is to learn embeddings such that the anchor is closer to the positive example than it is to the negative example by some specified margin value. The triplet loss, therefore, minimizes the distance between the anchor and the positive sample of the same identity and maximizes the distance between the anchor and the negative sample of a different identity. \externalsrc{\cite{schroff2015facenet}}}
     \label{fig:TripletLossLearningProcess}
 \end{figure}
@@ -142,7 +142,7 @@ Given a training set, the task is to produce reasonable triplets off-line, for i
 Online mining is performed by selecting the hard positive/negative exemplars from within a mini-batch (fig. \ref{fig:TripletArchitectureOnlineMining}). A condition that a minimum number of exemplars for any identity is present in each mini-batch has to be met. For example, Schroff et. al.~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per mini-batch. Let $P$ be the number of different objects/identities (people, vehicles, etc.) and $K$ be the number of different images for a concrete identity (e.g. different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
 
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.55\linewidth]{figures/theoretical_foundations/triplet_architecture_online_mining.pdf}}
+    \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/triplet_architecture_online_mining.pdf}}
     \caption[Triplet loss online mining architecture]{The architecture of a triplet network where an online triplet loss function is used for training. In this architecture, no weight sharing is required as the triplet selection happens \emph{online} solely in the loss function.}
     \label{fig:TripletArchitectureOnlineMining}
 \end{figure}
