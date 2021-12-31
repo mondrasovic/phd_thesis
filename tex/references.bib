@@ -12,26 +12,6 @@
   numpages  = 14,
   keywords  = {physics-based character animation, computer vision, video imitation, reinforcement learning, motion reconstruction}
 }
-@article{arulampalam2007particlefilter,
-  title     = {{A tutorial on particle filters for online nonlinear/nongaussian bayesian tracking}},
-  author    = {Arulampalam, M. Sanjeev and Maskell, Simon and Gordon, Neil and Clapp, Tim},
-  year      = 2007,
-  journal   = {Bayesian Bounds for Parameter Estimation and Nonlinear Filtering/Tracking},
-  publisher = {IEEE},
-  volume    = 50,
-  number    = 2,
-  pages     = {723--737},
-  doi       = {10.1109/9780470544198.ch73},
-  isbn      = 9780470544198,
-  abstract  = {Increasingly, for many application areas, it is becoming important to include elements of nonlinearity and non-Gaussianity in order to model accurately the underlying dynamics of a physical system. Moreover, it is typically crucial to process data on-line as it arrives, both from the point of view of storage costs as well as for rapid adaptation to changing signal characteristics. In this paper, we review both optimal and suboptimal Bayesian algorithms for nonlinear/non-Gaussian tracking problems, with a focus on particle filters. Particle filters are sequential Monte Carlo methods based on point mass (or “particle”) representations of probability densities, which can be applied to any state-space model and which generalize the traditional Kalman filtering methods. Several variants of the particle filter such as SIR, ASIR, and RPF are introduced within a generic framework of the sequential importance sampling (SIS) algorithm. These are discussed and compared with the standard EKF through an illustrative example.},
-  keywords  = {Approximation algorithms,Approximation methods,Bayesian methods,Filtering algorithms,Particle filters}
-}
-@phdthesis{bergman1999recursive,
-  title  = {{Recursive Bayesian estimation: Navigation and tracking applications}},
-  author = {Bergman, Niclas},
-  year   = 1999,
-  school = {Link{\"o}ping University}
-}
 @article{bertinetto2016siamfc,
   title         = {{Fully-convolutional siamese networks for object tracking}},
   author        = {Bertinetto, Luca and Valmadre, Jack and Henriques, Jo{\~{a}}o F. and Vedaldi, Andrea and Torr, Philip H.S.},
@@ -92,16 +72,6 @@
   archiveprefix = {arXiv},
   arxivid       = {1704.04503},
   eprint        = {1704.04503}
-}
-@article{broida1986estimation,
-  title   = {{Estimation of Object Motion Parameters from Noisy Images}},
-  author  = {Broida, Ted J. and Chellappa, Rama},
-  year    = 1986,
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  volume  = {PAMI-8},
-  number  = 1,
-  pages   = {90--99},
-  doi     = {10.1109/TPAMI.1986.4767755}
 }
 @article{comaniciu2003kernel,
   title   = {{Kernel-based object tracking}},
@@ -174,29 +144,6 @@
   biburl     = {https://dblp.org/rec/journals/corr/abs-1906-04567.bib},
   bibsource  = {dblp computer science bibliography, https://dblp.org}
 }
-@article{dosovitskiy2015flownet,
-  title         = {{FlowNet: Learning optical flow with convolutional networks}},
-  author        = {Dosovitskiy, Alexey and Fischery, Philipp and Ilg, Eddy and Hausser, Philip and Hazirbas, Caner and others},
-  year          = 2015,
-  journal       = {Proceedings of the IEEE International Conference on Computer Vision},
-  volume        = {2015 Inter},
-  pages         = {2758--2766},
-  doi           = {10.1109/ICCV.2015.316},
-  isbn          = 9781467383912,
-  issn          = 15505499,
-  abstract      = {Convolutional neural networks (CNNs) have recently been very successful in a variety of computer vision tasks, especially on those linked to recognition. Optical flow estimation has not been among the tasks CNNs succeeded at. In this paper we construct CNNs which are capable of solving the optical flow estimation problem as a supervised learning task. We propose and compare two architectures: a generic architecture and another one including a layer that correlates feature vectors at different image locations. Since existing ground truth data sets are not sufficiently large to train a CNN, we generate a large synthetic Flying Chairs dataset. We show that networks trained on this unrealistic data still generalize very well to existing datasets such as Sintel and KITTI, achieving competitive accuracy at frame rates of 5 to 10 fps.},
-  archiveprefix = {arXiv},
-  arxivid       = {1504.06852},
-  eprint        = {1504.06852}
-}
-@incollection{doucet2001introduction,
-  title     = {{An introduction to sequential Monte Carlo methods}},
-  author    = {Doucet, Arnaud and De Freitas, Nando and Gordon, Neil},
-  year      = 2001,
-  booktitle = {Sequential Monte Carlo methods in practice},
-  publisher = {Springer},
-  pages     = {3--14}
-}
 @article{everingham2010pascalvoc,
   title   = {{The Pascal Visual Object Classes (VOC) Challenge}},
   author  = {Everingham, M. and Van~Gool, L. and Williams, C. K. I. and Winn, J. and Zisserman, A.},
@@ -206,14 +153,6 @@
   volume  = 88,
   number  = 2,
   pages   = {303--338}
-}
-@incollection{fleet2006optical,
-  title     = {{Optical flow estimation}},
-  author    = {Fleet, David and Weiss, Yair},
-  year      = 2006,
-  booktitle = {Handbook of mathematical models in computer vision},
-  publisher = {Springer},
-  pages     = {237--257}
 }
 @book{forsyth2012computer,
   title     = {{Computer Vision - A Modern Approach, Second Edition.}},
@@ -282,18 +221,6 @@
   title        = {{GOT-10k}},
   note         = {Accessed: 2020-09-07},
   howpublished = {\url{http://got-10k.aitestunion.com/}}
-}
-@inproceedings{farneback2003motion,
-  title     = {{Two-Frame Motion Estimation Based on Polynomial Expansion}},
-  author    = {Farneback, Gunnar},
-  year      = 2003,
-  booktitle = {Image Analysis},
-  publisher = {Springer Berlin Heidelberg},
-  address   = {Berlin, Heidelberg},
-  pages     = {363--370},
-  isbn      = {978-3-540-45103-7},
-  editor    = {Bigun, Josef and Gustavsson, Tomas},
-  abstract  = {This paper presents a novel two-frame motion estimation algorithm. The first step is to approximate each neighborhood of both frames by quadratic polynomials, which can be done efficiently using the polynomial expansion transform. From observing how an exact polynomial transforms under translation a method to estimate displacement fields from the polynomial expansion coefficients is derived and after a series of refinements leads to a robust algorithm. Evaluation on the Yosemite sequence shows good results.}
 }
 @misc{guo2019siamcar,
   title         = {{SiamCAR: Siamese Fully Convolutional Classification and Regression for Visual Tracking}},
@@ -416,16 +343,6 @@
   booktitle = {CVPR09},
   bibsource = {http://www.image-net.org/papers/deng2009imagenet.bib}
 }
-@article{isard1998condensation,
-  title     = {{Condensation—conditional density propagation for visual tracking}},
-  author    = {Isard, Michael and Blake, Andrew},
-  year      = 1998,
-  journal   = {International journal of computer vision},
-  publisher = {Springer},
-  volume    = 29,
-  number    = 1,
-  pages     = {5--28}
-}
 @article{jalal2012sotavot,
   title   = {{The State-of-the-Art in Visual Object Tracking.}},
   author  = {Jalal, Anand and Singh, Vrijendra},
@@ -435,19 +352,6 @@
   volume  = 36,
   pages   = {227--248},
   issn    = {03505596}
-}
-@book{james2013itslwithr,
-  title     = {{An Introduction to Statistical Learning: with Applications in R }},
-  author    = {James, Gareth and Witten, Daniela and Hastie, Trevor and Tibshirani, Robert},
-  year      = 2013,
-  publisher = {Springer},
-  url       = {https://faculty.marshall.usc.edu/gareth-james/ISL/},
-  added-at  = {2019-10-12T20:03:56.000+0200},
-  biburl    = {https://www.bibsonomy.org/bibtex/2444186c86d18bddb4433c12fa126f6be/lopusz_kdd},
-  interhash = {b3febabdc45a8629023cee7323dfbd86},
-  intrahash = {444186c86d18bddb4433c12fa126f6be},
-  keywords  = {general_machine_learning},
-  timestamp = {2019-10-12T23:45:37.000+0200}
 }
 @article{jiyan2007robustocclusion,
   title    = {{Robust occlusion handling in object tracking}},
@@ -483,13 +387,6 @@
   archiveprefix = {arXiv},
   arxivid       = {1812.04948},
   eprint        = {1812.04948}
-}
-@incollection{kim2018introduction,
-  title     = {{Introduction to Kalman filter and its applications}},
-  author    = {Kim, Youngjoo and Bang, Hyochoong},
-  year      = 2018,
-  booktitle = {Introduction and Implementations of the Kalman Filter},
-  publisher = {IntechOpen}
 }
 @misc{webkittiobjdetectiondataset,
   title        = {{KITTI Object Detection}},
@@ -553,36 +450,6 @@
   arxivid       = {1901.01015},
   eprint        = {1901.01015}
 }
-@article{kunsch2013particlefilter,
-  title         = {{Particle filters}},
-  author        = {K{\"{u}}nsch, Hans R.},
-  year          = 2013,
-  journal       = {Bernoulli},
-  volume        = 19,
-  number        = 4,
-  pages         = {1391--1403},
-  doi           = {10.3150/12-BEJSP07},
-  issn          = 13507265,
-  abstract      = {This is a short review of Monte Carlo methods for approximating filter distributions in state space models. The basic algorithm and different strategies to reduce imbalance of the weights are discussed. Finally, methods for more difficult problems like smoothing and parameter estimation and applications outside the state space model context are presented. {\textcopyright} 2013 ISI/BS.},
-  archiveprefix = {arXiv},
-  arxivid       = {1309.7807},
-  eprint        = {1309.7807},
-  keywords      = {Ensemble Kalman filter,Importance sampling and resampling,Sequential Monte Carlo,Smoothing algorithm,State space models}
-}
-@article{lealtaixe2016siameseassoc,
-  title         = {{Learning by Tracking: Siamese CNN for Robust Target Association}},
-  author        = {Leal-Taixe, Laura and Canton-Ferrer, Cristian and Schindler, Konrad},
-  year          = 2016,
-  journal       = {IEEE Computer Society Conference on Computer Vision and Pattern Recognition Workshops},
-  pages         = {418--425},
-  doi           = {10.1109/CVPRW.2016.59},
-  isbn          = 9781467388504,
-  issn          = 21607516,
-  abstract      = {This paper introduces a novel approach to the task of data association within the context of pedestrian tracking, by introducing a two-stage learning scheme to match pairs of detections. First, a Siamese convolutional neural network (CNN) is trained to learn descriptors encoding local spatio-temporal structures between the two input image patches, aggregating pixel values and optical flow information. Second, a set of contextual features derived from the position and size of the compared input patches are combined with the CNN output by means of a gradient boosting classifier to generate the final matching probability. This learning approach is validated by using a linear programming based multi-person tracker showing that even a simple and efficient tracker may outperform much more complex models when fed with our learned matching probabilities. Results on publicly available sequences show that our method meets state-of-the-art standards in multiple people tracking.},
-  archiveprefix = {arXiv},
-  arxivid       = {1604.07866},
-  eprint        = {1604.07866}
-}
 @misc{lealtaixe2017tracking,
   title         = {{Tracking the Trackers: An Analysis of the State of the Art in Multiple Object Tracking}},
   author        = {Laura Leal-Taixé and Anton Milan and Konrad Schindler and Daniel Cremers and Ian Reid and others},
@@ -601,21 +468,6 @@
   isbn     = 9781538664209,
   issn     = 10636919,
   abstract = {Visual object tracking has been a fundamental topic in recent years and many deep learning based trackers have achieved state-of-the-art performance on multiple benchmarks. However, most of these trackers can hardly get top performance with real-time speed. In this paper, we propose the Siamese region proposal network (Siamese-RPN) which is end-to-end trained off-line with large-scale image pairs. Specifically, it consists of Siamese subnetwork for feature extraction and region proposal subnetwork including the classification branch and regression branch. In the inference phase, the proposed framework is formulated as a local one-shot detection task. We can pre-compute the template branch of the Siamese subnetwork and formulate the correlation layers as trivial convolution layers to perform online tracking. Benefit from the proposal refinement, traditional multi-scale test and online fine-tuning can be discarded. The Siamese-RPN runs at 160 FPS while achieving leading performance in VOT2015, VOT2016 and VOT2017 real-time challenges.}
-}
-@article{li2019weightedfpn,
-  title         = {{Weighted feature pyramid networks for object detection}},
-  author        = {Li, Xiaohan and Lai, Taotao and Wang, Shuaiyu and Chen, Quan and Yang, Changcai and others},
-  year          = 2019,
-  journal       = {Proceedings - 2019 IEEE Intl Conf on Parallel and Distributed Processing with Applications, Big Data and Cloud Computing, Sustainable Computing and Communications, Social Computing and Networking, ISPA/BDCloud/SustainCom/SocialCom 2019},
-  pages         = {1500--1504},
-  doi           = {10.1109/ISPA-BDCloud-SustainCom-SocialCom48970.2019.00217},
-  isbn          = 9781728143286,
-  abstract      = {Feature Pyramid Networks (FPN) is a popular feature extraction. However, FPN and its variants do not investigate the influence of resolution information and semantic information in the object detection. Thus, FPN and its variants cannot detect some objects on challenging images. In this paper, based on FPN, we propose to use gaussian kernel function to assign different weight values to semantic information and resolution information for different images in the object detection. The proposed method, is called a Weighted Feature Pyramid Network (WFPN), and shows significant improvement over the traditional feature pyramids in several applications. Using WFPN in Faster R-CNN system, the proposed method achieves better performance on the PASCAL detection benchmark.},
-  archiveprefix = {arXiv},
-  arxivid       = {arXiv:1612.03144v2},
-  eprint        = {arXiv:1612.03144v2},
-  file          = {:C$\backslash$:/Users/Milan/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Li~\etal{} - 2019 - Weighted feature pyramid networks for object detection.pdf:pdf},
-  keywords      = {Gaussian kernel function,Resolution information,Semantic information,Weighted feature pyramid networks}
 }
 @article{lin2014mscoco,
   title         = {{Microsoft COCO: Common objects in context}},
@@ -704,18 +556,6 @@
   doi      = {10.1109/iccv.1999.790410},
   abstract = {An object recognition system has been developed that uses a new class of local image features. The features are invariant to image scaling, translation, and rotation, and partially invariant to illumination changes and affine or 3D projection. These features share similar properties with neurons in inferior temporal cortex that are used for object recognition in primate vision. Features are efficiently detected through a staged filtering approach that identifies stable points in scale space. Image keys are created that allow for local geometric deformations by representing blurred image gradients in multiple orientation planes and at multiple scales. The keys are used as input to a nearest-neighbor indexing method that identifies candidate object matches. Final verification of each match is achieved by finding a low-residual least-squares solution for the unknown model parameters. Experimental results show that robust object recognition can be achieved in cluttered partially-occluded images with a computation time of under 2 seconds.}
 }
-@inproceedings{lucas1981lucaskanade,
-  title     = {{An Iterative Image Registration Technique with an Application to Stereo Vision}},
-  author    = {Lucas, Bruce D. and Kanade, Takeo},
-  year      = 1981,
-  booktitle = {Proceedings of the 7th International Joint Conference on Artificial Intelligence - Volume 2},
-  location  = {Vancouver, BC, Canada},
-  publisher = {Morgan Kaufmann Publishers Inc.},
-  address   = {San Francisco, CA, USA},
-  series    = {IJCAI'81},
-  pages     = {674–679},
-  numpages  = 6
-}
 @article{manmatha2017samplingmatters,
   title         = {{Sampling Matters in Deep Embedding Learning}},
   author        = {Manmatha, R. and Wu, Chao Yuan and Smola, Alexander J. and Krahenbuhl, Philipp},
@@ -730,15 +570,6 @@
   archiveprefix = {arXiv},
   arxivid       = {1706.07567},
   eprint        = {1706.07567}
-}
-@article{mihaylova2007object,
-  title     = {{Object tracking by particle filtering techniques in video sequences}},
-  author    = {Mihaylova, Lyudmila and Brasnett, Paul and Canagarajah, Nishan and Bull, David},
-  year      = 2007,
-  journal   = {Advances and challenges in multisensor data and information processing},
-  publisher = {Citeseer},
-  volume    = 8,
-  pages     = {260--268}
 }
 @misc{webmotchallenge,
   title        = {{MOT challenge}},
@@ -821,11 +652,6 @@
   posted-at            = {2008-01-15 19:21:54},
   priority             = 4
 }
-@misc{webopticalflowimage,
-  title        = {{Optical Flow Illustration}},
-  note         = {Accessed: 2020-09-07},
-  howpublished = {\url{https://docs.opencv.org/3.4/d4/dee/tutorial_optical_flow.html}}
-}
 @inproceedings{barath2016novel,
   title     = {Novel Ways to Estimate Homography from Local Affine Transformations},
   author    = {Daniel Barath and Levente Hajder},
@@ -873,18 +699,6 @@
   pages    = {41.1--41.12},
   doi      = {10.5244/c.29.41},
   abstract = {The goal of this paper is face recognition – from either a single photograph or from a set of faces tracked in a video. Recent progress in this area has been due to two factors: (i) end to end learning for the task using a convolutional neural network (CNN), and (ii) the availability of very large scale training datasets. We make two contributions: first, we show how a very large scale dataset (2.6M im- ages, over 2.6K people) can be assembled by a combination of automation and human in the loop, and discuss the trade off between data purity and time; second, we traverse through the complexities of deep network training and face recognition to present meth- ods and procedures to achieve comparable state of the art results on the standard LFW and YTF face benchmarks.}
-}
-@inproceedings{wang2011particlevot,
-  title     = {{Particle Filters for Visual Tracking}},
-  author    = {Wang, Fasheng},
-  year      = 2011,
-  booktitle = {Advanced Research on Computer Science and Information Engineering},
-  publisher = {Springer Berlin Heidelberg},
-  address   = {Berlin, Heidelberg},
-  pages     = {107--112},
-  isbn      = {978-3-642-21402-8},
-  editor    = {Shen, Gang and Huang, Xiong},
-  abstract  = {Particle filter has grown to be a standard tool for solving visual tracking problems in real world applications. This paper discusses in detail the application of particle filter in visual tracking, including single object and multiple objects tracking. Choosing a good proposal distribution for the tracking algorithm in particle filtering framework is the main focus of this paper. We also discussed the contributions related to dealing with occlusion, interaction, illumination change using improved particle filters. A conclusion is drawn in section 4.}
 }
 @misc{webpkuvehicledataset,
   title        = {{PKU VehicleID}},
@@ -986,18 +800,6 @@
   keywords  = {information_retrieval},
   timestamp = {2018-11-07T09:14:29.000+0100}
 }
-@article{shi1994goodfeatures,
-  title    = {{Good Features To Track}},
-  author   = {Shi, Jianbo and Tomasi, Carlo},
-  year     = 1994,
-  journal  = {Image (Rochester, N.Y.)},
-  pages    = {593--600},
-  doi      = {10.1109/CVPR.1994.323794},
-  isbn     = {0-8186-5825-8},
-  issn     = {1063-6919},
-  abstract = {No feature-based vision system can work unless good features can be identified and tracked from frame to frame. Although tracking itself is by and large a solved problem, selecting features that can be tracked well and correspond to physical points in the world is still hard. We propose a feature selection criterion that is optimal by construction because it is based on how the tracker works, and a feature monitoring method that can detect occlusions, disocclusions, and features that do not correspond to points in the world. These methods are based on a new tracking algorithm that extends previous Newton-Raphson style search methods to work under affine image transformations. We test performance with several simulations and experiments},
-  pmid     = 11968495
-}
 @article{schroff2015facenet,
   title         = {{FaceNet: A unified embedding for face recognition and clustering}},
   author        = {Schroff, Florian and Kalenichenko, Dmitry and Philbin, James},
@@ -1022,12 +824,6 @@
   abstract      = {In this work we investigate the effect of the convolutional network depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of increasing depth using an architecture with very small (3 × 3) convolution filters, which shows that a significant improvement on the prior-art configurations can be achieved by pushing the depth to 16–19 weight layers. These findings were the basis of our ImageNet Challenge 2014 submission, where our team secured the first and the second places in the localisation and classification tracks respectively. We also show that our representations generalise well to other datasets, where they achieve state-of-the-art results. We have made our two best-performing ConvNet models publicly available to facilitate further research on the use of deep visual representations in computer vision.},
   archiveprefix = {arXiv},
   arxivid       = {1409.1556}
-}
-@mastersthesis{stordal2008sequential,
-  title  = {{Sequential Monte Carlo Methods for Bayesian Filtering}},
-  author = {Stordal, Andreas St{\o}rksen},
-  year   = 2008,
-  school = {The University of Bergen}
 }
 @article{szegedy2015inception,
   title         = {{Going deeper with convolutions}},
@@ -1182,12 +978,6 @@
   arxivid       = {1812.05050},
   eprint        = {1812.05050},
   keywords      = {Deep Learning,Motion and Tracking,Vision Applications and Systems}
-}
-@misc{welch1995introduction,
-  title     = {{An introduction to the Kalman filter}},
-  author    = {Welch, Greg and Bishop, Gary and others},
-  year      = 1995,
-  publisher = {Citeseer}
 }
 @article{wong2019yolonano,
   title   = {{YOLO Nano: a Highly Compact You Only Look Once Convolutional Neural Network for Object Detection}},
