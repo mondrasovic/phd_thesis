@@ -62,9 +62,6 @@
 % Allow nested function calls.
 \MakeRobust{\Call}
 
-% Augmented references allowing use of "fig." and "eq." names, links to abbreviations, and much more.
-\usepackage{hyperref}
-
 % Change properties of titles for sections, paragraphs etc.
 \usepackage{titlesec}
 \titleformat{\paragraph}[runin]{\normalfont\normalsize\itshape}{\theparagraph}{1em}{}
@@ -85,12 +82,11 @@
 % https://tex.stackexchange.com/questions/287080/best-solution-for-acronyms-abbreviations-glossary-and-index
 \usepackage[acronyms,shortcuts]{glossaries}
 
-% The Harvard style bibliography.
-% \usepackage{natbib}
-
 % Change the color of references.
-\usepackage{hyperref}
-\hypersetup{colorlinks=true,allcolors=[rgb]{0,0,1}}
+\usepackage[colorlinks=true,
+            linkcolor=red,
+            urlcolor=green,
+            citecolor=blue]{hyperref}
 
 % Capitalize only the first letter (used with acronyms).
 \usepackage{stringstrings}
