@@ -148,7 +148,7 @@ The inference phase involves computation of the overall heat map for which a wei
 \end{equation}
 This introduces another hyperparameter $\lambda$ (where $0 < \lambda < 1$) that can in practice be reliably estimated from the validation dataset.
 
-The series of Siamese-based architectures for tracking continued with the idea of using the \gls{rpn}~\cite{li2018siamrpn} (see \sectionstr{}~\ref{ssec:FasterRCNN} for the same concept applied in object detection). Under the flag of end-to-end training, the \siamrpn{} model consists of a Siamese subnetwork for feature extraction (again, a duplicate of the \siamfc{}~\cite{bertinetto2016siamfc}) and \gls{rpn} as another subnetwork encompassing both classification and regression branch (\figstr{}~\ref{fig:SiamRPNNetArchitecture}). The notable contribution is that the proposed framework is formulated as a local one-shot detection task in the inference phase (the first work to make such a step) (\figstr{}~\ref{fig:SiamRPNOneShotDetection}). The template branch encodes the object appearance information for further foreground/background discrimination. Analogically, the \gls{bbox} from the first frame is the only exemplar for one-shot detection in the inference phase.
+The series of Siamese-based architectures for tracking continued with the idea of using the \gls{rpn}~\cite{li2018siamrpn} (see \sectionstr{}~\ref{ssec:FasterRCNN} for the same concept applied in object detection). Under the flag of end-to-end training, the \siamrpn{} model consists of a Siamese subnetwork for feature extraction (again, a duplicate of the \siamfc{}~\cite{bertinetto2016siamfc}) and \gls{rpn} as another subnetwork encompassing both classification and regression branch (see \figstr{}~\ref{fig:SiamRPNNetArchitecture}). The notable contribution is that the proposed framework is formulated as a local one-shot detection task in the inference phase (the first work to make such a step) (see \figstr{}~\ref{fig:SiamRPNOneShotDetection}). The template branch encodes the object appearance information for further foreground/background discrimination. Analogically, the \gls{bbox} from the first frame is the only exemplar for one-shot detection in the inference phase.
 
 The region proposal subnetwork contains a pair-wise correlation section as well as a supervision section. Let $k$ denote the number of anchors. Then, the model has to output $2k$ channels for the classification and $4k$ channels for the regression. Following the established notation, the Siamese subnetwork produces feature maps $\func{\gamma}{z}$ and $\func{\gamma}{x}$. The pair-wise correlation splits $\func{\gamma}{z}$ into $\sbrackets{\func{\gamma}{z}}_{cls}$ and $\sbrackets{\func{\gamma}{z}}_{reg}$ while increasing the no. of channels (\figstr{}~\ref{fig:SiamRPNNetArchitecture}). Conversely, $\func{\gamma}{x}$ is also split into $\sbrackets{\func{\gamma}{x}}_{cls}$ and $\sbrackets{\func{\gamma}{x}}_{reg}$, but the no. of channels remains unchanged. The correlation, when computed on both branches, is given by
 \begin{equation}
@@ -207,7 +207,7 @@ In this setting, this objective function can be re-written in terms of the Siame
         }
     }.
 \end{equation}
-The template branch provides training parameters to predict the kernel for the detection task, a typical example of the \emph{learning to learn} process. The template branch, therefore, embeds necessary category information into the kernel that is subsequently utilized for detection (\figstr{}~\ref{fig:SiamRPNOneShotDetection}). The last thing to consider is how to propose and then select the regions. One strategy is to discard boxes too far away from the object's center. A possible implementation is to keep $g \times g$ subregion of the $\subsup{A}{w \times h \times 2k}{cls}$ feature map resulting in $g \times g \times k$ anchors instead of $w \times h \times k$. This idea is the beginning of a further refined notion in future papers of the so-called \emph{centerness} that plays an important role in weighting \glspl{bbox}. Another strategy would be to use a cosine window to help in computing a penalty bound to a too large displacement in size and ratio. Afterwards, the \gls{nms} (section~\ref{ssec:NonMaximumSuppression}) is applied to get the final tracking \gls{bbox}.
+The template branch provides training parameters to predict the kernel for the detection task, a typical example of the \emph{learning to learn} process. The template branch, therefore, embeds necessary category information into the kernel that is subsequently utilized for detection (\figstr{}~\ref{fig:SiamRPNOneShotDetection}).
 
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/siam_rpn_one_shot_detection.pdf}}
@@ -238,169 +238,7 @@ As always, the \siamfc{}~\cite{bertinetto2016siamfc} was employed as the fundame
     \label{fig:SiamMaskArchitecture}
 \end{figure}
 
-Let $z$ and $x$ be the exemplar and the search image, respectively. Then, these two inputs are processed by the same \gls{cnn} $f_\theta$ to yield $g_\theta$ using the cross-correlation as follows:
-\begin{equation}
-    \label{eq:SiamMaskCrossCorrelation}
-    \func{g_\theta}{z, x} = \func{f_\theta}{z} \star \func{f_\theta}{x}.
-\end{equation}
-Authors contrived the term \gls{row} to represent each spatial element of the response map given by the left hand side of equation~\ref{eq:SiamMaskCrossCorrelation}. In that regard, the similarity between the exemplar $z$ and the $n$-th candidate window in $x$ is declared as $\func{\subsup{g}{\theta}{n}}{z, x}$. Throughout the training phase, $w \times h$ binary masks (one for each \gls{row}) using a trivial two-layer neural network $h_\phi$ are predicted. Let $\mtx{M_n}$ be the predicted segmentation mask corresponding to the $n$-th \gls{row},
-\begin{equation}
-    \mtx{M_n} = \func{h_\phi}{\func{\subsup{g}{\theta}{n}}{z, x}}.
-\end{equation}
-A ground-truth binary label $y_n \in \cbrackets{\pm 1}$ is assigned to each \gls{row} as well as pixel-wise ground-trith mask $\mtx{C_n}$ with dimensions $w \times h$. Let $\mtx{C}_n^{i,j} \in \cbrackets{\pm 1}$ denote the label corresponding to pixel at position $\rbrackets{i, j}$ within the segmentation mask in the $n$-th \gls{row}. The mask prediction task is driven by the binary logistic regression loss function $\mathcal{L}_{mask}$ over all \glspl{row}:
-\begin{equation}
-    \func{\mathcal{L}_{mask}}{\theta, \phi} =
-    \sum_n
-    \rbrackets{
-    \frac{1 + y_n}{2wh}
-    \sum_{i}
-    \sum_{j}
-    \func{\log}{1 + e^{-\mtx{C}_n^{i,j} \mtx{M}_n^{i,j}}}
-    }.
-\end{equation}
-
-An incremental improvement of \siammask{} model came when~\cite{chen2019rotbboxes} proposed a novel, efficient algorithm for the estimation of the \gls{bbox} rotation when the object segmentation mask is given. Particularly, a mask produced by the \siammask{} model, as this work builds on top of~\cite{wang2019siammask}, under the derived name \siammaske{}. In addition, their approach can be used to generate a rotated box ground truth from any segmentation datasets to train a rotation angle regression model.
-
-To estimate the rotation angle, they adopted the least-squared scheme as part of the ellipse fitting algorithm. Considering the standard conic equation
-\begin{equation}
-    ax^2 + bxy + cy^2 + dx + ey + f = 0,
-\end{equation}
-the ellipse can be formulated by adding a constraint
-\begin{equation}
-    b^2 - 4ac < 0,
-\end{equation}
-where $a$, $b$, $c$, $d$, $e$, and $f$ are the coefficients of the ellipse and $x$, $y$ represent any point on the ellipse. Let $\vectt{a}{a, b, c, d, e, f}$ and $\vectt{x}{x^2, xy, y^2, x, y, 1}$. The ellipse equation can then be written as
-\begin{equation}
-    \func{F}{\vect{x}} = \vect{x}^T\vect{a} = 0.
-\end{equation}
-Assume a dataset of $N$ points, $\mset{A} = \cbrackets{\rbrackets{x_1, y_1}, \rbrackets{x_2, y_2}, \dots, \rbrackets{x_N, y_N}}$, and a task of fitting an ellipse to the dataset $\mset{A}$. The goal is to find the coefficients of the vector $\vect{a}$, as determined by the objective function
-\begin{equation}
-    \underset{\vect{a}}{\argmin} \sum_{i = 1}^{N} {\func{F}{\vect{x}_i}}^2,
-\end{equation}
-
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.4\linewidth]{figures/theoretical_foundations/fast_vot_rot_bbox_ellipse.pdf}}
-    \caption[Ellipse notation]{Ellipse notation: $\rbrackets{x_0, y_0}$ is the center point around which the ellipse with semi-major axis $m$ and semi-minor axis $n$ is rotated by the angle $\theta$ in counter-clockwise direction. \externalsrc{\cite{chen2019rotbboxes}}}
-    \label{fig:FastVOTRotBBOXEllipse}
-\end{figure}
-where $\vect{x}^T = \sbrackets{\subsup{x}{i}{2}, x_i y_i, \subsup{y}{i}{2}, x_i, y_i, 1}$ and $\mset{A}_i = \rbrackets{x_i, y_i}$.
-
-For the upcoming description, we advise to follow the description for \figstr{}~\ref{fig:FastVOTRotBBOXFitting}. Once the coefficients are estimated, the rotation angle $\theta$ around the center point $\rbrackets{x_0, y_0}$ with semi-major $m$ and semi-minor axis $n$ are trivial to obtain (\figstr{}~\ref{fig:FastVOTRotBBOXEllipse}). The 2D affine transformation matrix
-\begin{equation}
-    \mtx{T} =
-    \begin{bmatrix}
-        \func{\cos}{\theta} &
-        \func{\sin}{\theta} &
-        \rbrackets{1 - \func{\cos}{\theta}}x_0 - \func{\sin}{\theta} y_0 \\
-        -\func{sin}{\theta} &
-        \func{\cos}{\theta} &
-        \func{\sin}{\theta} x_0 - \rbrackets{1 - \func{\cos}{\theta}} y_0
-    \end{bmatrix}
-\end{equation}
-is thereafter used to produce the set $\mset{M'}$, which contains the transformed (rotated and translated) points belonging to the input segmentation mask, denoted by the set $\mset{M}$, as
-\begin{equation}
-    \mset{M'} =
-    \cbrackets{
-        \mtx{T}
-        \sbrackets{x, y, 1}^T
-        \ | \
-        \forall \rbrackets{x, y} \in \mset{M}
-    }.
-\end{equation}
-Computing the \gls{bbox} $\vect{G}$ into which the ellipse after being transformed by $\mtx{T}$ is inscribed is rather straightforward:
-\begin{equation}
-    \vectt{G}{x_0 - n, y_0 - m, x_0 + n, y_0 + m}.
-\end{equation}
-Considering the extreme values for coordinates $x$ and $y$ below:
-\begin{equation}
-    \begin{aligned}
-         & x_{min} = \min \cbrackets{x\ |\ \forall x \in \mset{M'}},
-        \quad
-         & x_{max} = \max \cbrackets{x\ |\ \forall x \in \mset{M'}}, \\
-         & y_{min} = \min \cbrackets{y\ |\ \forall y \in \mset{M'}},
-        \quad
-         & y_{max} = \max \cbrackets{y\ |\ \forall y \in \mset{M'}},
-    \end{aligned}
-\end{equation}
-then the the min-max axis-aligned \gls{bbox} $\vect{B}$ is given by
-\begin{equation}
-    \vectt{B}{x_{min}, y_{min}, x_{max}, y_{max}}.
-\end{equation}
-Combining $\vect{G}$ and $\vect{B}$ we have the intersection \gls{bbox} $\vect{R}$ calculated using the following equation:
-\begin{equation}
-    \vectt{R}{
-        \max \cbrackets{\vect{G_1}, \vect{B_1}},
-        \max \cbrackets{\vect{G_2}, \vect{B_2}},
-        \min \cbrackets{\vect{G_3}, \vect{B_3}},
-        \min \cbrackets{\vect{G_4}, \vect{B_4}}
-    }.
-\end{equation}
-Let $\mset{R}$ be the set containing vertices of the box $\vect{R}$, thus
-\begin{equation}
-    \mset{R} = \cbrackets{
-        \rbrackets{\vect{R_1}, \vect{R_2}},
-        \rbrackets{\vect{R_3}, \vect{R_2}},
-        \rbrackets{\vect{R_3}, \vect{R_4}},
-        \rbrackets{\vect{R_1}, \vect{R_4}}
-    }.
-\end{equation}
-The last step, the conversion of the transformed coordinates back to the original image coordinates, is performed using the inverse affine transformation matrix $\mtx{T}^{-1}$. The result of this operation is accomplished by
-\begin{equation}
-    \mset{R'} =
-    \cbrackets{
-        \mtx{T}^{-1}
-        \sbrackets{x, y, 1}^T
-        \ | \
-        \forall \rbrackets{x, y} \in \mset{R}
-    }.
-\end{equation}
-
-\begin{figure}[t]
-    \centering
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_01.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_02.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_03.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_04.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_05.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_06.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.135\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/fast_vot_rot_bbox_algo_07.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \caption[Rotated \gls{bbox} by ellipse fitting]{\imgpartdesc{a} Edge pixels of the input segmentation mask, \imgpartdesc{b} ellipse fitting, \imgpartdesc{c} the affine transformation is computed and the points belonging to the mask are rotated and translated, \imgpartdesc{d} the ellipse is then inscribed into a rectangular box, \imgpartdesc{e} this box is then intersected with the min-max rectangular box, \imgpartdesc{f} the intersection box, \imgpartdesc{g} inverse affine transformation. \externalsrc{\cite{chen2019rotbboxes}}}
-    \label{fig:FastVOTRotBBOXFitting}
-\end{figure}
+An incremental improvement of \siammask{} model came when~\cite{chen2019rotbboxes} proposed a novel, efficient algorithm for the estimation of the \gls{bbox} rotation when the object segmentation mask is given. Particularly, a mask produced by the \siammask{} model, as this work builds on top of~\cite{wang2019siammask}, under the derived name \siammaske{}. In addition, their approach can be used to generate a rotated box ground truth from any segmentation datasets to train a rotation angle regression model. To estimate the rotation angle, they adopted the least-squared scheme as part of the ellipse fitting algorithm.
 
 The idea to employ fully convolutional networks seems to pertain to the modern computer vision community. Besides a simpler model, the fully convolutional design often leads to a reduced number of hyperparameters. One such an architecture (a descendant of the famous \siamfc{}~\cite{bertinetto2016siamfc} model) has been recently proposed, named \siamcar{}~\cite{guo2019siamcar}. This approach relies on the decomposition of the task of \gls{vot} into two subproblems: classification for pixel category and regression for object \gls{bbox} at the given pixel. The leading concept of the article is that this tracker operates in an end-to-end, per-pixel manner. The authors managed to avoid the use of anchors as well as region proposals, hence reducing the need for human intervention. The use of the two aforementioned traits commonly leads to sensitivity to dimensions and aspect ratios of the anchor boxes, which requires expertise on hyperparameter tuning for successful tracking.
 
@@ -410,77 +248,15 @@ The idea to employ fully convolutional networks seems to pertain to the modern c
     \label{fig:SiamCARArchitecture}
 \end{figure}
 
-Let $R$ be the response map produced by a depth-wise correlation between the features extracted by the Siamese network from the exemplar $Z$ and the target $X$ (\figstr{}~\ref{fig:SiamCARArchitecture}). Then,
-\begin{equation}
-    R = \func{\gamma}{X} \star \func{\gamma}{Z}.
-\end{equation}
-An indispensable part of localization are low-level features like edges, corners, and so on, whereas high-level features strengthen the representational power from the semantic point of view, which is crucial for discrimination. Authors fused low-level and high-level features from the last $3$ residual blocks of the \gls{resnet}-50 backbone (indicated by the $\func{F_3}{X}$, $\func{F_4}{X}$ and $\func{F_5}{X}$), forming a unity after concatenation (in case of $X$):
-\begin{equation}
-    \func{\gamma}{X} = \func{cat}{\func{F_3}{X}, \func{F_4}{X}, \func{F_5}{X}}.
-\end{equation}
-The resulting $\func{\gamma}{X}$ contains $3 \times 255$ channels since all $\func{F_i}{X}, \forall i = 3, 4, 5$, include $256$ channels. The response map $R$ is then convoluted with $1 \times 1$ kernel to reduce its dimension to $256$ channels, giving the reduced response map $R^*$.
+An indispensable part of localization are low-level features like edges, corners, and so on, whereas high-level features strengthen the representational power from the semantic point of view, which is crucial for discrimination. Authors fused low-level and high-level features from the last $3$ residual blocks of the \gls{resnet}-50 backbone, forming a unity after concatenation.
 
-At a later stage, the response map $\subsup{R}{w \times h \times m}{*}$ extracted by the Siamese subnetwork serves for classification and regression branches, producing feature maps $\subsup{A}{w \times h \times 2}{cls}$ and $\subsup{A}{w \times h \times 4}{reg}$, respectively. Each point $\rbrackets{i, j, :}$ in $\subsup{A}{w \times h \times 2}{cls}$ contains a $2D$ vector representing the foreground and background scores. Analogically, each point $\rbrackets{i, j, :}$ in $\subsup{A}{w \times h \times 4}{reg}$ contains a $4D$ vector $\vectt{t_{i, j}}{l, t, r, b}$ specifying distance from the corresponding location to the $4$ sides of the \gls{bbox} in the input search region. Let $\rbrackets{x_0, y_0}$ and $\rbrackets{x_1, y_1}$ denote the top-left and bottom-right corners of the ground-truth \gls{bbox} and $\rbrackets{x, y}$ the corresponding location of a point $\rbrackets{i, j}$. The regression target $\vect{\tilde{t}_{i, j}}$ at $\subsup{A}{w \times h \times 4}{reg} \rbrackets{i, j, :}$ can be computed as:
-\begin{equation}
-    \vectt{\tilde{t}_{i, j}}{x - x_0, y - y_0, x_1 - x, y_1 - y}.
-\end{equation}
-The regression loss is consequently computed using the \gls{iou} (section~\ref{sssec:IntersectionOverUnion}) algorithm,
-\begin{equation}
-    \label{eq:SiamCARRegLoss}
-    \mathcal{L}_{reg} =
-    \frac{1}{\sum \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}}
-    \sum_{i, j}
-    \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}
-    \func{\mathcal{L}_{IOU}}{\func{A^{reg}}{i, j, :}, \vect{\tilde{t}_{i, j}}},
-\end{equation}
-which was proposed as part of loss function (given by $\func{\mathcal{L}_{IOU}}{\cdot}$) in~\cite{yu2016unitbox}. The indicator function $\func{\mathbbm{1}}{\cdot}$ evaluated to $1$ if the given location lies within a ground truth \gls{bbox}, otherwise the value is $0$. An important observation was made that locations further away from the object center may aggravate the predicted box as they can be considered of low-quality. To diminish the effect of such locations, another branch alongside the classification branch to suppress the outliers is introduced, based on the concept of \emph{centerness}, borrowed from the~\cite{tian2019fcos}. This branch outputs a feature map $\subsup{A}{w \times h \times 1}{cen}$, where each point indicates the \emph{centerness} score for the corresponding location. The \emph{centerness} is optimized as
+An important observation was made that locations further away from the object center may aggravate the predicted box as they can be considered of low-quality. To diminish the effect of such locations, another branch alongside the classification branch to suppress the outliers is introduced, based on the concept of \emph{centerness}, borrowed from the~\cite{tian2019fcos}. This branch outputs a feature map where each point indicates the \emph{centerness} score for the corresponding location. This concept was also utilized within the base architecture we tested our experiments on. We can say that \emph{centerness} is a very general concept, and practically it represents a weighting mechanism to penalize areas within the \gls{roi} that most likely do not contain the target object.
 
-\begin{equation}
-    \begin{aligned}
-        \label{eq:SiamCARCenLoss}
-        \mathcal{L}_{cen} =
-         & \frac{-1}{\sum \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}}
-        \sum_{
-            \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}} = 1
-        }
-        \Big[
-            \func{C}{i, j}
-            \func{\log}{
-                \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
-            }
-        +                                                              \\
-         & \rbrackets{1 - \func{C}{i, j}}
-            \func{\log}{
-                1 - \func{\subsup{A}{w \times h \times 1}{cen}}{i, j}
-            }
-            \Big]
-    \end{aligned},
-\end{equation}
-where $\func{C}{i, j}$ computes the \emph{centerness} only for valid objects:
-\begin{equation}
-    \label{eq:CenternesSiamCAR}
-    \func{C}{i, j} =
-    \func{\mathbbm{1}}{\vect{\tilde{t}_{i, j}}}
-    \sqrt{
-        \frac{
-            \func{\min}{\tilde{l}, \tilde{r}}
-        }{
-            \func{\max}{\tilde{l}, \tilde{r}}
-        }
-        \times
-        \frac{
-            \func{\min}{\tilde{t}, \tilde{b}}
-        }{
-            \func{\max}{\tilde{t}, \tilde{b}}
-        }
-    }.
-\end{equation}
-The overall loss function, therefore, is given by
-\begin{equation}
-    \label{eq:SiamCAROverallLoss}
-    \mathcal{L} =
-    \mathcal{L}_{cls} +
-    \lambda_1 \mathcal{L}_{cen} +
-    \lambda_2 \mathcal{L}_{reg},
-\end{equation}
-where $\mathcal{L}_{cls}$ represents the standard cross-entropy loss for classification.
+\subsubsection{Conclusions Made In the Survey Paper}
+
+Due to space limitations, in this short section we summarize the most important conclusions and observations that we made in our survye paper~\cite{ondrasovic2021siamese} when researching Siamese-based visual object trackers. 
+
+In the referred survey, we aimed to identify and elaborate on the most significant challenges the Siamese trackers face. The objective was to answer what design decisions the authors had made and what problems they had attempted to address. This treatise could be thought of as an in-depth analysis of the core principles on which Siamese trackers operate together with discussion of the underlying motivation. In addition, we also provided an up-to-date qualitative and quantitative comparison of the prominent Siamese trackers on established benchmarks, since the last survey that involved thorough discusssions of Siamese trackers was published in $2018$~\cite{pflugfelder2018indepth}. Last but not the least, we discussed the current trends in developing Siamese trackers at the time of writing the article as well.
+
+We have to emphasize that Siamese trackers are a research direction in \gls{vot} with great potential. In practical terms, they belong
+to the fastest trackers with the ``accuracy-to-speed'' ratio being their primary strength. Contrary to the initial expectation, we realized that fast trackers are also among the accurate ones (with some existing exceptions). High processing speed is an inherent property of Siamese architectures. The presence of distractors is in our paper often mentioned as one of the leading causes of problems for this type of trackers.
