@@ -82,7 +82,7 @@
 
 % Names.
 % ==============================================================================
-\newcommand{\modelname}[1]{\texttt{#1}} % A general name of a model (an entire network or just its part).
+\newcommand{\modelname}[1]{\texttt{#1}} % A general name of a model.
 \newcommand{\datasetname}[1]{\texttt{#1}} % A general name of a dataset.
 
 \def\siammot{\modelname{SiamMOT}}
@@ -95,6 +95,8 @@
 \def\siammaske{\modelname{SiamMask-E}}
 \def\anet{\modelname{A-Net}}
 \def\snet{\modelname{S-Net}}
+\def\retinanet{\modelname{RetinaNet}}
+\def\retinatrack{\modelname{RetinaTrack}}
 
 \def\uadetrac{\datasetname{UA-DETRAC}}
 \def\mscoco{\datasetname{MS-COCO}}
@@ -104,12 +106,14 @@
 \def\otbthirteen{\datasetname{OTB-2013}}
 \def\otbfifteen{\datasetname{OTB-2015}}
 
+\def\featurenms{Feature-\gls{nms}}
+
 % Related to external sources: figures, tables, etc.
 % ==============================================================================
 \newcommand{\externalsrc}[1]{(\textit{source}: {#1})}
 
 % Other
-% ===============================================================================
+% ==============================================================================
 % Image description.
 \newcommand{\imgpartdesc}[1]{\textbf{({#1})}}
 
