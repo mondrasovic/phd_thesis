@@ -183,6 +183,8 @@ This model also attempts to tackle short-term occlusion. It is one of the key in
 
 A short-term occlusion can be defined as having the visibility confidence for the currently tracker object below the threshold $\alpha$. In \siammot{}, instead of definitely ceaseing the track's existence, the relevant information are kept in memory and thus the search for the exemplar continued until $\tau > 1$ frames have been processed in hope of re-instatiating the object. The most recently predicted location and its corresponding feature frames extracted from the backbone are utilized as the searching template.
 
+\subsubsection{Online Solver Algorithm}
+
 \subsection{Implementation Details}
 
 The \siammot{} model is a paragon of feature pooling.
