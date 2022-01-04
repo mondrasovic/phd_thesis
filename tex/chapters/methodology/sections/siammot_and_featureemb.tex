@@ -1,6 +1,7 @@
 \section{Siamese Multi-Object Tracking and Feature Embedding}
 \label{sec:SiamMOTandFeatureEmb}
 
+% ##############################################################################
 \subsection{Motivation}
 
 One of our experiments involved an end-to-end training of the whole \siammot{} model together with a custom head supposed to create embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The motivation was to force the training process into extracting features that are not only satisfactory for detection and tracking, but also contain the necessary information to create embeddings for subsequent \gls{reid} purposes during the inference.
@@ -13,6 +14,7 @@ More concretely, suppose the extracted features were represented by a tensor of 
 
 This observation led us to the following hypothesis. Given the fact the Siamese exemplar features do contain some, although probably not sufficient information for object \gls{reid}, would it be possible to map them further using a non-linear function to produce embedding vectors that could serve for \gls{reid}? Such features are just a learned template, therefore, some notion of similarity needs to be already built into it.
 
+% ##############################################################################
 \subsection{Feature Embedding Head Architecture}
 
 As far as the vector embedding computation was concerned, we attached the embedding head (\tablestr{}~\ref{tab:FeatureEmbeddingHead}) into the backbone features but after the \gls{roi}-pooling operation. This ensured fixed tensor shapes and allowed us to process the very same feature that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation (discussed next) with all the necessary operations such as negative mining.
@@ -43,6 +45,7 @@ As far as the vector embedding computation was concerned, we attached the embedd
     \label{tab:FeatureEmbeddingHead}
 \end{table}
 
+% ##############################################################################
 \subsection{Training Phase}
 
 The training phase was altered by adding another loss function to the sum of already existing three loss functions from the original model. In particular, the general \siammot{} loss function defined in \eqstr{}~\ref{eq:SiamMOTGeneralLoss} was reformulated as
@@ -52,6 +55,7 @@ The training phase was altered by adding another loss function to the sum of alr
 \end{equation}
 The $l_{\text{emb}}$ loss incorporated triplet loss (\eqstr{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). As we discussed in \sectionstr{}~\ref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encountered harder and harder triplets to generate sufficient learning signal. To this end, we went for the semi-hard triplet mining strategy (\eqstr{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). We implemented the entire mining algorithm followed by the loss computation in a GPU-only fashion for fast execution and easy intergration into the pipeline.
 
+% ##############################################################################
 \subsection{Inference Phase}
 
 \subsubsection{Feature-based Non-Maximum Suppression}
@@ -121,8 +125,10 @@ Here we provide a pseudocode of the \featurenms{} algorithm:
     \EndFunction
 \end{algorithmic}
 
+% ##############################################################################
 \subsection{Experimental Evaluation}
 
+% ##############################################################################
 \subsection{Discussion}
 
 We conjecture that our inability to improve the tracker performance was not particularly caused by the feature embedding itself. There is a recently published work Lu~\etal{}~\cite{lu2020retinetrack}, who introduced their \retinatrack{} tracker. This framework exploited the base visual object detector called a \retinanet{}~\cite{lin2018focal} and then added principially the same head as we did for the purpose of producing feature embeddings that could be used for \gls{reid}. However, there are obvious differences between the two trackers in terms of how the inference phase is executed, and that is where we see the root cause of our failure.

@@ -3,6 +3,7 @@
 
 This section is dedicated to the most important tracker we have encountered during our research, called \siammot{}~\cite{shuai2021siammot}. Its importance stems from the fact that the majority of our experiments adopted this model. Even though this section could be part of the theoretical foundations chapter, we found it more comprehensible to provide the description of the base architecture closer to the description of our methods and experiments.
 
+% ##############################################################################
 \subsection{General Description}
 
 The authors of~\cite{shuai2021siammot} tracker focused on improving online \gls{mot}. As far as their methodology was concerned, they employed region-based approach~\cite{ren2017fasterrcnn} in conjunction with a Siamese multi-object tracking network, hence the name \siammot{}. Broadly speaking, this architecture employes Siamese tracker for motion estimation between two frames. We would like to note that all the principles so far discussed regarding Siamese trackers apply here. However, as already suggested, the adoption of \gls{rpn} enables this framework to have more information available. Not only there is the motion prediction from the Siamese tracker, there are also detections produced by the \fasterrcnn{} object detector~\cite{ren2017fasterrcnn} that is integrated within the whole architecture. Subsequently, an online solver is utilized to merge these prediction obtained from the tracker and detector heads. It is no surprise that such a framework that exploits modern approaches (more on that later) to object detection and Siamese tracking produces \gls{sota} performance.
@@ -11,6 +12,7 @@ We will disect this framewrok in great detail since we studied it scrupulously. 
 
 During our development we often engaged in discussions related to this project incentivized by other researchers who were also working on this project and trying to either only apply this work to their specific use case or even extend the model. Our detailed knowledge of this model acquired through deliberate and long-lasting work on this project often helped several other programmers who dealt with various issues. From the programming standpoint, our work involved a considerable amount of programming, even though the base architecture was provided and fully functional. We would like to emphasize that the project consisted of $?$ lines of source code programmed purely in Python programming language. Concerning the deep learning aspect, the PyTorch library~\cite{paszke2019pytorch} was primarily used. It is a widely known library aimed at building deep neural network models while exploiting automatic differentiation.
 
+% ##############################################################################
 \subsection{Model Architecture}
 
 The two key aspects of the the \siammot{} architecture are \fasterrcnn{}~\cite{ren2017fasterrcnn} object detector and Siamese tracker. The salient element of the \fasterrcnn{} is the \gls{rpn}. Simply put, \siammot{} adds a region-based Siamese tracker along the standard $2$-stage object detection pipeline in order to model instance-level motion.
@@ -152,6 +154,7 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
     \label{fig:FCOSCenterness}
 \end{figure}
 
+% ##############################################################################
 \subsection{Training and Inference Phases}
 
 The \siammot{} model can be trained in an end-to-end fashion, which is one of its great advantages in terms of usability, among others. The general loss function can be formulated as
@@ -185,10 +188,12 @@ A short-term occlusion can be defined as having the visibility confidence for th
 
 \subsubsection{Online Solver Algorithm}
 
+% ##############################################################################
 \subsection{Implementation Details}
 
 The \siammot{} model is a paragon of feature pooling.
 
+% ##############################################################################
 \subsection{Relevant Implementation-Related Remarks}
 
 In this short section, we would like to summarize several relevant remarks related to the \siammot{} model.
@@ -220,4 +225,5 @@ where $n$ is the number of accumulated minibatches.
 
 Considering the advantages outlined above, it is necessary to acknowledge the potential drawbacks. For example, if batch normalization~\cite{ioffe2015batchnorm} layers are used within the model, then the use of gradient accumulation may possibly have a detrimental effect upon their performance. The reason is that batch normalization layers compute the statistics with respect to a single minibatch. These layers, in their standard formulation and commonly adopted implementation, are incapable of accomodating their innerworkings to adequately administer multiple sequential minibatches. However, there is ongoing research in the direction of group normalization as well, namely works of~\cite{wu2018groupnorm}~and~\cite{zhou2020batchgroupnorm}.
 
+% ##############################################################################
 \subsection{Experimental Analysis}
