@@ -15,30 +15,31 @@ This observation led us to the following hypothesis. Given the fact the Siamese 
 
 \subsection{Feature Embedding Head Architecture}
 
-As far as the vector embedding computation was concerned, we attached the embedding head into the backbone features but after the \gls{roi}-pooling operation. This ensured fixed tensor shapes and allowed us to process the very same feature that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation with all the necessary operations such as negative mining.
+As far as the vector embedding computation was concerned, we attached the embedding head (\tablestr{}~\ref{tab:FeatureEmbeddingHead}) into the backbone features but after the \gls{roi}-pooling operation. This ensured fixed tensor shapes and allowed us to process the very same feature that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation (discussed next) with all the necessary operations such as negative mining.
 
 \begin{table}[t]
     \centering
-    \begin{tabular}{|l|l|l|}
-        \hline
-        layer             & tensor shape                  & \# trainable parameters \\
-        \hline
-        input             & $\sbrackets{-1, 256, 15, 15}$ & $0$                     \\
-        \hline
-        conv $3 \times 3$ & $\sbrackets{-1, 256, 13, 13}$ & $589\ 824$              \\
-        \hline
-        ReLU              & $\sbrackets{-1, 256, 13, 13}$ & $0$                     \\
-        \hline
-        conv $3 \times 3$ & $\sbrackets{-1, 512, 11, 11}$ & $1\ 179\ 648$           \\
-        \hline
-        ReLU              & $\sbrackets{-1, 512, 11, 11}$ & $0$                     \\
-        \hline
-        flatten           & $\sbrackets{-1, 61952}$       & $0$                     \\
-        \hline
-        linear            & $\sbrackets{-1, 1024}$        & $63\ 439\ 872$          \\
-        \hline
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{layer}    & \textbf{tensor shape}        & \textbf{parameters no.} \\
+        \midrule
+        input             & $\sbrackets{B, 256, 15, 15}$ & $0$                     \\
+        \midrule
+        conv $3 \times 3$ & $\sbrackets{B, 256, 13, 13}$ & $589\ 824$              \\
+        ReLU              & $\sbrackets{B, 256, 13, 13}$ & $0$                     \\
+        \midrule
+        conv $3 \times 3$ & $\sbrackets{B, 512, 11, 11}$ & $1\ 179\ 648$           \\
+        ReLU              & $\sbrackets{B, 512, 11, 11}$ & $0$                     \\
+        \midrule
+        flatten           & $\sbrackets{B, 61952}$       & $0$                     \\
+        linear            & $\sbrackets{B, 1024}$        & $63\ 439\ 872$          \\
+        \midrule
+        $l_2$-normalize   & $\sbrackets{B, 1024}$        & $0$                     \\
+        \bottomrule
+                          & \textbf{total}               & $65\ 209\ 344$          \\
+        \cline{2-3}
     \end{tabular}
-    \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors.}
+    \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors. It is built from two convolutional layers separated by a \gls{relu} nonlinearity followed by a fully-connected layer which produces a $1024$ dimensional feature embedding. The batch size dimension is given by $B$ in the tensor shape. Since each embedding vector is normalized to unit length at the end, we avoided learning biases throughout the whole network.}
     \label{tab:FeatureEmbeddingHead}
 \end{table}
 

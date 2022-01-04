@@ -7,11 +7,57 @@ In our work, we will often discuss the use of so-called \emph{embedings} for occ
 \subsection{Learning Metric Embedding}
 \label{ssec:LearningMetricEmbedding}
 
-As~\cite{hermans2017triplet} describes, the goal of learning metric embedding is to learn a function (a transformation) $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$, which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$. Learning such a metric embedding is similar to dimensionality reduction, as it involves mapping a set of high dimensional input points onto a low dimensional manifold. The function $\func{f_\theta}{\cdot}$ ideally maps \emph{similar} (a measure of similarity has to be defined) points in the input space to nearby points on the manifold~\cite{hadsell2006dimreduction}.
+As~\cite{hermans2017triplet} describes the goal of learning metric embedding is to learn a function (a transformation) $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$, which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$. Learning such a metric embedding is similar to dimensionality reduction, as it involves mapping a set of high dimensional input points onto a low dimensional manifold. The function $\func{f_\theta}{\cdot}$ ideally maps \emph{similar} (a measure of similarity has to be defined, as in \sectionstr{}~\ref{ssec:EmbeddingSimilarity}) points in the input space to nearby points on the manifold~\cite{hadsell2006dimreduction}.
 
 To clarify, suppose the use of this transformation for vehicle \gls{reid}. This embedding would be achieved by a learned function that would map the images of vehicles into a latent space, where images of the same vehicle would be mapped closer together. Moreover, such mapping should be invariant to variations in lighting conditions, vehicle rotations (a difficult one can be a change from front to rear view), and many other transformations that interfere with vehicle \gls{reid}. Kuma~\etal{}~\cite{kuma2019vehiclereid} also mention that popular loss functions for learning embeddings include contrastive or triplet loss, the two we discuss further in \sectionstr{}~\ref{ssec:SiameseAndTripletNetworks}. Among other things, embedding trained this way can be used to produce a feature vector for classification, one-shot learning tasks~\cite{koch2015siameseoneshot}, clustering~\cite{schroff2015facenet}, face recognition~\cite{parkhi2015deepface} and last, but not least, re-identification~\cite{kuma2019vehiclereid}.
 
-Embedding, or mapping the input into some latent space with specific properties, is of great use even in combination with \glspl{gan}~\cite{goodfellow2014gans}. A prominent work of researches from NVidia company~\cite{webnvidia} demonstrates how individual facial features can be modified once the image of the person's face is mapped (embedded) into an adequate latent space~\cite{karras2020stylegan}. Manipulations ranging from a change in hair and skin color through facial expressions (e.g. smile) up to the person's age or gender are possible using just linear vector operations. Briefly, once the user obtains the corresponding vector of the person's face image in the latent space formed during the training phase, then simply adding or subtracting a vector which corresponds to the ``age direction'' results in making the person younger or older. All of this is achieved in a purely linear fashion. Even though such a generator-based architecture is by itself of no use for \gls{reid}, this approach initially led us to consider the exploration of latent spaces.
+Embedding, or mapping the input into some latent space with specific properties, is of great use even in combination with \glspl{gan}~\cite{goodfellow2014gans}. A prominent work of researches from NVidia company~\cite{webnvidia} demonstrates how individual facial features can be modified once the image of the person's face is mapped (embedded) into an adequate latent space~\cite{karras2020stylegan}. Manipulations ranging from a change in hair and skin color through facial expressions (e.g. smile) up to the person's age or gender are possible using just linear vector operations. Briefly, once the user obtains the corresponding vector of the person's face image in the latent space formed during the training phase, then simply adding or subtracting a vector that corresponds to the ``age direction'' results in making the person younger or older. All of this is achieved in a purely linear fashion. Even though such a generator-based architecture is by itself of no use for \gls{reid}, this approach initially led us to consider the exploration of latent spaces.
+
+% ##############################################################################
+\subsection{Embedding Vector Similarity}
+\label{ssec:EmbeddingVectorSimilarity}
+
+There are various ways to evaluate the degree of similarity between two embedding vectors. For simplicity as well as our purposes, we will discuss the two most common approaches, i.e., Euclidean distance and cosine similarity.
+
+Let $\vect{u}$ and $\vect{v}$ be two arbitrary $D$-dimensional vectors representing our embedding vectors. The Euclidean distance between the vectord $\vect{u}$ and $\vect{v}$ is defined as
+\begin{equation}
+    \label{eq:EuclideanDistance}
+    \euclnorm{\vect{u} - \vect{v}} =
+    \sqrt{
+        \sum_{i = 0}^{D} \rbrackets{\vect{u}_i - \vect{v}_i}^2
+    },
+\end{equation}
+and the cosine similarity is defined as
+\begin{equation}
+    \label{eq:CosineSimilarity}
+    \func{\cos \angle}{\vect{u}, \vect{v}} =
+    \func{\cos}{\theta} =
+    \frac{
+        \vect{u} \cdot \vect{v}
+    }{
+        \euclnorm{\vect{u}} \euclnorm{\vect{v}}
+    },
+\end{equation}
+where $\theta$ is the angle between the vectors $\vect{u}$ and $\vect{v}$.
+
+The major distinction between these measures is that cosine similarity only measures the angular difference between the vectors regardless of their magnitude, whereas the Euclidean distance takes the vector length into account as it quantifies the distance between the ``tips'' of the vectors. However, one important property is that as long as the two vectors under consideration are normalized, i.e., they are of unit length, then the squared Euclidean distance is proportional to the cosine similarity as given by
+\begin{equation}
+    \label{eq:CosineEuclideanRelation}
+    \begin{aligned}
+        \euclnorm{
+            \frac{\vect{u}}{\euclnorm{\vect{u}}} -
+            \frac{\vect{v}}{\euclnorm{\vect{v}}}
+        }^2 =
+        2 -
+        2 \frac{
+            \vect{u} \cdot \vect{v}
+        }{
+            \euclnorm{\vect{u}} \euclnorm{\vect{v}}
+        } =
+        2 - 2 \func{\cos \angle}{\vect{u}, \vect{v}}
+        \in \left< 0, 4 \right>.
+    \end{aligned}
+\end{equation}
 
 % ##############################################################################
 \subsection{Siamese and Triplet Networks}
@@ -48,7 +94,7 @@ Consider a sample $\rbrackets{x_0, x_1, y}$, where $x_0$ and $x_1$ represent the
     \rbrackets{1 - y} {\rbrackets{
             \sbrackets{\alpha - \func{D}{\func{f_\theta}{x_0}, \func{f_\theta}{x_1}}}_{+}}}^2.
 \end{equation}
-The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The output is then evaluated by the contrastive loss function (\figstr{}~\ref{fig:SiameseAndTripletArchitectures} \imgpartdesc{a}). Positive samples should have a small distance between each other as measured by the $\func{D}{\cdot}$ to decrease the loss towards $0$. On the other hand, negative samples should have the distance beyond the threshold $\alpha$ to incur a loss of $0$.
+The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The output is then evaluated by the contrastive loss function (\figstr{}~\ref{fig:SiameseAndTripletArchitectures} \imgpartdesc{a}). Positive samples should have a small distance between each other as measured by the $\func{D}{\cdot}$ to decrease the loss towards $0$. On the other hand, negative samples should have a distance beyond the threshold $\alpha$ to incur a loss of $0$.
 
 \subsubsection{Triplet Loss}
 
@@ -88,26 +134,24 @@ During the training using the triplet loss, the model should learn to push negat
 \subsection{Triplet Mining Strategies}
 \label{ssec:TripletMiningStrategies}
 
-Contrastive (eq.~\ref{eq:ContrastiveLoss}) and triplet (eq.~\ref{eq:TripletLoss}) loss functions play an important role in training an embedding model. However, the way that pairs or triplets are selected is crucial and as Hermans~\etal{}~\cite{hermans2017triplet} and Manmatha~\etal{}~\cite{manmatha2017samplingmatters} showed, it may significantly influence the training. They demonstrated that the sampling strategy matters at least as much as the loss function itself. Moreover, as the dataset gets larger, then the number of possible triplets grows cubically, rendering the use of all of them impractical. The majority of those triplets would be so-called \emph{easy triplets}, thus hindering the learning process, because generating all possible triplets produces many triplets that fulfill the constraint \ref{eq:TripletDistanceConstraint}, hence provide inferior learning signal. To paraphrase the analogy from~\cite{hermans2017triplet}, showing the model that people with different clothes are not the same person after a certain point does not bring any new information. On the other hand, explicitly \emph{mining} images of similar-looking yet different people with the same clothes (\emph{hard negatives}) or of the same person with dramatically different poses (\emph{hard positives}) vastly contributes to an understanding of the notion of the \emph{same person}. As suggested, there are different kinds of triplets which are defined in the table \ref{tab:TripletCategoriesDefinitions}, using a general $\rbrackets{x_a^i, x_p^i, x_n^i}$ triplet for clarity. We encourage the reader to observe the figure \ref{fig:PositiveAndNegativeTripletsCategories}, too.
+Contrastive (eq.~\ref{eq:ContrastiveLoss}) and triplet (eq.~\ref{eq:TripletLoss}) loss functions play an important role in training an embedding model. However, the way that pairs or triplets are selected is crucial, and as Hermans~\etal{}~\cite{hermans2017triplet} and Manmatha~\etal{}~\cite{manmatha2017samplingmatters} showed, it may significantly influence the training. They demonstrated that the sampling strategy matters at least as much as the loss function itself. Moreover, as the dataset gets larger, then the number of possible triplets grows cubically, rendering the use of all of them impractical. The majority of those triplets would be so-called \emph{easy triplets}, thus hindering the learning process, because generating all possible triplets produces many triplets that fulfill the constraint \ref{eq:TripletDistanceConstraint}, hence providing an inferior learning signal. To paraphrase the analogy from~\cite{hermans2017triplet}, showing the model that people with different clothes are not the same person after a certain point does not bring any new information. On the other hand, explicitly \emph{mining} images of similar-looking yet different people with the same clothes (\emph{hard negatives}) or of the same person with dramatically different poses (\emph{hard positives}) vastly contributes to an understanding of the notion of the \emph{same person}. As suggested, there are different kinds of triplets which are defined in the table \ref{tab:TripletCategoriesDefinitions}, using a general $\rbrackets{x_a^i, x_p^i, x_n^i}$ triplet for clarity. We encourage the reader to observe the figure \ref{fig:PositiveAndNegativeTripletsCategories}, too.
 
 \begin{table}[t]
     \centering
 
-    \begin{tabular}{|c|c|}
-        \hline
+    \begin{tabular}{cc}
+        \toprule
         \tblcolname{triplet} & \tblcolname{constraint}                                                                                                                                            \\
-        \hline
 
-        easy                 &
+        \midrule
+        \emph{easy}          &
         $\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}} + \alpha < \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}}$                                                            \\
-        \hline
 
-        semi-hard            &
+        \emph{semi-hard}     &
         $\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}} < \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}} < \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}} + \alpha$ \\
-        \hline
 
-        hard                 & $\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}} < \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}}$                                              \\
-        \hline
+        \emph{hard}          & $\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}} < \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}}$                                              \\
+        \bottomrule
     \end{tabular}
 
     \caption[Triplet categories.]{Definitions of various categories of triplets (regardless whether it is positive or negative) as imposed by their distance relationship.}
@@ -175,7 +219,7 @@ This strategy aims for selecting all valid triplets and averaging the loss only 
 
 \subsubsection{Online Triplet Mining: Batch Hard}
 
-In this strategy, the goal is to find the hardest positive and hardest negative for each anchor. The total number of triplets is $PK$. The selected triplets are the hardest among the given batch~\cite{hermans2017triplet}. Additionally, Hermans~\etal{}~\cite{hermans2017triplet} say that the selected triplets can be considered moderate, since they are the hardest within a small subset of the data, which is the best for learning with the triplet loss.
+In this strategy, the goal is to find the hardest positive and hardest negative for each anchor. The total number of triplets is $PK$. The selected triplets are the hardest among the given batch~\cite{hermans2017triplet}. Additionally, Hermans~\etal{}~\cite{hermans2017triplet} say that the selected triplets can be considered moderate since they are the hardest within a small subset of the data, which is the best for learning with the triplet loss.
 \begin{equation}
     \label{eq:BatchHardMining}
     \begin{aligned}

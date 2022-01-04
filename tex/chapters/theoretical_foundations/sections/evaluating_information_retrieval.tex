@@ -10,14 +10,14 @@ In order to put the meaning of \gls{map} (\sectionstr{}~\ref{ssec:MeanAveragePre
 \begin{table}[t]
     \centering
 
-    \begin{tabular}{|c|c|c|}
-        \hline
+    \begin{tabular}{c|cc}
+        \toprule
                                         & \tblcolname{Actual positive} & \tblcolname{Actual negative} \\
-        \hline
+        \cline{2-3}
         \tblcolname{Predicted positive} & \gls{tp}                     & \gls{fp}                     \\
-        \hline
+        \cline{2-3}
         \tblcolname{Predicted negative} & \gls{fn}                     & \gls{tn}                     \\
-        \hline
+        \bottomrule
     \end{tabular}
 
     \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{davis2016prcurves}}}
