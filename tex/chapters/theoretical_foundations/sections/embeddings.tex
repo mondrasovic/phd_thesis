@@ -80,6 +80,7 @@ The major distinction between these measures is that cosine similarity only meas
     \caption[Contrastive and triplet loss]{Comparison of the Siamese \imgpartdesc{a} and the triplet \imgpartdesc{b} network architectures. The concept of weight sharing implies that the same network is used for inference and only one set of weights is trained. Architectures are depicted as containing multiple models only for conceptual understanding.}
     \label{fig:SiameseAndTripletArchitectures}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Let $\func{D}{x, y}: \mathbb{R}^D \times \mathbb{R}^D \to \mathbb{R}$ be a metric function measuring distances in the embedding space. Without a loss of generality, we resort to use of the Euclidean distance ($L_2$ norm), so $\func{D}{x, y} = \euclnorm{x - y}$.
 
@@ -105,6 +106,7 @@ The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The
     \caption[Triplet loss architecture]{A model structure developed by~\cite{schroff2015facenet}. This network consists of a batch input layer and a deep \gls{cnn} followed by an $L_2$ normalization, which produces the final embedding. A triplet loss is used during the training. \externalsrc{\cite{schroff2015facenet}}}
     \label{fig:TripletLossModelStructure}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Apart from the contrastive loss, this time three samples are required to compute the loss. The rationale is to supply additional context when forming the metric space. Siamese networks are usually implemented using shared model weights, but there are better approaches when the triplet loss is used. Conceptually speaking, the model could be implemented as shown in \figstr{}~\ref{fig:SiameseAndTripletArchitectures} \imgpartdesc{b}. However, as we will discuss later, triplet mining strategies are required for the triplet loss to work properly. The model can be thus simplified from an architectural point of view at the cost of moving the complexity to the computation of the loss function (see \figstr{}~\ref{fig:TripletLossModelStructure}).
 
@@ -132,6 +134,7 @@ During the training using the triplet loss, the model should learn to push negat
     \caption[Triplet loss learning]{The objective is to learn embeddings such that the anchor is closer to the positive example than it is to the negative example by some specified margin value. The triplet loss, therefore, minimizes the distance between the anchor and the positive sample of the same identity and maximizes the distance between the anchor and the negative sample of a different identity. \externalsrc{\cite{schroff2015facenet}}}
     \label{fig:TripletLossLearningProcess}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{Triplet Mining Strategies}
@@ -178,6 +181,7 @@ Contrastive (eq.~\ref{eq:ContrastiveLoss}) and triplet (eq.~\ref{eq:TripletLoss}
     \caption[Triplet loss categories visualization.]{Given a fixed anchor $x_a^i$ and positive sample $x_p^i$ as well as some positive margin value $\alpha$, we discriminate between three different types of categories in terms of their level of \emph{difficulty}. These categories vary in relation to positive \imgpartdesc{a} or negative \imgpartdesc{b} perspective.}
     \label{fig:PositiveAndNegativeTripletsCategories}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 In order to attain an effective convergence during the training, it is necessary to select triplets that violate the triplet constraint in eq. \ref{eq:TripletDistanceConstraint}. This means that given $x_a^i$, the goal is to select a \emph{hard positive} $x_p^i$ given by $\argmax_{x_p^i}\cbrackets{\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_p^i}}}$ and a \emph{hard negative} $x_n^i$ as a result of $\argmin_{x_n^i}\cbrackets{\func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}}}$. Admittedly, it is often infeasible to compute the $\argmin\cbrackets{\cdot}$ and $\argmax\cbrackets{\cdot}$ over the entire training set. In this regard, there are two possible approaches to tackle this problem, either by selecting these hard triplets online or doing it offline~\cite{schroff2015facenet}.
 
@@ -195,6 +199,7 @@ Online mining is performed by selecting the hard positive/negative exemplars fro
     \caption[Triplet loss online mining architecture]{The architecture of a triplet network where an online triplet loss function is used for training. In this architecture, no weight sharing is required as the triplet selection happens \emph{online} solely in the loss function.}
     \label{fig:TripletArchitectureOnlineMining}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \subsubsection{Online Triplet Mining: Batch All}
 

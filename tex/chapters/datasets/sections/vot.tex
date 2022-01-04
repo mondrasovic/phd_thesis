@@ -19,6 +19,7 @@ As we have already mentioned, the principle of one-shot learning has been advert
     \caption[\gottenk{} dataset]{Screenshots of some representative videos collected and annotated in the \gottenk{} dataset. \externalsrc{\cite{webgot10kdataset}}}
     \label{fig:GOT10kDataset}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{VOT 2015-2019}
@@ -38,6 +39,7 @@ This object tracking benchmark~\cite{geiger2012cvpr} (web:~\cite{webkittiobjtrac
     \caption[\datasetname{KITTI Object Tracking} dataset]{A sample of the only two classes ("car" and "pedestrian") that are evaluated in the benchmark using the \datasetname{KITTI Object Tracking} dataset. \externalsrc{\cite{webkittiobjtrackingdataset}}}
     \label{fig:DatasetKITTIObjectTracking}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{UA-DETRAC}
@@ -53,6 +55,7 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
     \caption[\uadetrac{} dataset]{A sample from the \uadetrac{} dataset. The whole dataset consists of diverse traffic situations captured using a static camera viewed from various angles. \externalsrc{\cite{webuadetracdataset}}}
     \label{fig:DatasetUADETRAC}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \def\uadetracfigsize{0.4}
 
@@ -85,6 +88,7 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
     \caption[\uadetrac{} dataset overview]{Summary statistics of the \uadetrac{} dataset. \imgpartdesc{a} shows the distribution of vehicle categories, one of \emph{car}, \emph{bus}, \emph{van} or \emph{other}; \imgpartdesc{b} shows the varying weather conditions belonging to either \emph{night}, \emph{sunny}, \emph{rainy} or \emph{cloudy}; \imgpartdesc{c} depicts the change in scale given by the square root of the \gls{bbox} pixel area; and \imgpartdesc{d} reflects the occlusion ratio throughout the dataset computed as the fraction of the vehicle \gls{bbox} being occluded . \externalsrc{\cite{webuadetracdataset}}}
     \label{fig:UADETRACStats}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Since this dataset is of paramount importance to our research, here we provide more details about the structure and properties of the contained data compared to other datasets described in our work. The dataset consists of $100$ videos, where $60$ of them are dedicated to training, while the remaining $40$ are used for testing. Ground-truth annotations are provided in both variations. This is not always the case, as several benchmarks do not disclose annotations for the test dataset, e.g., \datasetname{KITTI}~\cite{geiger2012cvpr}.
 
@@ -94,6 +98,7 @@ Since this dataset is of paramount importance to our research, here we provide m
     \caption[Ignored regions in \uadetrac{}]{A demonstration of a possible distribution of ignored regions in the \uadetrac{} dataset. \externalsrc{\cite{webuadetracdataset}}}
     \label{fig:UADETRACIgnoredRegions}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 The dataset authors provide extensive information about the vehicle, including its speed in frames per second, color, orientation, and occlusion. Due to space restrictions, we limit our elaboration on how the data was obtained only to the fields pertinent to our usage. In the beginning, there is a section describing some ignored regions (see \figstr{}~\ref{fig:UADETRACIgnoredRegions}). The authors decided to omit regions with very dense traffic. Nevertheless, the dataset contains a plethora of scenes where the number of cars is very high. More specifically, \tablestr{}~\ref{tab:UADETRACVehicleDensity} describes some basic statistical properties of the distribution of the number of cars throughout the dataset. The data were obtained by collecting the number of annotated cars for each frame. Training and testing data were merged for simplicity.
 

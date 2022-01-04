@@ -19,6 +19,7 @@ Given an initial state in a form of a \gls{bbox} belonging to the first frame (a
     \caption[\Gls{goturn} architecture]{The architecture of \gls{goturn} showing the input as a search region from the current frame where the target from the previous frame is to be searched for. The network essentially learns to localize the target within the cropped region. \externalsrc{\cite{held2016goturn}}}
     \label{fig:GOTURNFramework}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{Fully Convolutional Tracking}
@@ -53,6 +54,7 @@ The motivation for the utilization of different convolutional layers was that ex
     \caption[Fully convolutional tracking]{A \gls{cnn} model trained on image classification task carries spatial information. \imgpartdesc{a} Input image with an associated ground truth mask. \imgpartdesc{b} Visualization of feature maps from convolutional layers placed at the bottom of the model, capturing differences between foreground and background of a particular object instance. \imgpartdesc{c} As opposed to the previous group of images, a more holistic, abstract view on the object category itself is provided by feature maps from top convolutional layers. The top row in the \imgpartdesc{b} and \imgpartdesc{c} represents feature maps, whereas the bottom row represents the corresponding saliency map with spatial information of the category. \externalsrc{\cite{wang2015votcnn}}}
     \label{fig:FullyCNNTrackingFeatureMaps}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Authors of~\cite{wang2015votcnn} put together a list of three observations that summarize properties of the fully convolutional nature of a tracker proposed by them.
 \begin{itemize}
@@ -68,6 +70,7 @@ The proposed architecture in accordance to the aforementioned observation is des
     \caption[Architecture of fully convolutional tracking]{For a given image, a feature map selection is performed on two different layers of the VGG network~\cite{simonyan2015verydeepcnn} to select the most relevant ones. This selection is handled as a heat map regression problem. A general network (GNet) captures the category information, whilst the specific network (SNet) captures visual traits based on which the foreground is separated from the background. Two heat maps are produced by these networks forming a basis for subsequent target localization. Both of these networks have to be initialized in the first frame. Afterward, when a new frame is to be processed, a region of interest is centered at the last target location, and the whole process repeats. \externalsrc{\cite{wang2015votcnn}}}
     \label{fig:FullyCNNTrackingSNetGNet}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{Tracking Using Siamese Networks}
@@ -91,6 +94,7 @@ As such, when trivial distance or similarity measure is computed by the function
     \caption[\siamfc{} architecture]{The fully-convolutional Siamese architecture produces a scalar-valued score map, the size of which depends on the size of the search image. The similarity function is computed for all sub-windows within the search image and stored in a 2D score map, rather than just a pure 1D embedding vector. This computation requires only one evaluation. In this image, the red and blue pixels in the output score map represent similarity values for the two sub-windows on the input. Best viewed in color. \externalsrc{\cite{bertinetto2016siamfc}}}
     \label{fig:FullyCNNSiamTrackingArch}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 The use of the Siamese architecture spawned a lot of follow-up work, and we will describe some that serve our purposes. A team of authors in~\cite{he2018twofoldsiam} made the following observation: features learned in an image classification task (denoted as semantic features) complement features learned in a similarity matching task (denoted as appearance features). They also suitably commented that the key to designing a high-performance tracker is to harness expressive features that are simultaneously discriminative and generalized. In light of this, they developed a model consisting of a semantic and an appearance branch (see \figstr{}~\ref{fig:TwofoldSiameseNetArchitecture}), with each branch being represented by a standard similarity-learning Siamese network (as in \siamfc{}~\cite{bertinetto2016siamfc}). However, an important distinction is that these two branches were trained separately, making them effectively heterogeneous to avoid any sharing of information. They reported that both branches were less powerful when trained jointly than when trained separately. The rationale behind such a decision was that each branch provides different features produced at different levels of abstraction, yet they complement each other. The merge of their respective outputs happens only during the testing time. Nowadays, joint training is prevalent, especially due to its effectiveness. Given the advantage of the hindsight, there are more important aspects of Siamese trackers to address in order to reap even greater benefits in terms of accuracy, for example, feature fusion.
 
@@ -100,6 +104,7 @@ The use of the Siamese architecture spawned a lot of follow-up work, and we will
     \caption[\sasiam{} architecture]{The architecture of the \sasiam{} network. The \anet{} represents the appearance network and the \snet{} represents the semantic network. For the reason that this work builds on \siamfc{} model~\cite{bertinetto2016siamfc}, structures connected by dotted lines are exactly the same as in the \siamfc{} model. The last two convolutional layers provide features that are extracted afterward. The attention model determines the weight of each feature channel by simultaneous consideration of exemplar and context information. The fusion module is trivial and uses just $1 \times 1$ convolutions. As shown on the right, combining branches is allowed only when testing. \externalsrc{\cite{he2018twofoldsiam}}}
     \label{fig:TwofoldSiameseNetArchitecture}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 The \sasiam{} receives an input as a pair of image patches (see \figstr{}~\ref{fig:TwofoldSiameseNetArchitecture}) cropped from the initial (target, exemplar) frame and the current (search) frame. Let $z$, $z^s$ and $X$ be the image of exemplar, exemplar including the surrounding context and the search region, respectively. Dimensions of $x^s$ and $X$ are identical, $W_s \times H_s \times 3$. Dimensions of the exemplar $z$ located in the exact center of the region of $z^s$ are $W_t \times H_t \times 3$, such that $W_t < W_s$ and $H_t < H_s$. The appearance branch (\anet{}) takes $\rbrackets{z, X}$ as input and essentially clones the entire \siamfc{} network. Let $\func{f_a}{\cdot}$ denote the visual features extracted by the \anet{}. Then, the response map of this branch is given by
 \begin{equation}
@@ -139,6 +144,7 @@ where the no. of elements of $\zeta$ is equal to the no. of channels in $\func{f
     \caption[\snet{} attention module]{The attention module of the \snet{} network. \externalsrc{\cite{he2018twofoldsiam}}}
     \label{fig:TwofoldSiameseNetAttentionModule}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 When training the \snet{} branch, only the fusion and the attention modules are updated. No fine-tuning techniques are taken advantage of, regardless of the potential improvement of the semantic branch alone. Authors informed about such experiments, and they resulted in diminished overall performance thanks to \anet{} and \snet{} becoming less heterogeneous. Let $\rbrackets{\subsup{z}{i}{s}, X_i}$ with their corresponding ground-truth response map $Y_i$, for $i = 1, \dots, N$, be the $N$ chosen training samples. The parameters $\theta_s$ of the \snet{} model are fitted using the logistic loss function $\func{\mathcal{L}}{\cdot}$ (equal to \eqstr{}~\ref{eq:ANetModelTraining})
 \begin{equation}
@@ -177,6 +183,7 @@ where the template feature maps $\sbrackets{\func{\gamma}{z}}_{cls}$ and $\sbrac
     \caption[\siamrpn{} architecture]{The pipeline starts with the original \siamfc{} network followed by the \gls{rpn} which has two branches: classification and regression. The output of the two branches is obtained using a pair-wise correlation. Foreground/background classification and the box regression are given by the $17 \times 17 \times 2k$ and $17 \times 17 \times 4k$ feature maps, respectively. \externalsrc{\cite{li2018siamrpn}}}
     \label{fig:SiamRPNNetArchitecture}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 The noteworthy formulation of tracking as one-shot detection was proposed as follows. In general terms, the goal is to minimize the average loss $\mathcal{L}$ of a predictor function $\func{\psi}{x; W}$ by finding its parameters $W$. When computed over a dataset of $N$ samples $x_i$ with corresponding labels $y_i$, $\forall i = 1, \dots, N$, it is given by
 \begin{equation}
@@ -226,6 +233,7 @@ The template branch provides training parameters to predict the kernel for the d
     \caption[Tracking as one-shot detection]{Tracking is framed as one-shot detection here. First, the template branch predicts the weights of the kernels for the \gls{rpn} using the first frame. Later on, only the detection branch is retained so the framework can be thought of as a local detection network. \externalsrc{\cite{li2018siamrpn}}}
     \label{fig:SiamRPNOneShotDetection}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Later on, a fork of publications emerged with an endeavor to improve the tracking performance by estimating not only a regular axis-aligned \gls{bbox}, but a rotated box, too. Put into perspective, the rotated \gls{bbox}, as opposed to an ordinary, axis-aligned, contains the minimal amount of background pixels~\cite{chen2019rotbboxes}. Thus, datasets with rotated \glspl{bbox} provide tighter enclosed boxes. Additionally, the orientation information may be useful for solving different computer vision problems, such as action classification.
 
@@ -250,6 +258,7 @@ As always, the \siamfc{}~\cite{bertinetto2016siamfc} was employed as the fundame
     \caption[\siammask{} architecture]{A schematic illustration of the two \siammask{} variants: \imgpartdesc{a} a three-branch architecture (full), \imgpartdesc{b} a two-branch architecture (head). Depth-wise correlation layers are adopted again. \externalsrc{\cite{wang2019siammask}}}
     \label{fig:SiamMaskArchitecture}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 An incremental improvement of \siammask{} model came when~\cite{chen2019rotbboxes} proposed a novel, efficient algorithm for the estimation of the \gls{bbox} rotation when the object segmentation mask is given. Particularly, a mask produced by the \siammask{} model, as this work builds on top of~\cite{wang2019siammask}, under the derived name \siammaske{}. In addition, their approach can be used to generate a rotated box ground truth from any segmentation datasets to train a rotation angle regression model. To estimate the rotation angle, they adopted the least-squared scheme as part of the ellipse fitting algorithm.
 
@@ -261,6 +270,7 @@ The idea to employ fully convolutional networks seems to pertain to the modern c
     \caption[\siamcar{} architecture]{\siamcar{} architecture. The left side consists of the original \siamfc{}~\cite{bertinetto2016siamfc} model, with a simple amendment of using depth-wise correlation for multi-channel response map extraction. The right side depicts the subnetworks for foreground/background classification and \gls{bbox} regression. \externalsrc{\cite{guo2019siamcar}}}
     \label{fig:SiamCARArchitecture}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 An indispensable part of localization are low-level features like edges, corners, and so on, whereas high-level features strengthen the representational power from the semantic point of view, which is crucial for discrimination. Authors fused low-level and high-level features from the last $3$ residual blocks of the \gls{resnet}-50 backbone, forming a unity after concatenation.
 

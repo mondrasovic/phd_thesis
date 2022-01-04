@@ -21,6 +21,7 @@ Specifically, let $\func{H}{\vect{x}}$ denote the desired underlying mapping. Th
     \caption[\Gls{resnet} motivation]{The motivating behind the introduction of \glspl{resnet}. The training error, and thus the test error as well, is greater for the deeper model than for the shallower model. Therefore, the inevitable conclusion is that in order to learn better networks, it takes more than just stacking more layers. \externalsrc{\cite{he2015resnet}}}
     \label{fig:ResnetMotivation}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -28,6 +29,7 @@ Specifically, let $\func{H}{\vect{x}}$ denote the desired underlying mapping. Th
     \caption[Skip connections]{A basic building block of residual learning demonstrating the mapping reformulation using skip connections. \externalsrc{\cite{he2015resnet}}}
     \label{fig:SkipConnections}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 To highglight the importance of these ideas, \Gls{resnet} was used as the foundational backbone architecture for feature extraction in majority of all our experiments.
 
@@ -68,6 +70,7 @@ When detecting objects visually at different image resolutions, pyramidal featur
     \caption[\gls{fpn}]{A comparison of four traditional approaches to feature aggregation. \imgpartdesc{a} Computing features on distinct image scales (computationally expensive); \imgpartdesc{b} the use of single scale features only (fast, but not robust); \imgpartdesc{c} Reusing pyramidal feature hierarchy (fast and robust); \imgpartdesc{d} the proposed \gls{fpn} - pyramidal feature aggregation in both directions (practically fast as previous methods but considerably more accurate). \externalsrc{\cite{lin2017fpn}}}
     \label{fig:FPNVariousApproaches}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{Deep Layer Aggregation}
@@ -79,6 +82,7 @@ When detecting objects visually at different image resolutions, pyramidal featur
     \caption[\Gls{dla} comparison]{A demonstration of unification of semantic and spatial information. The \gls{dla} architecture extends densely connected networks, i.e., \glspl{densenet}, and \glspl{fpn}. This extension builds on the idea of skip connections for enhanced feature fusion. \externalsrc{\cite{yu2019dla}}}
     \label{fig:DLAMotivation}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architecture extension emphasizes the importance of feature aggregation across multiple levels in order to merge information from different stages of input processing (see \figstr{}~\ref{fig:DLAMotivation}). Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}, to name a few. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda} (see \figstr{}~\ref{fig:DLADiffApproaches} for further ideas). These structures are expressed through an architectural framework, which is, more importantly, independent of the choice of backbone, thus preserving the compatibility with current and future networks.
 
@@ -88,6 +92,7 @@ A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019d
     \caption[\Gls{dla} proposed solution]{Different approaches to feature aggregation. \imgpartdesc{a} No aggregation; \imgpartdesc{b} Shallow aggregation using skip connections; \imgpartdesc{c} Reordering of skip connections; \imgpartdesc{d} shallowst parts are aggregated the most; \imgpartdesc{e}, \imgpartdesc{f} further refining for deeper aggregation by routing intermediate aggregations back into the network. \externalsrc{\cite{yu2019dla}}}
     \label{fig:DLADiffApproaches}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \subsubsection{Iterative Deep Aggregation}
 
@@ -146,3 +151,4 @@ The two approaches above are independent as well as compatible enough to facilit
     \caption[Combination of \gls{dla} approaches]{\Gls{dla} promotes enhanced feature extraction in spatial and semantic spectrum from the underlying network. In this combined approach, iterative connections progressively deepen and spatially refine the feature representation by joining neighboring stages. Simultaneously, hierarchical connections cross these stages with a tree-like structure to aid gradient propagation through the model. \externalsrc{\cite{yu2019dla}}}
     \label{fig:DLACombination}
 \end{figure}
+% ------------------------------------------------------------------------------

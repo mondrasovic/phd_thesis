@@ -25,6 +25,7 @@ Our goal was to explore the possibility of employing homography for \gls{vot}. T
     \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that would serve for a homography transformation. The rectified, fronto-parallel view demonstrates the desired effect that points present on the ``ground'' plane (in this case, the chessboard) are properly projected, whereas other points suffer from substantial distortion. \externalsrc{\cite{webhomographybasiccode}}}
     \label{fig:ChessboardMarker}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -32,6 +33,7 @@ Our goal was to explore the possibility of employing homography for \gls{vot}. T
     \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view. \externalsrc{\cite{bose2004groundplane}}}
     \label{fig:RoadMarker}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 A common approach to estimate the homography is to use a set of at least four $2$D point correspondences~\cite{hartley1997defense}. The points that are used for establishing the $2$D point correspondences will be referred to as keypoints. These keypoints may belong to a marker which is an object with a known shape that is either naturally occurring or artificially positioned in the scene. A regular, easy-to-detect pattern (e.g., a chessboard) is commonly utilized~\cite{zhang2016flexible} (see \figstr{}~\ref{fig:ChessboardMarker}). A single marker is identified in the image by multiple independent keypoints that have a direct correspondence to its real shape, thus making a group of point correspondences. For the sake of traffic analysis, the marker may be represented by virtually any points on the image as long as certain conditions are met (see \figstr{}~\ref{fig:RoadMarker}). However, the point correspondences established this way are often subjected to noise, thus errors may be introduced in the homography estimation. Although $4$ keypoints are satisfactory, often a greater number of keypoints is used, allowing to use optimization to minimize a suitable cost function~\cite{osuna2016multiobjective, mou2013robust}. Subsequently, an outlier removal becomes an important step in the processing pipeline, for which effective and robust algorithms such as RANSAC~\cite{fischler1981ransac} are usually employed.
 
@@ -41,6 +43,7 @@ A common approach to estimate the homography is to use a set of at least four $2
     \caption[Homography ranking motivation diagram]{A fundamental difference between existing homography estimation methods and our proposed method for homography ranking. If there are multiple markers while the information about their relative positions in the world is absent, the existing approaches can only estimate isolated homographies without the ability to select the best one. To address this issue, our method easily serves as an extension to existing approaches by exploiting multiple markers to rank the isolated homographies from the ``best'' to the ``worst''.}
     \label{fig:HomographyMotivationDiagram}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 A real-world application of generating a bird's-eye view over a road (see \figstr{}~\ref{fig:RoadRectification}) from a video recording when we could not use a large marker to cover a sufficient portion of the road (see \figstr{}~\ref{fig:MultipleMarkersOnRoad}) motivated this entire project. We observed that, under our conditions, the homography estimation based on a single small marker was inaccurate. Therefore, there was an attempt to utilize multiple small markers and measure their relative positions. However, as is often the case in practice, their position measurements were highly noisy at best. Thus, we had to bypass the position measurements altogether, which led us to adopt the proposed method, instead. It is crucial to emphasize that our method can also be adopted in a situation when the marker placed at various positions on the same planar surface can be seen at different frames using a static camera. Stacking the captured frames onto each other would effectively yield an artificially generated view of multiple markers.
 
@@ -54,6 +57,7 @@ Under the constraints discussed above, the existing methods can only generate an
     \caption[Road rectification]{A demonstration of the process of rectification when obtaining a fronto-parallel view over the road using homography. \externalsrc{\cite{luo2010low}}}
     \label{fig:RoadRectification}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -61,3 +65,4 @@ Under the constraints discussed above, the existing methods can only generate an
     \caption[Multiple markers on the road]{A motivating real-world example for the proposed method. We can see different frames captured during a video recording that show various positions of the same marker. The picture after the ``equality'' sign is a merge of the previous frames for better illustration. Due to the use of a static camera, we may treat the positions of the given marker on individual frames as if they were captured simultaneously. However, the question remains unanswered. Given multiple markers in the absence of their position information, which one is the best to choose for rectification?}
     \label{fig:MultipleMarkersOnRoad}
 \end{figure}
+% ------------------------------------------------------------------------------

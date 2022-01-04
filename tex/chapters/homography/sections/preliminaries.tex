@@ -12,6 +12,7 @@ We define a marker as an object with a known, easy-to-detect shape. Such object 
     \caption[Homography ranking terminology]{Visualization of relationships within our established terminology. This diagram also depicts the hierarchical dependence between individual terms. In addition, the dotted elements represent processes with arrows denoting their input and output.}
     \label{fig:HomographyTerminology}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 Unless stated otherwise, a \mbox{\textbf{similarity transformation}} denotes a limited affine transformation with $4$ DoF which encompasses translation, rotation and uniform scaling (equation \ref{eq:SimilarityMatrices}). Specifically, let $\mset{K}_1$ and $\mset{K}_2$ be sets of feature keypoints belonging to objects $O_1$ and $O_2$. We refer to the objects $O_1$ and $O_2$ as \mbox{\textbf{similar}} if there exists a similarity transformation $\psi$, such that $\mset{K}_1 = \func{\psi}{\mset{K}_2}$ and $\mset{K}_2 = \func{\psi^{-1}}{\mset{K}_1}$. For instance, $O_1$ and $O_2$ may represent rectangles of different sizes whilst having a equal aspect ratio.
 

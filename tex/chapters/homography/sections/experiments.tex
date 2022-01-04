@@ -9,6 +9,7 @@
     \caption[Homography ranking heatmaps]{Distribution of pixel-wise reprojection error. The heat map along with the corresponding contours demonstrate the varying distance between the ground truth and rectified pixel position after removing the perspective distortion. The bold square represents the reference marker. We show the result of \imgpartdesc{a} the ``best'' marker and \imgpartdesc{b} the ``worst'' marker. This test scenario includes all similarity transformations as well as noise in point correspondence.}
     \label{fig:HeatmapsBestWorst}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 The evaluation of the proposed homography ranking algorithm involved various conditions. We tested cases that included diverse similarity transformations applied to original markers as well as noisy point correspondence, e.g., errors in marker detection since these are the expected problems in real-world scenarios.
 
@@ -52,6 +53,7 @@ To simulate a noisy point correspondence, we applied a random noise (translation
     \caption[Description of creation of test scenarios]{Description of how each one of $t$ test instances in a specific test scenario is created. The input is a blank $w \times h$ image over which $m$ markers are initialized in a uniform grid, which produces the original marker keypoints. Depending on the test scenario, a particular subset of similarity transformations is applied to the entire image. Subsequently, warped keypoints are modified by random noise to simulate noisy point correspondence.}
     \label{fig:DatasetGenerating}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 % ##############################################################################
 \subsection{Evaluation Methodology}
@@ -159,6 +161,7 @@ In this test scenario, we tested in isolation each allowed similarity transforma
     \caption[Influence of similarity transformation]{Influence of similarity transformation on the reprojection error.}
     \label{fig:SimilarityTransformInfluence}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \subsubsection{Influence of Noise}
 
@@ -171,6 +174,7 @@ In \figstr{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point corr
     \caption[Influence of noise]{Influence of noise applied to the warped keypoints representing a noisy point correspondence.}
     \label{fig:NoiseInfluence}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \subsubsection{Influence of Variable Shapes}
 
@@ -183,6 +187,7 @@ We expected that the relative improvement of our method should be invariant to v
     \caption[Influence of marker shape]{Results for different marker shapes.}
     \label{fig:ShapeInfluence}
 \end{figure}
+% ------------------------------------------------------------------------------
 
 \subsubsection{Influence of Number of Markers}
 
