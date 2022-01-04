@@ -141,7 +141,7 @@ We computed the relative improvement in \% for each $k$-th homography according 
 \end{algorithm}
 
 % ##############################################################################
-\subsection{Results}
+\subsection{Experimental Results}
 \label{ssec:EvaluationResults}
 
 \figstr{}~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with respect to the marker position. We can see that the marker position can be deduced by looking at the heatmap representing the pixel-wise reprojection error over the image. The transformation achieves the best accuracy in the marker neighborhood and steadily decreases for more distant pixels. However, not all markers are subjected to the same pattern of error variation. This observation was the core motivation for our solution. We aim to choose the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints.
