@@ -194,6 +194,15 @@ A short-term occlusion can be defined as having the visibility confidence for th
 
 \subsubsection{Online Solver Algorithm}
 
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/methodology/siammot_online_solver.pdf}
+    \caption[\siammot{} online solver]{Here we present the process which the tracker as well as the detector predictions for the current frame undergo in order to derive the final tracker output. At first, all the \glspl{bbox} are merged upon which a \gls{nms} algorithm is performed. The \gls{nms} algorithm preserves the priority that active tracks are processed primarily, then followed by the dormant tracks. The remaining detections are filtered as last. The \gls{nms} algorithm does not have to be modified at all, since the priority can be induced by altering the associated score values. After the \gls{nms} stage, the dormant tracks with sufficient confidence are reactivated. Conversely, active tracks with low confidence are suspended. Then, if there are detections with high confidence, new tracks are established. The process finishes off by permanently killing dormant tracks that have lasted for more than some specific number of frames without reinstantiation.}
+    \label{fig:SiamMOTOnlineSolver}
+\end{figure}
+% ------------------------------------------------------------------------------
+
 % ##############################################################################
 \subsection{Implementation Details}
 
