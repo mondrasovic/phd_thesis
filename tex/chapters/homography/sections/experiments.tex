@@ -3,6 +3,7 @@
 
 \figstr{}~\ref{fig:HeatmapsBestWorst} demonstrates how the reprojection error varies with respect to the marker position. It can be observed that the marker position can be approximately estimated by looking at the heatmap which represents the pixel-wise reprojection error over the image. Simply put, the transformation achieves the best accuracy in the vicinity of the chosen marker and steadily decreases for more distant pixels. However, the important property is that not all markers are subjected to the same pattern of error variation. This is the core observation that motivated our solution in the first place. The objective is to select the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints. The rationale is that subsequent image postprocessing would greatly benefit from having the area of the image as large as possible that is reprojected properly.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/homography/heatmaps_best_worst.pdf}}
     \caption[Homography ranking heatmaps]{Distribution of pixel-wise reprojection error. The heat map along with the corresponding contours demonstrate the varying distance between the ground truth and rectified pixel position after removing the perspective distortion. The bold square represents the reference marker. We show the result of \imgpartdesc{a} the ``best'' marker and \imgpartdesc{b} the ``worst'' marker. This test scenario includes all similarity transformations as well as noise in point correspondence.}
@@ -44,6 +45,7 @@ The most important transformation was the change in perspective. To this end, we
 
 To simulate a noisy point correspondence, we applied a random noise (translation) to each $x$ and $y$ coordinate of the warped keypoints from the interval $\sbrackets{-2, 2}$ pixels. At this stage, each keypoint was modified in isolation to achieve the distortive effect. Thanks to the perspective deformation, the generated random shift represented different levels of noise depending on how much the image had been warped. This step imitated errors in the marker detection, leading to noisy point correspondence.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\linewidth]{figures/homography/dataset_generating.pdf}
@@ -150,6 +152,7 @@ In this test scenario, we tested in isolation each allowed similarity transforma
 
 \def\boxplotimgwidth{0.75\linewidth}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=\boxplotimgwidth]{figures/homography/similarity_transform_influence.pdf}
@@ -161,6 +164,7 @@ In this test scenario, we tested in isolation each allowed similarity transforma
 
 In \figstr{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point correspondence that simulated inaccurate keypoint detection. The ranking method preserved the trend of the relative improvement in presence of noise. Absolute reprojection error demonstrated that unless noise was present, the errors varied on sub-pixel levels, so they were practically zero.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=\boxplotimgwidth]{figures/homography/noise_influence.pdf}
@@ -172,6 +176,7 @@ In \figstr{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point corr
 
 We expected that the relative improvement of our method should be invariant to variable shapes as long as they were similar. \figstr{}~\ref{fig:ShapeInfluence} demonstrates that with an increasing number of keypoints our method consistently preserved its capabilities. Introducing more complicated shapes than just rectangles did not exacerbate the outcome of the algorithm.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=\boxplotimgwidth]{figures/homography/shape_influence.pdf}

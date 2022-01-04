@@ -5,6 +5,7 @@ This section contains a description of our custom terminology. Despite the exist
 
 We define a marker as an object with a known, easy-to-detect shape. Such object can be either naturally occurring or artificially placed on the planar surface of the scene we want to remove perspective distortion from, i.e., to produce a bird's-eye view. The marker contains keypoints, which is a set of distinct, independent, visual feature points (for instance, corners). The chosen keypoints visible in the perspectively deformed image are called the \mbox{warped keypoints}. The set of the \mbox{rectified keypoints} is represented in the desired image (not subjected to perspective distortion) and is produced from the warped keypoints using the homography projection. Last but not least, the \mbox{point correspondence} is a relationship between the warped and the \mbox{target keypoints} and it is necessary for homography estimation. In an ideal case, the rectified keypoints match the target keypoints in terms of their pixel positions (see \figstr{}~\ref{fig:HomographyTerminology}).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/homography/terminology.pdf}

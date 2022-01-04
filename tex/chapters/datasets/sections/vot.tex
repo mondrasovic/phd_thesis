@@ -13,6 +13,7 @@ The \gls{otb} dataset~\cite{wu2015otb} is widely adopted for performance evaluat
 One of the newest benchmarks is the \gottenk{} dataset~\cite{huang2021got10k} (web:~\cite{webgot10kdataset}). Our personal opinion, based on the comprehensive survey regarding single object tracking that we composed~\cite{ondrasovic2021siamese}, is that this dataset belongs to the top ones freely available in terms of quality. The number of video segments this dataset contains exceeds $10\ 000$. These videos cover real-world moving objects represented by $1.5$ million manually labeled \glspl{bbox}. Besides a plethora of real-world classes the number of which surpasses $560$, there are also more than $80$ classes of motion patterns present throughout the dataset (see \figstr{}~\ref{fig:GOT10kDataset}).
 As we have already mentioned, the principle of one-shot learning has been advertised in the tracking community several times. This benchmark encourages the development of generic purposed trackers by following the one-shot rule. It is also worth emphasizing the zero overlap between the train and test sets in terms of object classes. The comprehensiveness of this work is further reinforced by providing extra labeling information, such as object visibility ratios.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/datasets/got10k_sample.pdf}}
     \caption[\gottenk{} dataset]{Screenshots of some representative videos collected and annotated in the \gottenk{} dataset. \externalsrc{\cite{webgot10kdataset}}}
@@ -31,6 +32,7 @@ This prominent dataset (web:~\cite{webvot2019dataset}) is a benchmark in visual 
 
 This object tracking benchmark~\cite{geiger2012cvpr} (web:~\cite{webkittiobjtrackingdataset}) consists of $21$ training sequences and $29$ test sequences. Even though there have been labeled $8$ different classes, only the classes "car" and "Pedestrian" are evaluated in this benchmark, as only for those classes enough instances for a comprehensive evaluation have been labeled. Considering our potential traffic application, this fact does not represent a disadvantage. The goal of the object tracking task in this benchmark is to estimate object tracklets for the classes "car" and "pedestrian". Only $2D$ $0$-based, axis-aligned \glspl{bbox} in each image are evaluated.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/datasets/kitti_object_tracking_sample.jpg}}
     \caption[\datasetname{KITTI Object Tracking} dataset]{A sample of the only two classes ("car" and "pedestrian") that are evaluated in the benchmark using the \datasetname{KITTI Object Tracking} dataset. \externalsrc{\cite{webkittiobjtrackingdataset}}}
@@ -45,6 +47,7 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
 
 \uadetrac{} is considered a challenging real-world multi-object detection and multi-object tracking benchmark. The dataset consists of $10$ hours of videos captured at $24$ different locations in China. The videos are recorded at $25$ \gls{fps}, with resolution of $960 \times 540$ pixels. There are more than $140\ 000$ frames and $8\ 250$ vehicles that are manually annotated, leading to a total of $1.21$ million labeled \glspl{bbox} of objects.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/datasets/uadetrac_samples.jpg}}
     \caption[\uadetrac{} dataset]{A sample from the \uadetrac{} dataset. The whole dataset consists of diverse traffic situations captured using a static camera viewed from various angles. \externalsrc{\cite{webuadetracdataset}}}
@@ -53,6 +56,7 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
 
 \def\uadetracfigsize{0.4}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \begin{subfigure}[b]{\uadetracfigsize\textwidth}
@@ -84,6 +88,7 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
 
 Since this dataset is of paramount importance to our research, here we provide more details about the structure and properties of the contained data compared to other datasets described in our work. The dataset consists of $100$ videos, where $60$ of them are dedicated to training, while the remaining $40$ are used for testing. Ground-truth annotations are provided in both variations. This is not always the case, as several benchmarks do not disclose annotations for the test dataset, e.g., \datasetname{KITTI}~\cite{geiger2012cvpr}.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.8\linewidth]{figures/datasets/uadetrac_ignored_regions.png}}
     \caption[Ignored regions in \uadetrac{}]{A demonstration of a possible distribution of ignored regions in the \uadetrac{} dataset. \externalsrc{\cite{webuadetracdataset}}}

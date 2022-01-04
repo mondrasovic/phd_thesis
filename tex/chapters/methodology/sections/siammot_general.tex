@@ -34,6 +34,7 @@ Assume there is a specific object instance $i$ detected at time $t$. Then, the S
 \end{equation}
 where $\mathcal{T}$ is a module (head) represented by the Siamese tracker with learnable parameters $\Theta$. In light of the already stated efficiency of this framework in terms reusing information as much as possible, the module $\mathcal{T}$ is trained on shared feature maps extracted from the backbone using \gls{roi}-align operations. As a short reminder, a basic Siamese tracker uses an exemplar image encoded as a kernel to search for the occurrence of the corresponding object in a future frame over a specific search region that should be, by definition, greater than the exemplar region. Thus, the feature map $\mtxsubsup{f}{R_i}{t}$ is extracted over the region $\subsup{R}{i}{t}$ contained in the frame $\mtxsup{I}{t}$. Analogically, the feature map $\mtxsubsup{f}{S_i}{t + \delta}$ is extracted over the search region $\subsup{S}{i}{t + \delta}$ delineated in the frame $\mtxsup{I}{t + \delta}$. The region $\subsup{S}{i}{t + \delta}$ is computed by simple expansion of the region $\subsup{R}{i}{t}$ by a factor $r$, such that $r > 1$, while preserving the location of the geometric center, as illustrated in \figstr{}~\ref{fig:SiamMOTArchitecture} by the dashed \gls{bbox}. Once again, a standard procedure of region expansion while maintaining the original region in the center of the specified region that is ubiquitous among single-object Siamese trackers. Last but not least, $\subsup{v}{i}{t + \delta}$ represents the visibility confidence for the detected instance $i$ at time $t + \delta$. This visibility score reflects the tracker's prediction confidence, and so the value $\subsup{v}{i}{t + \delta}$ should be high if the instance is visible in $\subsup{S}{i}{t + \delta}$, otherwise the value should be low. On top of this formulation that is reminiscent of single object tracking, in the \gls{mot} context \eqstr{}~\ref{eq:SiamMOTSiameseTracker} is applied multiple times, i.e., for each object detected in frame $t$, signified by $\subsup{R}{i}{t} \in \mtxsup{R}{t}$. However, from implementation's perspective, all these operations can run in parallel and thus the backbone features are computed only once, making the online tracking inference very efficient.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/methodology/siammot_architecture.pdf}
@@ -52,7 +53,7 @@ As far as the Siamese part of the \siammot{} is concerned, the authors dubbed th
 
 \subsubsection{Explicit Motion Modeling}
 
-The most fundamental aspect of Siamese trackers is the cross-correlation operator (\sectionstr{}~\ref{}) to generate a pixel-level $2$D response map. In \siammot{}, this operation correlation each location of the search feature map (belonging to the search region) $\mtxsubsup{f}{S_i}{t + \delta}$ with the exemplar (target) feature map $\mtxsubsup{f}{R_i}{t}$ to produce a response map
+The most fundamental aspect of Siamese trackers is the cross-correlation operator (\sectionstr{}~\ref{eq:SiameseCrossCorrelation} on page~\pageref{eq:SiameseCrossCorrelation}) to generate a pixel-level $2$D response map. In \siammot{}, this operation correlation each location of the search feature map (belonging to the search region) $\mtxsubsup{f}{S_i}{t + \delta}$ with the exemplar (target) feature map $\mtxsubsup{f}{R_i}{t}$ to produce a response map
 \begin{equation}
     \mtxsub{r}{i} = \mtxsubsup{f}{S_i}{t + \delta} \star \mtxsubsup{f}{R_i}{t}.
 \end{equation}
@@ -83,7 +84,7 @@ in which $\odot$ symbolizes the element-wise multiplication, $\mtxsub{\eta}{i}$ 
         \subsup{R}{i}{t}
     }.
 \end{equation}
-Here, the letter $\lambda$, such that $0 \leq \lambda \leq 1$, is a weighting coefficient, $\mathcal{C}$ is the cosine-window function (\sectionstr{}~\ref{}) with respect to the geometric center of the previous target location given by $\subsup{R}{i}{t}$, and $\mathcal{S}$ is a Gaussian function that is supposed to penalize the height-to-width ratio changes between candidate region $\func{\mtx{p}}{x, y}$ and $\subsup{R}{i}{t}$. The aim of the penalty map is to discourage abrupt changes in target location between individual frames during the course of tracking. This technique is widely adopted in Siamese trackers.
+Here, the letter $\lambda$, such that $0 \leq \lambda \leq 1$, is a weighting coefficient, $\mathcal{C}$ is the cosine-window function with respect to the geometric center of the previous target location given by $\subsup{R}{i}{t}$, and $\mathcal{S}$ is a Gaussian function that is supposed to penalize the height-to-width ratio changes between candidate region $\func{\mtx{p}}{x, y}$ and $\subsup{R}{i}{t}$. The aim of the penalty map is to discourage abrupt changes in target location between individual frames during the course of tracking. This technique is widely adopted in Siamese trackers.
 
 \subsubsection{Loss Function}
 
@@ -148,6 +149,7 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
     }.
 \end{equation}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.2\linewidth]{figures/methodology/fcos_centerness.pdf}}
     \caption[Centerness visualization]{Red, blue, and other colors denote $1$, $0$ and the values between them, respectively. Centerness is calculated as given by \eqstr{}~\ref{eq:Centerness} and decays from $1$ to $0$ as the location deviates from the center of the object. Best viewed in color. \externalsrc{\cite{tian2019fcos}}}
@@ -166,6 +168,7 @@ where the $l_{\text{rpn}}$ as well as the $l_{\text{detect}}$ are standard \gls{
 
 For better understanding, we suggest the reader follow the diagram in \figstr{}~\ref{fig:SiamMOTInference}. At inference, the well-established \gls{iou}-based \gls{nms} operation (\sectionstr{}~\ref{ssec:NonMaximumSuppression} is exploited to process the outputs of the detection and tracker subnetwork independently. The subsequent process aimed at spatial-matching is used to merge detections with the tracker output. This stage also involves the already mentioned \gls{iou}-based \gls{nms} operation (thus, in total, it is used three times during the inference).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/methodology/siammot_inference_diagram.pdf}
@@ -216,6 +219,7 @@ When using gradient accumulation, the update step is modified as
 \end{equation}
 where $n$ is the number of accumulated minibatches.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/methodology/gradient_accumulation.png}

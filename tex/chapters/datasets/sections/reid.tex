@@ -9,12 +9,14 @@ In this section, we focus on re-identifying vehicles. Faces and their \gls{reid}
 
 The \datasetname{CompCars} dataset~\cite{yang2015compcars} (web:~\cite{webcompcarsdataset}) consists of data from two scenarios: web-nature and surveillance-nature (see \figstr{}~\ref{fig:CompCarsDatasetSurveillance}). The data in the web-nature category encompass $163$ cars with $1\ 716$ car models. In total, there are $136\ 726$ images that capture the entire car, whereas $27\ 618$ of additional images provide only a view of car parts. The full car images are labels with \glspl{bbox} as well as viewpoints. The attributes each car model is labeled with are the following: maximum speed, displacement, number of doors, number of seats, and type of car. On the other hand, the surveillance-nature data contains $50\ 000$ images of just the front view. This dataset is freely available for research purposes and can be downloaded without the need to ask for permission. Apart from \gls{reid}, the dataset is well prepared for computer vision tasks such as fine-grained classification, attribute prediction, car model verification (see \figstr{}~\ref{fig:CompCarsDatasetAttributes}).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/datasets/compcars_surveillance_samples.pdf}}
     \caption[\datasetname{CompCars} dataset]{Sample images of the surveillance-nature data from the \datasetname{CompCars} dataset. The images have considerable appearance variations due to the varying conditions of light, weather, traffic, etc. \externalsrc{\cite{yang2015compcars}}}
     \label{fig:CompCarsDatasetSurveillance}
 \end{figure}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \begin{subfigure}[b]{0.75\textwidth}
@@ -43,6 +45,7 @@ The \datasetname{CompCars} dataset~\cite{yang2015compcars} (web:~\cite{webcompca
 
 The \datasetname{VehicleID} dataset~\cite{liu2016deepreldist} (web:~\cite{webpkuvehicledataset}) contains data captured during daytime by multiple real-world surveillance cameras distributed in a small city. There are $26\ 267$ vehicles ($221\ 763$ images in total). Each image is attached with an ID label corresponding to its identity in the real world (see \figstr{}~\ref{fig:VehicleIDDataset}). In addition, there are manually labeled $10\ 319$ vehicles ($90\ 196$ images in total) of their vehicle model information (i.e. “MINI-cooper”, “Audi A6L”, “BWM 1 Series”, etc.). This dataset is usable thanks to the information about the model. We posit that at some point a hypothesis could be tested whether incorporating car model information into the machine learning model would improve its robustness. Nevertheless, only the front or rear view of the vehicle is available. This disadvantage is lessened by a reasonable number of training images. This dataset is also available only upon request and only for research purposes.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/datasets/vehicleid_overview.pdf}}
     \caption[\datasetname{VehicleID} dataset]{Few samples from the \datasetname{VehicleID} dataset. Each vehicle has at least two images in the dataset, but only its front and rear view were obtained. \externalsrc{\cite{liu2016deepreldist}}}
@@ -62,6 +65,7 @@ A large-scale benchmark dataset named \verisss{} (web:~\cite{webveridataset}) fo
     \item Data samples are also labeled with license plates and other spatio-temporal information, such as the \glspl{bbox} of plates with corresponding strings, the timestamps of vehicles, and the distances between neighboring cameras.
 \end{itemize}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/datasets/veri776__overview.pdf}}
     \caption[\verisss{} dataset]{The key properties of the \verisss{} dataset. Individual vehicles offer rich within-class differences in different viewpoints. At the same time, different but similar vehicles may have trivial inter-class differences. Moreover, the license plates as the unique ID are at disposal for a vehicle search. Additional contextual information can assist in vehicle searches in the city. \externalsrc{\cite{liu2018provid}}}

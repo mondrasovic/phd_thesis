@@ -15,12 +15,14 @@ The primary reason for adding skip connections was to avoid vanishing gradient p
 
 Specifically, let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonlinear layers are then expected to fit a different mapping $\func{F}{\vect{x}} = \func{H}{\vect{x}} - \vect{x}$. Thus, the original mapping is reformulated as $\func{H}{\vect{x}} = \func{F}{\vect{x}} + \vect{x}$. The initial hypothesis, which turned out to be correct, was that it is easier to optimize the residual mapping instead of the original, unreferenced mapping. This formulation is visualized on \figstr{}~\ref{fig:SkipConnections}.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.9\linewidth]{figures/theoretical_foundations/resnet_motivation.pdf}}
     \caption[\Gls{resnet} motivation]{The motivating behind the introduction of \glspl{resnet}. The training error, and thus the test error as well, is greater for the deeper model than for the shallower model. Therefore, the inevitable conclusion is that in order to learn better networks, it takes more than just stacking more layers. \externalsrc{\cite{he2015resnet}}}
     \label{fig:ResnetMotivation}
 \end{figure}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.35\linewidth]{figures/theoretical_foundations/skip_connections.pdf}}
     \caption[Skip connections]{A basic building block of residual learning demonstrating the mapping reformulation using skip connections. \externalsrc{\cite{he2015resnet}}}
@@ -37,6 +39,7 @@ When detecting objects visually at different image resolutions, pyramidal featur
 
 \figstr{}~\ref{fig:FPNVariousApproaches} compares competing methods of feature aggregation by their core principles. Regarding the \gls{fpn} itself, observe the two pathways in \figstr{}~\ref{fig:FPNVariousApproaches} \imgpartdesc{d}. The bottom-up pathway represents a feedforward computation of the backbone (e.g., a basic \gls{cnn}), where one pyramid levels corresponds to one stage. The output of the last layer of each stage will serve the purpose of enriching the feature maps when processing the top-down pathway by use of lateral connections. The top-down pathway consists of upsampling operations followed by an application of $1 \times 1$ convolutions to align tensor channels dimensions and then element-wise addition of features. Each lateral connection merges features of the same spatial size at each stage from the two pathways. If applied to a model, a rich feature representation is then available for further processing, e.g., detecting objects, thus greatly enhancing the model performance.
 
+% ------------------------------------------------------------------------------
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
@@ -70,6 +73,7 @@ When detecting objects visually at different image resolutions, pyramidal featur
 \subsection{Deep Layer Aggregation}
 \label{ssec:DeepLayerAggregation}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/dla_comparison.pdf}}
     \caption[\Gls{dla} comparison]{A demonstration of unification of semantic and spatial information. The \gls{dla} architecture extends densely connected networks, i.e., \glspl{densenet}, and \glspl{fpn}. This extension builds on the idea of skip connections for enhanced feature fusion. \externalsrc{\cite{yu2019dla}}}
@@ -78,6 +82,7 @@ When detecting objects visually at different image resolutions, pyramidal featur
 
 A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architecture extension emphasizes the importance of feature aggregation across multiple levels in order to merge information from different stages of input processing (see \figstr{}~\ref{fig:DLAMotivation}). Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}, to name a few. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda} (see \figstr{}~\ref{fig:DLADiffApproaches} for further ideas). These structures are expressed through an architectural framework, which is, more importantly, independent of the choice of backbone, thus preserving the compatibility with current and future networks.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/dla_existing_vs_proposed.pdf}}
     \caption[\Gls{dla} proposed solution]{Different approaches to feature aggregation. \imgpartdesc{a} No aggregation; \imgpartdesc{b} Shallow aggregation using skip connections; \imgpartdesc{c} Reordering of skip connections; \imgpartdesc{d} shallowst parts are aggregated the most; \imgpartdesc{e}, \imgpartdesc{f} further refining for deeper aggregation by routing intermediate aggregations back into the network. \externalsrc{\cite{yu2019dla}}}
@@ -135,6 +140,7 @@ where $B$ represents some convolutional block.
 
 The two approaches above are independent as well as compatible enough to facilitate combining the two together for even richer feature aggregation as shown in \figstr{}~\ref{fig:DLACombination}.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.9\linewidth]{figures/theoretical_foundations/dla_ida_hda_combination.pdf}}
     \caption[Combination of \gls{dla} approaches]{\Gls{dla} promotes enhanced feature extraction in spatial and semantic spectrum from the underlying network. In this combined approach, iterative connections progressively deepen and spatially refine the feature representation by joining neighboring stages. Simultaneously, hierarchical connections cross these stages with a tree-like structure to aid gradient propagation through the model. \externalsrc{\cite{yu2019dla}}}

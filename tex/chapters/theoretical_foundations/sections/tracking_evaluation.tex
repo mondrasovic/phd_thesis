@@ -39,7 +39,7 @@ For each time frame $t$:
           \end{enumerate}
 \end{enumerate}
 
-
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.55\linewidth]{figures/theoretical_foundations/clear_hypotheses_status.pdf}}
     \caption[\gls{clear} hypotheses]{With a demonstration of a correct tracker inference at the top, the \gls{clear} \gls{mot} metric distinguishes between three fundamental types of errors, misses (false negatives), false positives and ID switches, shown in this order respectively. \externalsrc{\cite{bernardin2008clearmot}}}
@@ -62,12 +62,14 @@ However, there are several issues with such approaches. Consider scenarios depic
 
 Let $M_t = \cbrackets{\rbrackets{h_i, o_j}}$ be the set of mappings made up to time $t$, such that $M_0 = \cbrackets{\cdot}$. Once a new correspondence is made at the next step at time $t + 1$ between the hypothesis $h_k$ and the object $io_j$ that conflicts the already established identity by the pair $\rbrackets{h_i, o_j}$ in $M_t$, this contradition is then counted as a mismatch error and $\rbrackets{h_i, o_j}$ is replaced by $\rbrackets{h_k, o_j}$ in $M_{t + 1}$. Consequently, papping that is constructed this way enhances decision-making when facing multiple competing hypotheses for the same object. The implicit assumption is that the previously assigned hypothesis is more likely to be correct that the new one, even if the distance metric alone would indicate otherwise (see \figstr{}~\ref{fig:ObjectHypothesisReInit} for illustration).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/seq_based_correspondence_issues.pdf}}
     \caption[Sequence-based correspondence mismatches]{This figure illustrates the inherent ``unfairness'' when relying on sequence-level ``best'' object-hypothesis mapping induced by the most frequent correspondence. As shown in the case $1$, the correct hypothesis is the $h_2$, and thus only $2$ errors are incurred for the first mismatch. The case $2$ is practically identical, the $h_2$ also represents the most common assignment. However, $4$ errors are accumulated for the alleged mismatch for $h_1$. \externalsrc{\cite{bernardin2008clearmot}}}
     \label{fig:SeqLevelMostCommonCorrespondenceProb}
 \end{figure}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/object_hypothesis_reinit.pdf}}
     \caption[Object-hypothesis re-initialization]{Demonstration of a track reinitialization. At time $t$, the identity of the object $o_1$ is accounted for by the hypothesis $h_1$. At time $t + 1$, the object disappears and the track is temporarily lost. At time $t + 2$, the tracker is responsible for reinstantiating the object identity. During evaluation, the underlying assumption is that the previous hypothesis should be the correct one, even if the new hypothesis is closer according to the used distance function. \externalsrc{\cite{bernardin2008clearmot}}}
@@ -110,6 +112,7 @@ the possible values of which lie within the interval $\sbrackets{-\infty, 1}$. F
 
 We would like to emphasize that the errors have to be first summed up across all the frames before computing the ratios rather than evaluating the ratio locally. Independent computation of the given ratios (in both equations~\ref{eq:MOTPMetric}~and~\ref{eq:MOTAMetric}) would lead to non-intuitive outcome (see \figstr{}~\ref{fig:LocalGlobalRatioEval} for details).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/local_vs_global_ratio_evaluation.pdf}}
     \caption[Local vs. global ratio evaluation]{Computing of error ratios needs to be performed on a global level, rather than on a local, frame level. Assume a sequence consisting of $8$ frames. Moreover, assume that objects $o_1, \dots, o_4$ are visible on the frames from $t_1$ to $t_4$, but none of them is being tracked. The situation changes at frame $t_4$ where only the object $o_4$ is being tracked properly by the hypothesis $h_1$. As a result, in frames $t_1, \dots, t_4$, the resulting miss rate is $100\%$, whereas in frames $t_5, \dots, t_8$ it is exactly $0\%$. Applying arithmetic average to these values yields a global miss rate of $\frac{1}{8} \rbrackets{4 \cdot 100 + 4 \cdot 0} = \frac{1}{2}$, or, $50\%$. Conversely, performing summation prior to quantifying the final global ratio produces far more intuitive result of $16$ out of $20$ misses, or the miss rate of $80\%$. \externalsrc{\cite{bernardin2008clearmot}}}

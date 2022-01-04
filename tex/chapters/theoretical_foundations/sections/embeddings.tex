@@ -7,7 +7,7 @@ In our work, we will often discuss the use of so-called \emph{embedings} for occ
 \subsection{Learning Metric Embedding}
 \label{ssec:LearningMetricEmbedding}
 
-As~\cite{hermans2017triplet} describes the goal of learning metric embedding is to learn a function (a transformation) $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$, which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$. Learning such a metric embedding is similar to dimensionality reduction, as it involves mapping a set of high dimensional input points onto a low dimensional manifold. The function $\func{f_\theta}{\cdot}$ ideally maps \emph{similar} (a measure of similarity has to be defined, as in \sectionstr{}~\ref{ssec:EmbeddingSimilarity}) points in the input space to nearby points on the manifold~\cite{hadsell2006dimreduction}.
+As~\cite{hermans2017triplet} describes the goal of learning metric embedding is to learn a function (a transformation) $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$, which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$. Learning such a metric embedding is similar to dimensionality reduction, as it involves mapping a set of high dimensional input points onto a low dimensional manifold. The function $\func{f_\theta}{\cdot}$ ideally maps \emph{similar} (a measure of similarity has to be defined, as in \sectionstr{}~\ref{ssec:EmbeddingVectorSimilarity}) points in the input space to nearby points on the manifold~\cite{hadsell2006dimreduction}.
 
 To clarify, suppose the use of this transformation for vehicle \gls{reid}. This embedding would be achieved by a learned function that would map the images of vehicles into a latent space, where images of the same vehicle would be mapped closer together. Moreover, such mapping should be invariant to variations in lighting conditions, vehicle rotations (a difficult one can be a change from front to rear view), and many other transformations that interfere with vehicle \gls{reid}. Kuma~\etal{}~\cite{kuma2019vehiclereid} also mention that popular loss functions for learning embeddings include contrastive or triplet loss, the two we discuss further in \sectionstr{}~\ref{ssec:SiameseAndTripletNetworks}. Among other things, embedding trained this way can be used to produce a feature vector for classification, one-shot learning tasks~\cite{koch2015siameseoneshot}, clustering~\cite{schroff2015facenet}, face recognition~\cite{parkhi2015deepface} and last, but not least, re-identification~\cite{kuma2019vehiclereid}.
 
@@ -63,6 +63,7 @@ The major distinction between these measures is that cosine similarity only meas
 \subsection{Siamese and Triplet Networks}
 \label{ssec:SiameseAndTripletNetworks}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
@@ -98,6 +99,7 @@ The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The
 
 \subsubsection{Triplet Loss}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/triplet_loss_model_structure.pdf}}
     \caption[Triplet loss architecture]{A model structure developed by~\cite{schroff2015facenet}. This network consists of a batch input layer and a deep \gls{cnn} followed by an $L_2$ normalization, which produces the final embedding. A triplet loss is used during the training. \externalsrc{\cite{schroff2015facenet}}}
@@ -124,6 +126,7 @@ to hold true. The triplet loss function is therefore defined as~\cite{schroff201
 \end{equation}
 During the training using the triplet loss, the model should learn to push negative samples further away from the positive samples, ideally exceeding the margin $\alpha$. Assuming a situation when the negative sample is mapped closer than a positive sample, the training should result in the desired situation of bringing the positive sample closer while pushing the negative one further (see \figstr{}~\ref{fig:TripletLossLearningProcess}).
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/triplet_loss_learning_process.pdf}}
     \caption[Triplet loss learning]{The objective is to learn embeddings such that the anchor is closer to the positive example than it is to the negative example by some specified margin value. The triplet loss, therefore, minimizes the distance between the anchor and the positive sample of the same identity and maximizes the distance between the anchor and the negative sample of a different identity. \externalsrc{\cite{schroff2015facenet}}}
@@ -158,6 +161,7 @@ Contrastive (eq.~\ref{eq:ContrastiveLoss}) and triplet (eq.~\ref{eq:TripletLoss}
     \label{tab:TripletCategoriesDefinitions}
 \end{table}
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centering
     \begin{subfigure}[b]{0.35\textwidth}
@@ -185,6 +189,7 @@ Given a training set, the task is to produce reasonable triplets off-line, for i
 
 Online mining is performed by selecting the hard positive/negative exemplars from within a mini-batch (fig. \ref{fig:TripletArchitectureOnlineMining}). A condition that a minimum number of exemplars for any identity is present in each mini-batch has to be met. For example, Schroff et. al.~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per mini-batch. Let $P$ be the number of different objects/identities (people, vehicles, etc.) and $K$ be the number of different images for a concrete identity (e.g. different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
 
+% ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/triplet_architecture_online_mining.pdf}}
     \caption[Triplet loss online mining architecture]{The architecture of a triplet network where an online triplet loss function is used for training. In this architecture, no weight sharing is required as the triplet selection happens \emph{online} solely in the loss function.}
