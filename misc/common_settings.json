@@ -2,7 +2,7 @@
     "workbench.editorAssociations": {
         "*.ipynb": "jupyter-notebook"
     },
-    "workbench.colorTheme": "Monokai Dimmed",
+    "workbench.colorTheme": "Solarized Dark",
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "notebook.cellToolbarLocation": {
@@ -21,21 +21,40 @@
     "editor.wordWrap": "on",
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before": ["j"],
-            "after": ["g", "j"]
+            "before": [
+                "j"
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
         },
         {
-            "before": ["k"],
-            "after": ["g", "k"]
+            "before": [
+                "k"
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
         }
     ],
+    "remote.SSH.remotePlatform": {
+        "158.193.146.199": "linux"
+    },
     "files.exclude": {
         "**/.classpath": true,
         "**/.project": true,
         "**/.settings": true,
         "**/.factorypath": true
     },
-    "remote.SSH.remotePlatform": {
-        "158.193.146.199": "linux"
-    }
+    "jupyter.askForKernelRestart": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": false,
+    "python.formatting.provider": "yapf",
+    "editor.formatOnSave": true,
+    "python.formatting.yapfArgs": [
+        "--style={based_on_style: facebook, column_limit: 80, indent_width: 4}"
+    ],
+    "open-all-files.recursive": true
 }
