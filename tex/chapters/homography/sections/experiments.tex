@@ -18,7 +18,7 @@ All the test scenarios indicated the following trend. On average, the homography
 \subsubsection{Implementation Details}
 \label{sssec:HomographyImplementation}
 
-Our proposed algorithm can be utilized to extend any homography estimation method that exploits point correspondences. To demonstrate, we adopted time-tested implementations from the OpenCV~$4.4.0$ library~\cite{bradski2008learning}. Each homography was estimated by the \srcfuncname{findHomography} function which employs DLT~\cite{abdel2015direct} algorithm for $k = 4$ and RANSAC~\cite{fischler1981ransac} algorithm for $k > 4$, where $k$ is the size of the point correspondences set. Each optimal similarity transformation between two $2$D point sets was estimated by the \srcfuncname{estimateAffinePartial2D}, which also utilizes RANSAC for robustness. We always used default parameters.
+Our proposed algorithm can be utilized to extend any homography estimation method that exploits point correspondences. To demonstrate, we adopted time-tested implementations from the OpenCV~$4.4.0$ library~\cite{bradski2008learning}. Each homography was estimated by the \srcfuncname{findHomography} function which internally employs DLT~\cite{abdel2015direct} algorithm for $k = 4$ and RANSAC~\cite{fischler1981ransac} algorithm for $k > 4$, where $k$ is the size of the point correspondences set. At the same time, each optimal similarity transformation between two $2$D point sets was estimated by the \srcfuncname{estimateAffinePartial2D}, which also utilizes RANSAC for robustness. We used the default parameters whenever possible.
 
 % ##############################################################################
 \subsection{Dataset Creation}

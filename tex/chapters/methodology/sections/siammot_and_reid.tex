@@ -1,2 +1,13 @@
 \section{Siamese Multi-Object Tracking and Re-identification}
 \label{sec:SiamMOTandReID}
+
+We adopted the object \gls{reid} architecture published in~\cite{luo2019bagoftricksreid} by Luo~\etal{}. The authors proposed a simple yet very robust framework for person \gls{reid}. We adopted this architecture (see \figstr{}~\ref{fig:BagOfTricksReIDArchitecture}) for vehicle \gls{reid} due to its simplicity accompanied with \gls{sota} performance at the time of publishing.
+
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/methodology/bagoftricks_reid_architecture.pdf}
+    \caption[Gls{reid} baseline]{A object \gls{reid} baseline which we used for our experiments. \externalsrc{\cite{luo2019bagoftricksreid}}}
+    \label{fig:BagOfTricksReIDArchitecture}
+\end{figure}
+% ------------------------------------------------------------------------------
