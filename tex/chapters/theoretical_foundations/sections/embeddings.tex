@@ -177,6 +177,7 @@ This strategy aims for selecting all valid triplets and averaging the loss only 
 
 In this strategy, the goal is to find the hardest positive and hardest negative for each anchor. The total number of triplets is $PK$. The selected triplets are the hardest among the given batch~\cite{hermans2017triplet}. Additionally, Hermans~\etal{}~\cite{hermans2017triplet} say that the selected triplets can be considered moderate, since they are the hardest within a small subset of the data, which is the best for learning with the triplet loss.
 \begin{equation}
+    \label{eq:BatchHardMining}
     \begin{aligned}
         \func{\mathcal{L}_{batchhard}}{\theta} =
         \sum_{i = 1}^P

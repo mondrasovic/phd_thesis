@@ -3,17 +3,53 @@
 
 \subsection{Motivation}
 
-One of our experiments involved an end-to-end training of the whole \siammot{} architecture together with a custom head supposed to create embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The motivation was to force the training process into extracting features that are not only satisfactory for detection and tracking, but also contain the necessary information to create embeddings for subsequent \gls{reid} purposes during the inference.
+One of our experiments involved an end-to-end training of the whole \siammot{} model together with a custom head supposed to create embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The motivation was to force the training process into extracting features that are not only satisfactory for detection and tracking, but also contain the necessary information to create embeddings for subsequent \gls{reid} purposes during the inference.
 
-We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \siammot{} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending an already huge model that requires a significant amount of GPU VRAM made it even more demanding.
+We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \siammot{} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending a huge model that already requires a significant amount of GPU VRAM made it even more demanding.
 
-During the research related for our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using global average pooling operation into an embedding space of consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represents the kernel for the cross-correlation operation in the majority of the Siamese trackers discussed so far.
+During the research related to our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using global average pooling operation into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represents the kernel for the cross-correlation operation in the majority of the Siamese trackers discussed so far.
 
-More concretely, suppose the extracted features were represented by a tensor of shape $8 \times 8 \times 256$. Then, the average pooling operation along the channel dimmension would produce a tensor of shape $1 \times 1 \times 256$, which can then be further flattened into a single $256$-dimensional vector. In the end, the obtained vector was $l_2$-normalized and thus projected onto a unit hypersphere. In the work of Li~\etal{}~\cite{li2020figsiam}, these embedding vectors were exploited for template updating and for combining multiple templates within a pool of size $n$ in an exponential fashion.
+More concretely, suppose the extracted features were represented by a tensor of shape $8 \times 8 \times 256$. Then, the average pooling operation along the channel dimmension would produce a tensor of shape $1 \times 1 \times 256$, which could then be further flattened into a single $256$-dimensional vector. In the end, the obtained vector was $l_2$-normalized and thus projected onto a unit hypersphere. In the work of Li~\etal{}~\cite{li2020figsiam}, these embedding vectors were exploited for template updating and for combining multiple templates within a pool of size $n$ in an exponential fashion.
 
-This observation led us to the following hypothesis. Given the fact the Siamese exemplar features do contain some, althougt probably not sufficient information for object \gls{reid}, would it be possible to map them further using a non-linear function to produce embedding vectors that could serve for \gls{reid}? Such features are just a learned template, therefore some notion of similarity needs to be already built into it.
+This observation led us to the following hypothesis. Given the fact the Siamese exemplar features do contain some, although probably not sufficient information for object \gls{reid}, would it be possible to map them further using a non-linear function to produce embedding vectors that could serve for \gls{reid}? Such features are just a learned template, therefore, some notion of similarity needs to be already built into it.
+
+\subsection{Feature Embedding Head Architecture}
+
+As far as the vector embedding computation was concerned, we attached the embedding head into the backbone features but after the \gls{roi}-pooling operation. This ensured fixed tensor shapes and allowed us to process the very same feature that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation with all the necessary operations such as negative mining.
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        layer             & tensor shape                  & \# trainable parameters \\
+        \hline
+        input             & $\sbrackets{-1, 256, 15, 15}$ & $0$                     \\
+        \hline
+        conv $3 \times 3$ & $\sbrackets{-1, 256, 13, 13}$ & $589\ 824$              \\
+        \hline
+        ReLU              & $\sbrackets{-1, 256, 13, 13}$ & $0$                     \\
+        \hline
+        conv $3 \times 3$ & $\sbrackets{-1, 512, 11, 11}$ & $1\ 179\ 648$           \\
+        \hline
+        ReLU              & $\sbrackets{-1, 512, 11, 11}$ & $0$                     \\
+        \hline
+        flatten           & $\sbrackets{-1, 61952}$       & $0$                     \\
+        \hline
+        linear            & $\sbrackets{-1, 1024}$        & $63\ 439\ 872$          \\
+        \hline
+    \end{tabular}
+    \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors.}
+    \label{tab:FeatureEmbeddingHead}
+\end{table}
 
 \subsection{Training Phase}
+
+The training phase was altered by adding another loss function to the sum of already existing three loss functions from the original model. In particular, the general \siammot{} loss function defined in \eqstr{}~\ref{eq:SiamMOTGeneralLoss} was reformulated as
+\begin{equation}
+    \label{eq:SiamMOTFeatureEmbLoss}
+    \lossf = l_{\text{rpn}} + l_{\text{detect}} + l_{\text{motion}} + l_{\text{emb}}.
+\end{equation}
+The $l_{\text{emb}}$ loss incorporated triplet loss (\eqstr{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). As we discussed in \sectionstr{}~\ref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encountered harder and harder triplets to generate sufficient learning signal. To this end, we went for the semi-hard triplet mining strategy (\eqstr{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). We implemented the entire mining algorithm followed by the loss computation in a GPU-only fashion for fast execution and easy intergration into the pipeline.
 
 \subsection{Inference Phase}
 
@@ -22,7 +58,7 @@ This observation led us to the following hypothesis. Given the fact the Siamese 
 
 Salscheider~\cite{salscheider2020featurenms} proposed an extended \gls{nms} algorithm that incorporates a distance between feature embeddings dubbed as \featurenms{}. Considering our idea introduced above, we had to encompass the vector embeddings into the solver reasoning. At the beginning, we came up with the solution that exactly copied the one the mentioned author proposed. That provided further justification for attempting to implement the algorithm and test it in practice. The advantage is that this approach is restricted to the inference phase, thus experimenting with it did not require model re-training.
 
-We assume the reader is acquainted with the original \gls{nms} algorithm (more in Section~\ref{ssec:NonMaximumSuppression}.). Nevertheless, here we repeat the same definitions for clarity. Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. This time, we are also going to need the associated feature embedding vectors with each \gls{bbox}, represented by a set $\mset{E} = \cbrackets{\vect{e}_1, \vect{e}_2, \dots, \vect{e}_n}$. Let $\mset{B}_{nms}$ be  the set of filtered proposal instances from the set $\mset{B}$ produced using the \gls{nms} algorithm.
+We assume the reader is acquainted with the original \gls{nms} algorithm (more in \sectionstr{}~\ref{ssec:NonMaximumSuppression}.). Nevertheless, here we repeat the same definitions for clarity. Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. This time, we are also going to need the associated feature embedding vectors with each \gls{bbox}, represented by a set $\mset{E} = \cbrackets{\vect{e}_1, \vect{e}_2, \dots, \vect{e}_n}$. Let $\mset{B}_{nms}$ be  the set of filtered proposal instances from the set $\mset{B}$ produced using the \gls{nms} algorithm.
 
 \def\threshlower{\tau_{\text{lower}}}
 \def\threshupper{\tau_{\text{upper}}}

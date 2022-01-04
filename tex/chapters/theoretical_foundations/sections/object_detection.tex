@@ -39,7 +39,7 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
     \Comment{iterate through remaining proposals}
 
     \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \lambda$}
-    \Comment{\gls{iou} (equation~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
+    \Comment{\gls{iou} (\eqstr{}~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
 
     \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$
     \Comment{remove the proposal}

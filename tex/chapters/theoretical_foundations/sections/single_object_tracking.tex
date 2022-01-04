@@ -130,7 +130,7 @@ where the no. of elements of $\zeta$ is equal to the no. of channels in $\func{f
     \label{fig:TwofoldSiameseNetAttentionModule}
 \end{figure}
 
-When training the \snet{} branch, only the fusion and the attention modules are updated. No fine-tuning techniques are taken advantage of, regardless of the potential improvement of the semantic branch alone. Authors informed about such experiments, and they resulted in diminished overall performance thanks to \anet{} and \snet{} becoming less heterogeneous. Let $\rbrackets{\subsup{z}{i}{s}, X_i}$ with their corresponding ground-truth response map $Y_i$, for $i = 1, \dots, N$, be the $N$ chosen training samples. The parameters $\theta_s$ of the \snet{} model are fitted using the logistic loss function $\func{\mathcal{L}}{\cdot}$ (equal to equation~\ref{eq:ANetModelTraining})
+When training the \snet{} branch, only the fusion and the attention modules are updated. No fine-tuning techniques are taken advantage of, regardless of the potential improvement of the semantic branch alone. Authors informed about such experiments, and they resulted in diminished overall performance thanks to \anet{} and \snet{} becoming less heterogeneous. Let $\rbrackets{\subsup{z}{i}{s}, X_i}$ with their corresponding ground-truth response map $Y_i$, for $i = 1, \dots, N$, be the $N$ chosen training samples. The parameters $\theta_s$ of the \snet{} model are fitted using the logistic loss function $\func{\mathcal{L}}{\cdot}$ (equal to \eqstr{}~\ref{eq:ANetModelTraining})
 \begin{equation}
     \label{eq:SNetModelTraining}
     \underset{\theta_s}{\argmin}
