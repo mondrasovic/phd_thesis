@@ -179,29 +179,29 @@ For better understanding, we suggest the reader follow the diagram in \figstr{}~
 \end{figure}
 % ------------------------------------------------------------------------------
 
-The spatial-maching is followed by a standard \emph{online} solver that has been widely adopted in numerous works, such as~\cite{bawley2016simple, wojke2017simple, zhou2020tracking, bergmann2019tracking}. In its essence, this solver is simple yet very effective. As our experiments will later demonstrate, it is exceedingly difficult to surpass its performance in general by a significant margin. This solver is governed by the following rules listed below. Let $\subsup{v}{i}{t}$ be the visibility confidence, then
+The spatial matching and the subsequent object identity association happens within the non-trainable module that is activated only during the inference phase. This algorithm is adequately referred to in the original paper as the \emph{online solver}. The purpose is to propagate existing object identities to the future frames given the predictions made by the object detector and object tracker independently. In \figstr{}~\ref{fig:SiamMOTOnlineSolver}, we provide a graphical illustration of the original algorithm.
+
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/methodology/siammot_online_solver.pdf}
+    \caption[\siammot{} online solver]{Here we present the process which the tracker as well as the detector predictions for the current frame undergo in order to derive the final tracker output. At first, all the \glspl{bbox} are merged upon which a \gls{nms} algorithm is performed. The \gls{nms} algorithm preserves the priority that active tracks are processed primarily, then followed by the dormant tracks. The remaining detections are filtered as last. The \gls{nms} algorithm does not have to be modified at all, since the priority can be induced by altering the associated score values. After the \gls{nms} stage, the dormant tracks with sufficient confidence are reactivated. Conversely, active tracks with low confidence are suspended. Then, if there are detections with high confidence, new tracks are established. The process finishes off by permanently killing dormant tracks that have lasted for more than some specific number of frames without reinstantiation. Note that even though the solver outputs instances of all three categories, only the active tracks are part of the inference.}
+    \label{fig:SiamMOTOnlineSolver}
+\end{figure}
+% ------------------------------------------------------------------------------
+
+The solver algorithm is governed by the following rules listed below. Let $\subsup{v}{i}{t}$ be the visibility confidence, then
 \begin{enumerate}
     \item the object's trajectory is continued as long as its visibility confidence is above a specific threshold $\alpha$, otherwise this trajecotry becomes dormant,
     \item a new trajectory is spawned in case there is a non-matched detection (during the spatial-matching process) and its visibility confidence is above a threshold $\beta$,
     \item a dormant trajectory is terminated, i.e., the object ID will never be used once again, it its visibility confidence is below $\alpha$ for $\tau$ consecutive frames.
 \end{enumerate}
 
-\subsubsection{Short-term Occlusion Handling}
-
 This model also attempts to tackle short-term occlusion. It is one of the key incentives that led us to consider this architecture for our experiments, which is the model's ability to handle occlusion in an efficient and trivial manner. At the beginning, we guessed that this phase could be improved upon due to its inherent simplicity. However, regardless of how rudimentary their approach may seem, it implicitly addresses a great deal of frequent cases that apprear in object tracking in a competent way. Our endeavors later described often involved a minor improvement in rare situations with simultaneous minor detriments to common situations. Therefore, the outcome of perfoming worse than the baseline on average was usually inescapable.
 
 A short-term occlusion can be defined as having the visibility confidence for the currently tracker object below the threshold $\alpha$. In \siammot{}, instead of definitely ceaseing the track's existence, the relevant information are kept in memory and thus the search for the exemplar continued until $\tau > 1$ frames have been processed in hope of re-instatiating the object. The most recently predicted location and its corresponding feature frames extracted from the backbone are utilized as the searching template.
 
-\subsubsection{Online Solver Algorithm}
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.8\linewidth]{figures/methodology/siammot_online_solver.pdf}
-    \caption[\siammot{} online solver]{Here we present the process which the tracker as well as the detector predictions for the current frame undergo in order to derive the final tracker output. At first, all the \glspl{bbox} are merged upon which a \gls{nms} algorithm is performed. The \gls{nms} algorithm preserves the priority that active tracks are processed primarily, then followed by the dormant tracks. The remaining detections are filtered as last. The \gls{nms} algorithm does not have to be modified at all, since the priority can be induced by altering the associated score values. After the \gls{nms} stage, the dormant tracks with sufficient confidence are reactivated. Conversely, active tracks with low confidence are suspended. Then, if there are detections with high confidence, new tracks are established. The process finishes off by permanently killing dormant tracks that have lasted for more than some specific number of frames without reinstantiation. Note that even though the solver outputs instances of all three categories, only the active tracks are part of the inference.}
-    \label{fig:SiamMOTOnlineSolver}
-\end{figure}
-% ------------------------------------------------------------------------------
+As a side note, a very similar solver approach has also been adopted in numerous works, such as~\cite{bawley2016simple, wojke2017simple, zhou2020tracking, bergmann2019tracking}. In essence, it is simple yet very effective. As our experiments will later demonstrate, it is exceedingly difficult to surpass its performance in general by a significant margin.
 
 % ##############################################################################
 \subsection{Implementation Details}
