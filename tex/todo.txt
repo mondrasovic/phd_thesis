@@ -1,12 +1,2 @@
-Remove sections:
-    YOLO (only mention it briefly)
-    SSD (brief)
-    FCOS (remove it altogether)
-    Training Embeddings Using Advesarial Learning
-    Important Curves
-    Predicting Motion (Kalman and Particle Filter)
-    Optical Flow
-
-Add more information to sections:
-    Faster R-CNN
-    Siamese Tracking
+Use bold font when mentioning the glossary entry for the first time.
+Add other CLEAR MOT metrics.
