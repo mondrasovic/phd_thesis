@@ -51,9 +51,9 @@ As far as the vector embedding computation was concerned, we attached the embedd
 The training phase was altered by adding another loss function to the sum of already existing three loss functions from the original model. In particular, the general \siammot{} loss function defined in \eqtext{}~\ref{eq:SiamMOTGeneralLoss} was reformulated as
 \begin{equation}
     \label{eq:SiamMOTFeatureEmbLoss}
-    \lossf = l_{\text{rpn}} + l_{\text{detect}} + l_{\text{motion}} + l_{\text{emb}}.
+    \lossf = l_{rpn} + l_{detect} + l_{motion} + l_{emb}.
 \end{equation}
-The $l_{\text{emb}}$ loss incorporated triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). As we discussed in \sectiontext{}~\ref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encountered harder and harder triplets to generate sufficient learning signal. To this end, we went for the semi-hard triplet mining strategy (\eqtext{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). We implemented the entire mining algorithm followed by the loss computation in a GPU-only fashion for fast execution and easy intergration into the pipeline.
+The $l_{emb}$ loss incorporated triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). As we discussed in \sectiontext{}~\ref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encountered harder and harder triplets to generate sufficient learning signal. To this end, we went for the semi-hard triplet mining strategy (\eqtext{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). We implemented the entire mining algorithm followed by the loss computation in a GPU-only fashion for fast execution and easy intergration into the pipeline.
 
 % ##############################################################################
 \subsection{Inference Phase}

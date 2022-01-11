@@ -164,9 +164,9 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
 The \siammot{} model can be trained in an end-to-end fashion, which is one of its great advantages in terms of usability, among others. The general loss function can be formulated as
 \begin{equation}
     \label{eq:SiamMOTGeneralLoss}
-    \lossf = l_{\text{rpn}} + l_{\text{detect}} + l_{\text{motion}},
+    \lossf = l_{rpn} + l_{detect} + l_{motion},
 \end{equation}
-where the $l_{\text{rpn}}$ as well as the $l_{\text{detect}}$ are standard \gls{rpn}~\cite{ren2017fasterrcnn} and detection-subnetwork~\cite{girshick2015fast} losses, respectively. The $l_{\text{motion}}$ loss is used to train the Siamese tracker.
+where the $l_{rpn}$ as well as the $l_{detect}$ are standard \gls{rpn}~\cite{ren2017fasterrcnn} and detection-subnetwork~\cite{girshick2015fast} losses, respectively. The $l_{motion}$ loss is used to train the Siamese tracker.
 
 For better understanding, we suggest the reader follow the diagram in \figtext{}~\ref{fig:SiamMOTInference}. At inference, the well-established \gls{iou}-based \gls{nms} operation (\sectiontext{}~\ref{ssec:NonMaximumSuppression}) is exploited to process the outputs of the detection and tracker subnetwork independently. The subsequent process aimed at spatial-matching is used to merge detections with the tracker output. This stage also involves the already mentioned \gls{iou}-based \gls{nms} operation (thus, in total, it is used three times during the inference).
 

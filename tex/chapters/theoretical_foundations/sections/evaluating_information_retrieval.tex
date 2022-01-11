@@ -1,11 +1,7 @@
 \section{Evaluating Information Retrieval}
 \label{sec:EvaluatingInformationRetrieval}
 
-% ##############################################################################
-\subsection{Elementary Measures of Classification}
-\label{ssec:ElementaryMeasuresOfClassification}
-
-In order to put the meaning of \gls{map} (\sectiontext{}~\ref{ssec:MeanAveragePrecision}) into a broader context, we will briefly explain the basics of accuracy, precision, recall, and some other derived metrics. We will use the standard terminology to denote whether the classification is correct (true) or not (false), for both positive and negative categories. All these measures can be obtained from the confusion matrix (see \tabletext{}~\ref{tab:ConfusionMatrix}).
+In this section, we assume the reader is fully equipped with the basic notions of accuracy, precision, recall, and some other derived metrics. We will use the standard terminology to denote whether the classification is correct (true) or not (false), for both positive and negative categories. All these measures can be obtained from the confusion matrix (see \tabletext{}~\ref{tab:ConfusionMatrix}), which we provide for completeness.
 
 \begin{table}[t]
     \centering
@@ -25,15 +21,6 @@ In order to put the meaning of \gls{map} (\sectiontext{}~\ref{ssec:MeanAveragePr
 \end{table}
 
 % ##############################################################################
-\subsection{Important Curves}
-\label{ssec:ImportantCurves}
-
-\subsubsection{Precision-Recall Curve}
-\label{sssec:PrecisionRecallCurve}
-
-The precision-recall curve summarizes the trade-off between precision and recall for a given predictive model using different thresholds of probability. The precision-recall curve is appropriate for imbalanced datasets, \ietext{}, datasets where the number of instances in each class may differ considerably (large skew in the class distribution~\cite{davis2016prcurves}).
-
-% ##############################################################################
 \subsection{Evaluating Bounding Box Prediction}
 \label{ssec:EvaluatingBoundingBoxPrediction}
 
@@ -42,9 +29,9 @@ The precision-recall curve summarizes the trade-off between precision and recall
 
 \glslocalreset{iou}
 
-\Gls{iou} measures the overlap between two boundaries. For our purposes, we will use \gls{iou} as a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see \figtext{}~\ref{fig:IntersectionOverUnion}).
+\Gls{iou} measures the overlap between two boundaries. It is a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see \figtext{}~\ref{fig:IntersectionOverUnion}).
 
-Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox}, not necessarily different, described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner as well as the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox} described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner and the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
     \begin{aligned}
         \vect{b}_1 \cap \vect{b}_2 =
@@ -81,14 +68,14 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 
 \glslocalreset{map}
 
-\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent. This metric is often associated with popular datasets and their respective annual challenges, for instance, \pascalvoc{}~\cite{everingham2010pascalvoc} and \mscoco{}~\cite{lin2014mscoco} challenge.
+\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent.
 
 \subsubsection{Object Re-Identification}
 \label{sssec:ObjectReIdentification}
 
-A common use case in the context of object \gls{reid} is to use \gls{map} to assess the search results for a particular query using Euclidean distance or cosine similarity as a metric. Oftentimes the model is trained with intent to use one of these trivial metrics. Furthermore, this approach is often paired with \emph{top-k} accuracy, typically \emph{top-1}, \emph{top-2} and \emph{top-5}.
+A common use case in the context of object \gls{reid} is to use \gls{map} to assess the search results for a particular query using Euclidean distance or cosine similarity as a metric. Oftentimes the model is trained with the intent to use one of these trivial metrics. Furthermore, this approach is often paired with \emph{top-k} accuracy, typically \emph{top-1}, \emph{top-2} and \emph{top-5}.
 
-In a typical \gls{reid} evaluation setup, there is a query set and a so-called gallery set. For each object in a query set the aim is to retrieve a similar identity from the test set (\ietext{} the gallery set). The computation of the \gls{ap} for a query image $q$ is thus defined as
+In a typical \gls{reid} evaluation setup, there is a query set and a gallery set. For each object in the query set the aim is to retrieve a similar identity from the gallery set. The computation of the \gls{ap} for a query image $q$ is thus defined as
 \begin{equation}
     \label{eq:AveragePrecision}
     \func{\AP}{q} = \frac{1}{\func{N_{gt}}{q}} \sum_{k} \func{P}{k} \times {\delta}_k,
@@ -98,13 +85,13 @@ where $\func{P}{k}$ represents precision at rank $k$, $\func{N_{gt}}{q}$ is the 
     \label{eq:MeanAveragePrecision}
     \MAP = \frac{1}{Q} \sum_q \func{\AP}{q},
 \end{equation}
-where $Q$ is the total number of query images, as described in~\cite{kuma2019vehiclereid}. \eqtext{}~\ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in \eqtext{}~\ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to the query $q$.
+where $Q$ is the total number of query images, as described in~\cite{kuma2019vehiclereid}. \eqtext{}~\ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in \eqtext{}~\ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to queries on average.
 
 \subsubsection{Object Detection}
 
-Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (\sectiontext{}~\ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection, and its definition was initially formalized in the \pascalvoc{} challenge~\cite{everingham2010pascalvoc}, which consisted of various tasks involving image processing demanding robust evaluation metrics.
+Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (\sectiontext{}~\ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection~\cite{everingham2010pascalvoc}.
 
-In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve (\sectiontext{}~\ref{sssec:PrecisionRecallCurve}) can be plotted~\cite{salton1983introduction}. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{everingham2010pascalvoc}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
+In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve can be plotted. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{everingham2010pascalvoc}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
 \begin{equation}
     \AP = \frac{1}{11} \sum_{r \in \cbrackets{0.0, 0.1, \dots, 1.0}} \func{p_{interp}}{r},
 \end{equation}
@@ -112,4 +99,4 @@ where the precision at each recall level $r$ is interpolated by taking the maxim
 \begin{equation}
     \func{p_{interp}}{r} = \underset{\tilde{r}:\tilde{r} \geq r}{\max} \quad \func{p}{\tilde{r}},
 \end{equation}
-with $\func{p}{\tilde{r}}$ representing the measures precision at a specific recall level $\tilde{r}$~\cite{everingham2010pascalvoc, salton1983introduction}.
+with $\func{p}{\tilde{r}}$ representing the measures precision at a specific recall level $\tilde{r}$~\cite{salton1983introduction}.
