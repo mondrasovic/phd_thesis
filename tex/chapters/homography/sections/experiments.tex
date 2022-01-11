@@ -1,7 +1,7 @@
 \section{Experiments and Discussion}
 \label{sec:HomographyExperiments}
 
-\figstr{}~\ref{fig:HeatmapsBestWorst} demonstrates how the reprojection error varies with respect to the marker position. It can be observed that the marker position can be approximately estimated by looking at the heatmap which represents the pixel-wise reprojection error over the image. Simply put, the transformation achieves the best accuracy in the vicinity of the chosen marker and steadily decreases for more distant pixels. However, the important property is that not all markers are subjected to the same pattern of error variation. This is the core observation that motivated our solution in the first place. The objective is to select the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints. The rationale is that subsequent image postprocessing would greatly benefit from having the area of the image as large as possible that is reprojected properly.
+\figtext{}~\ref{fig:HeatmapsBestWorst} demonstrates how the reprojection error varies with respect to the marker position. It can be observed that the marker position can be approximately estimated by looking at the heatmap which represents the pixel-wise reprojection error over the image. Simply put, the transformation achieves the best accuracy in the vicinity of the chosen marker and steadily decreases for more distant pixels. However, the important property is that not all markers are subjected to the same pattern of error variation. This is the core observation that motivated our solution in the first place. The objective is to select the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints. The rationale is that subsequent image postprocessing would greatly benefit from having the area of the image as large as possible that is reprojected properly.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -11,7 +11,7 @@
 \end{figure}
 % ------------------------------------------------------------------------------
 
-The evaluation of the proposed homography ranking algorithm involved various conditions. We tested cases that included diverse similarity transformations applied to original markers as well as noisy point correspondence, e.g., errors in marker detection since these are the expected problems in real-world scenarios.
+The evaluation of the proposed homography ranking algorithm involved various conditions. We tested cases that included diverse similarity transformations applied to original markers as well as noisy point correspondence, \egtext{}, errors in marker detection since these are the expected problems in real-world scenarios.
 
 All the test scenarios indicated the following trend. On average, the homography with the highest score improved the relative performance to the baseline performance the most (both median and mean above $60$\%). The lowest-ranked homography often led to significantly worse performance (median and mean around $-90$\%). These values varied moderately across different setups. The change of shape and number of markers had the greatest impact.
 
@@ -24,7 +24,7 @@ Our proposed algorithm can be utilized to extend any homography estimation metho
 \subsection{Dataset Creation}
 \label{ssec:HomographyDatasetCreation}
 
-Our synthetic dataset was created to simulate the presence of markers in the scene subjected to perspective distortion. Our experiments were based on a pixel-wise comparison of the reprojection error. This dataset covered multiple setups named as \mbox{\textbf{test scenarios}}. For each test scenario, we generated $t$ different samples which we call \mbox{\textbf{test instances}}. We set $t = 1\ 000$. \tablestr{}~\ref{tab:TestScenariosResults} contains description of the generated test scenarios. To create test instances (within test scenarios), we employed the procedures described below (see \figstr{}~\ref{fig:DatasetGenerating}).
+Our synthetic dataset was created to simulate the presence of markers in the scene subjected to perspective distortion. Our experiments were based on a pixel-wise comparison of the reprojection error. This dataset covered multiple setups named as \mbox{\textbf{test scenarios}}. For each test scenario, we generated $t$ different samples which we call \mbox{\textbf{test instances}}. We set $t = 1\ 000$. \tabletext{}~\ref{tab:TestScenariosResults} contains description of the generated test scenarios. To create test instances (within test scenarios), we employed the procedures described below (see \figtext{}~\ref{fig:DatasetGenerating}).
 
 Our dataset easily allows complete reproducibility of the reported results. Thanks to the synthetic nature of our data, fixing the seed for the used pseudo-random generator was sufficient. The source code for running the experiments is freely available on our Github repository~\cite{webhomographyrankinggithub}.
 
@@ -92,7 +92,7 @@ To simply express the reprojection error as a single number for the whole image,
 \subsubsection{Evaluation Algorithm}
 \label{sssec:EvaluationAlgorithm}
 
-On the input, there are $m$ markers (\sectionstr{}~\ref{ssec:HomographyDatasetCreation}) and thus an $m$-to-$1$ point correspondence. Each marker, by definition, provides a unique homography. Therefore, the aim is to quantify the relative improvement in the reprojection error over the baseline when the $k$-th ranked homography is used for rectification. Even though we are primarily concerned only with the single, top-performing homography, we evaluate the entire ranking to demonstrate its stable behavior.
+On the input, there are $m$ markers (\sectiontext{}~\ref{ssec:HomographyDatasetCreation}) and thus an $m$-to-$1$ point correspondence. Each marker, by definition, provides a unique homography. Therefore, the aim is to quantify the relative improvement in the reprojection error over the baseline when the $k$-th ranked homography is used for rectification. Even though we are primarily concerned only with the single, top-performing homography, we evaluate the entire ranking to demonstrate its stable behavior.
 
 We evaluated our homography ranking in terms of reprojection error improvements against the existing approaches based on the isolated homography estimation represented by implementation from the OpenCV~\cite{bradski2008learning} library. Since our method provides a ranking, we compare our performance against a random marker selection based on uniform probability distribution. We refer to this performance as the ``baseline''; an unbiased marker selection. In practice, the user would rely on ``educated guess'' when predicting which marker could potentially be the best one to use. To obtain the aforementioned baseline, we evaluated the reprojection error \ref{eq:ReprojectionErrorSingle} for each marker in isolation and computed the arithmetic mean of these values. When we executed our proposed algorithm, we got the full ordering of markers by their score value computed using the proposed criterion \ref{eq:HomographyScoreFunction}. We expected that if the first marker were used to rectify the image, then the reprojection error would be minimal (and lower than the baseline error). If any subsequent marker in the given order were used instead, the reprojection error would increase.
 
@@ -120,7 +120,7 @@ We computed the relative improvement in \% for each $k$-th homography according 
 
         \For{$i \gets 1, \dots , m$}
         \State $\meanerrs \left[ i \right] \gets $ $\xi_{\text{reproj}}$
-        \Comment{\eqstr{}~\ref{eq:ReprojectionErrorSingle}}
+        \Comment{\eqtext{}~\ref{eq:ReprojectionErrorSingle}}
 
         \State $e_b \gets e_b + \meanerrs \left[ i \right]$
         \EndFor
@@ -144,13 +144,13 @@ We computed the relative improvement in \% for each $k$-th homography according 
 \subsection{Experimental Results}
 \label{ssec:EvaluationResults}
 
-\figstr{}~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with respect to the marker position. We can see that the marker position can be deduced by looking at the heatmap representing the pixel-wise reprojection error over the image. The transformation achieves the best accuracy in the marker neighborhood and steadily decreases for more distant pixels. However, not all markers are subjected to the same pattern of error variation. This observation was the core motivation for our solution. We aim to choose the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints.
+\figtext{}~\ref{fig:HeatmapsBestWorst} shows how the reprojection error varies with respect to the marker position. We can see that the marker position can be deduced by looking at the heatmap representing the pixel-wise reprojection error over the image. The transformation achieves the best accuracy in the marker neighborhood and steadily decreases for more distant pixels. However, not all markers are subjected to the same pattern of error variation. This observation was the core motivation for our solution. We aim to choose the marker that minimizes the pixel-wise reprojection error within the region of the image that is as broad as possible. That is why we evaluate our method by computing the reprojection error over each pixel, not just the keypoints.
 
-All tested scenarios depict similar trends as shown on the plots in \figstr{}~\ref{fig:SimilarityTransformInfluence}, \figstr{}~\ref{fig:NoiseInfluence}, \figstr{}~\ref{fig:ShapeInfluence} and in \figstr{}~\ref{fig:NMarkersInfluence}. The box plots extend from the lower to upper quartile values, with the thin and thick lines representing the median and mean, respectively. The plots discussed further show relative improvements over the baseline OpenCV~\cite{bradski2008learning} method. We evaluated relative improvements for the sake of interpretability. For better comprehension, we suggest to see \tablestr{}~\ref{tab:TestScenariosResults}. It contains individual test scenarios and their corresponding top performances in percents. Conversely, the reprojection error in absolute terms is difficult to interpret without additional context. Nevertheless, to highlight the differences in reprojection errors we also provide absolute values in \tablestr{}~\ref{tab:TestScenariosResults}. The presence of noise shifted the errors by multiple magnitudes, but still preserved the pattern of distribution.
+All tested scenarios depict similar trends as shown on the plots in \figtext{}~\ref{fig:SimilarityTransformInfluence}, \figtext{}~\ref{fig:NoiseInfluence}, \figtext{}~\ref{fig:ShapeInfluence} and in \figtext{}~\ref{fig:NMarkersInfluence}. The box plots extend from the lower to upper quartile values, with the thin and thick lines representing the median and mean, respectively. The plots discussed further show relative improvements over the baseline OpenCV~\cite{bradski2008learning} method. We evaluated relative improvements for the sake of interpretability. For better comprehension, we suggest to see \tabletext{}~\ref{tab:TestScenariosResults}. It contains individual test scenarios and their corresponding top performances in percents. Conversely, the reprojection error in absolute terms is difficult to interpret without additional context. Nevertheless, to highlight the differences in reprojection errors we also provide absolute values in \tabletext{}~\ref{tab:TestScenariosResults}. The presence of noise shifted the errors by multiple magnitudes, but still preserved the pattern of distribution.
 
 \subsubsection{Influence of Similarity Transformations}
 
-In this test scenario, we tested in isolation each allowed similarity transformation, i.e., translation, rotation, and uniform scaling. \figstr{}~\ref{fig:SimilarityTransformInfluence} demonstrates that the relative improvement was circa equal in all situations. Besides, we show that the proposed method is practically invariant to similarity transformations allowing the markers to be in arbitrary positions in a plane. When all similarity transformations were utilized, our method performed even better, showing its stability and robustness.
+In this test scenario, we tested in isolation each allowed similarity transformation, \ietext{}, translation, rotation, and uniform scaling. \figtext{}~\ref{fig:SimilarityTransformInfluence} demonstrates that the relative improvement was circa equal in all situations. Besides, we show that the proposed method is practically invariant to similarity transformations allowing the markers to be in arbitrary positions in a plane. When all similarity transformations were utilized, our method performed even better, showing its stability and robustness.
 
 \def\boxplotimgwidth{0.75\linewidth}
 
@@ -165,7 +165,7 @@ In this test scenario, we tested in isolation each allowed similarity transforma
 
 \subsubsection{Influence of Noise}
 
-In \figstr{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point correspondence that simulated inaccurate keypoint detection. The ranking method preserved the trend of the relative improvement in presence of noise. Absolute reprojection error demonstrated that unless noise was present, the errors varied on sub-pixel levels, so they were practically zero.
+In \figtext{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point correspondence that simulated inaccurate keypoint detection. The ranking method preserved the trend of the relative improvement in presence of noise. Absolute reprojection error demonstrated that unless noise was present, the errors varied on sub-pixel levels, so they were practically zero.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -178,7 +178,7 @@ In \figstr{}~\ref{fig:NoiseInfluence}, we can see the effect of noisy point corr
 
 \subsubsection{Influence of Variable Shapes}
 
-We expected that the relative improvement of our method should be invariant to variable shapes as long as they were similar. \figstr{}~\ref{fig:ShapeInfluence} demonstrates that with an increasing number of keypoints our method consistently preserved its capabilities. Introducing more complicated shapes than just rectangles did not exacerbate the outcome of the algorithm.
+We expected that the relative improvement of our method should be invariant to variable shapes as long as they were similar. \figtext{}~\ref{fig:ShapeInfluence} demonstrates that with an increasing number of keypoints our method consistently preserved its capabilities. Introducing more complicated shapes than just rectangles did not exacerbate the outcome of the algorithm.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -191,7 +191,7 @@ We expected that the relative improvement of our method should be invariant to v
 
 \subsubsection{Influence of Number of Markers}
 
-We tested a variable number of markers to demonstrate that our method preserved its improvement. \figstr{}~\ref{fig:NMarkersInfluence} shows that the greater the set of markers, the better the relative improvement of our method. Even when we used just three markers, the proposed method achieved a $46.91$\% median relative improvement.
+We tested a variable number of markers to demonstrate that our method preserved its improvement. \figtext{}~\ref{fig:NMarkersInfluence} shows that the greater the set of markers, the better the relative improvement of our method. Even when we used just three markers, the proposed method achieved a $46.91$\% median relative improvement.
 While it is beneficial to use a larger number of markers, we believe that the improvement we can obtain from an increasing number of markers has a logarithmic trend. On the extreme side, if we used only one marker, there would be no improvement since there would be only one homography to choose from.
 
 \begin{figure*}[t]
@@ -204,7 +204,7 @@ While it is beneficial to use a larger number of markers, we believe that the im
 \def\tblsccolw{0.06}
 \def\tblrscolw{0.08}
 \begin{table*}[t]
-    \caption[Description of syntehtic dataset scenarios]{Description of test scenarios in our synthetic dataset with corresponding settings and results for the top-ranked homography. One row represents one test scenario. Four visually separated groups (from top to bottom) are related to experiments shown in \figstr{}~\ref{fig:SimilarityTransformInfluence}~-~\ref{fig:NMarkersInfluence}.}
+    \caption[Description of syntehtic dataset scenarios]{Description of test scenarios in our synthetic dataset with corresponding settings and results for the top-ranked homography. One row represents one test scenario. Four visually separated groups (from top to bottom) are related to experiments shown in \figtext{}~\ref{fig:SimilarityTransformInfluence}~-~\ref{fig:NMarkersInfluence}.}
     \label{tab:TestScenariosResults}
     \setlength{\tabcolsep}{3pt}
     \begin{center}
