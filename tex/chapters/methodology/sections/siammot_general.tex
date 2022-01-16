@@ -171,7 +171,7 @@ where the $l_{rpn}$ as well as the $l_{detect}$ are standard \gls{rpn}~\cite{ren
 For better understanding, we suggest the reader follow the diagram in \figtext{}~\ref{fig:SiamMOTInference}. At inference, the well-established \gls{iou}-based \gls{nms} operation (\sectiontext{}~\ref{ssec:NonMaximumSuppression}) is exploited to process the outputs of the detection and tracker subnetwork independently. The subsequent process aimed at spatial-matching is used to merge detections with the tracker output. This stage also involves the already mentioned \gls{iou}-based \gls{nms} operation (thus, in total, it is used three times during the inference).
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{figures/methodology/siammot_inference_diagram.pdf}
     \caption[\siammot{} inference diagram]{Visualization of the inference pipeline in the \siammot{} architecture. The entire framework efficiently reuses as much information as possible, making it fast and accurate. Backbone features that are a result of intricate \gls{dla} and \gls{fpn} processing are fed into detector and the tracker. Please note that the predictions from the tracker are once again refined using the detector head. Two two aforementioned heads function on top of backbone features through the lens of \gls{roi} align operations. During the inference phase, the ``online solver'' works only with the final \glspl{bbox} produced by the tracker and the object detector. It utilizes a simple caching mechanism to store the backbone features belonging to active or dormant objects. The decision making regarding initialization, suspension and complete removal of track is performed within the ``track pool'' module.}
@@ -182,7 +182,7 @@ For better understanding, we suggest the reader follow the diagram in \figtext{}
 The spatial matching and the subsequent object identity association happens within the non-trainable module that is activated only during the inference phase. This algorithm is adequately referred to in the original paper as the \emph{online solver}. The purpose is to propagate existing object identities to the future frames given the predictions made by the object detector and object tracker independently. In \figtext{}~\ref{fig:SiamMOTOnlineSolver}, we provide a graphical illustration of the original algorithm.
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centering
     \includegraphics[width=0.85\linewidth]{figures/methodology/siammot_online_solver.pdf}
     \caption[\siammot{} online solver]{Here we present the process which the tracker as well as the detector predictions for the current frame undergo in order to derive the final tracker output. At first, all the \glspl{bbox} are merged upon which a \gls{nms} algorithm is performed. The \gls{nms} algorithm preserves the priority that active tracks are processed primarily, then followed by the dormant tracks. The remaining detections are filtered as last. The \gls{nms} algorithm does not have to be modified at all, since the priority can be induced by altering the associated score values. After the \gls{nms} stage, the dormant tracks with sufficient confidence are reactivated. Conversely, active tracks with low confidence are suspended. Then, if there are detections with high confidence, new tracks are established. The process finishes off by permanently killing dormant tracks that have lasted for more than some specific number of frames without reinstantiation. Note that even though the solver outputs instances of all three categories, only the active tracks are part of the inference.}
@@ -219,7 +219,7 @@ Overall, the model is not difficult to train. By difficult training we mainly me
 
 \subsubsection{Gradient Accumulation}
 
-Since majority of our experiments involved expanding the model by adding additional heads, we often struggled with the amount of available GPU VRAM in order to preserve reasonable size of minibatches. To this end, we also experimented with gradient accumulation. This technique allows the user to postpone the model weight updating after more minibatches have been processed. Therefore, the programmer may simulate using larger minibatches than actually are utilized. We emphasize the importance of not updating the model variables must during the accumulation phase so as to to ensure that all the mini-batches are processed by the same model variable values to calculate their gradients. Only after accumulating the gradients of the values of the model weights can be adjusted accordingly.
+Since majority of our experiments involved expanding the model by adding additional heads, we often struggled with the amount of available GPU VRAM in order to preserve reasonable size of minibatches. To this end, we also experimented with gradient accumulation. This technique allows the user to postpone the model weight updating after more minibatches have been processed (see \figtext{}~\ref{fig:GradientAccumulation}). Therefore, the programmer may simulate using larger minibatches than actually are utilized. We emphasize the importance of not updating the model variables must during the accumulation phase so as to to ensure that all the mini-batches are processed by the same model variable values to calculate their gradients. Only after accumulating the gradients of the values of the model weights can be adjusted accordingly.
 
 For a brief illustration, let $w$ be a single weight we want to update with respect to the computed gradient using the loss function $f$. Our goal is to adjust the weight at time $t$ and thus produce the weight at time $t + 1$. The learning rate is denoted by $\alpha$. So, the gradient update is usually performed as
 \begin{equation}
@@ -232,7 +232,7 @@ When using gradient accumulation, the update step is modified as
 where $n$ is the number of accumulated minibatches.
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/methodology/gradient_accumulation.png}
     \caption[Gradient accumulation]{Gradient accumulation is a mechanism that allows splitting the minibatch of samples — used for training a neural network — into several even smaller mini-batches of samples that will be processed sequentially. \externalsrc{\cite{webgradaccumulation}}}

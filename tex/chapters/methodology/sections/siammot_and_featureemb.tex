@@ -19,7 +19,7 @@ This observation led us to the following hypothesis. Given the fact the Siamese 
 
 As far as the vector embedding computation was concerned, we attached the embedding head (\tabletext{}~\ref{tab:FeatureEmbeddingHead}) into the backbone features but after the \gls{roi}-pooling operation. This ensured fixed tensor shapes and allowed us to process the very same feature that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation (discussed next) with all the necessary operations such as negative mining.
 
-\begin{table}[t]
+\begin{table}[!t]
     \centering
     \begin{tabular}{lll}
         \toprule

@@ -8,7 +8,7 @@ During several evaluation runs and our manual inspection of the tracker performa
 \figtext{}~\ref{fig:UADETRACPartialOcclusion}). Therefore, it resulted in a partial occlusion. However, what we considered even more problematic was the inability of the axis-aligned \gls{bbox} to properly define the vehicle as the angle under which the car was visible caused the \gls{bbox} to capture a great portion of the neighboring vehicles even without severe occlusion happening.
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centerline{\includegraphics[width=0.7\linewidth]{figures/methodology/uadetrac_partial_occlusion_red_light.pdf}}
     \caption[Partial occlusion in the \uadetrac{} dataset]{An example of a situation where multiple vehicles are standing still on a cross-road. In this scenario, even though a slight degree of occlusion is necessary, the biggest issues are caused by the need to delineate \glspl{roi} using axis-aligned \glspl{bbox}. This inevitably captures the neighboring vehicles, increasing the likelihood of drifting to semantic background due to presence of similar interference, \ietext{}, distractors.}
     \label{fig:UADETRACPartialOcclusion}
@@ -17,7 +17,7 @@ During several evaluation runs and our manual inspection of the tracker performa
 
 Situations described above reminded us of the \siammask{}~\cite{wang2019siammask} single object tracker targeted at predicting segmentation mask along with the usual single-object Siamese tracking routine. Such prediction was subsequently exploited to produce a rotated \gls{bbox} instead of an axis-aligned one. Even though the evaluation benchmarks only consider axis-aligned predictions, the rotated region served the purpose of enhancing the discriminative power of the tracker, primarily when dealing with occlusion. In the scenario shown in \figtext{}~\ref{fig:UADETRACPartialOcclusion}, a rotated \gls{bbox} would inexorably lead to an improved tracking accuracy. This approach was deemed successful for general object tracking, thus it also spawned another follow-up work of \siammaske{}~\cite{chen2019rotbboxes} which altered the original formulation of predicting the rotated \gls{bbox} by use of ellipse fitting for even better accuracy.
 
-However, as stated by the authors as well, there is a lack of datasets providing rotated annotations. The \uadetrac{} dataset is no exception. As a result, we sidestepped this approach and searched for an alternative solution that would enhance the discriminative power of the tracker when faced with partial occlusion. One such approach was the use of attention~\cite{vaswani2017attention}, especially spatial attention, which we found effective during our survey research~\cite{ondrasovic2021siamese}. Apart from the attention mechanism, we also remembered the more general formulation of the convolution operation, which has been shown to significantly better object detection tasks due to the semi-dense prediction requirements, dubbed as deformable convolution~\cite{dai2017dcnn}. In what follows, we shall discuss these two methods (\sectiontext{}~\ref{ssec:Attention} and \sectiontext{}~\ref{ssec:DeformableCNNS}) as a foundation for our subsequent experiments that yielded a positive outcome.
+However, as stated by the authors as well, there is a lack of datasets providing rotated annotations. The \uadetrac{} dataset is no exception. As a result, we sidestepped this approach and searched for an alternative solution that would enhance the discriminative power of the tracker when faced with partial occlusion. One such approach was the use of attention~\cite{vaswani2017attention}, especially spatial attention, which we found effective during our survey research~\cite{ondrasovic2021siamese}. Apart from the attention mechanism, we also remembered the more general formulation of the convolution operation, which has been shown to significantly better object detection tasks due to the semi-dense prediction requirements, dubbed as deformable convolution~\cite{dai2017dcnn}. In what follows, we shall discuss these two methods (\sectiontext{}~\ref{ssec:Attention} and \sectiontext{}~\ref{ssec:DeformableCNNs}) as a foundation for our subsequent experiments that yielded a positive outcome.
 
 % ##############################################################################
 \subsection{Attention}
@@ -37,7 +37,7 @@ For a more concrete demonstration, we shall use a scaled dot-product attention. 
 \end{equation}
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centerline{\includegraphics[width=0.15\linewidth]{figures/methodology/scaled_dot_product_attention.pdf}}
     \caption[Scaled dot-product attention]{An example of the input transformation by the scaled dot-product attention module. The pair of queries and keys is used to produce the probability distribution over the individual values for the final weighted sum. \externalsrc{\cite{vaswani2017attention}}}
     \label{fig:ScaledDotProductAttention}
@@ -46,11 +46,11 @@ For a more concrete demonstration, we shall use a scaled dot-product attention. 
 
 The two most prominent variants of attention are the additive attention~\cite{bahdanau2016additiveattention} and the multiplicative (dot-product) attention, with the latter being identical to the one described above except for the temperature scaling. Just for the record, we experimented with both approaches and we observed differences in performance. On balance, both attentions are similar in theory, however, dot-product is much faster and more space-efficient in practice. On the other hand, additive attention outperforms the dot-product attention as long as temperature scaling is not employed for larger values of $d_k$, since the dot-products tend to push the softmax function to regions of extremely small gradients.
 
-In our work, we also exploited the notion of self-attention. Since attention was first targeted at natural language translation, let us provide an example from this area. Originally, the attention was computed between the input and output sentences. Regarding self-attention, attention is computed with respect to the sentence itself. In terms of computer vision, the spatial self-attention represents a weight map over a $2$D feature map indicating how important each feature element for the particular task is. Analogically, the channel self-attention may be used to attribute importance to individual channels, as they often are not equally important. Moreover, it yields more interpretable models as a by-product~\cite{vaswani2017attention}. These ideas will be exploited later.
+In our work, we also exploited the notion of self-attention. Since attention was first targeted at natural language translation, let us provide an example from this area. Originally, the attention was computed between the input and output sentences. Regarding self-attention, attention is computed with respect to the sentence itself. In terms of computer vision, the spatial self-attention represents a weight map over a $2$D feature map indicating how important each feature element for the particular task is. Analogically, the channel self-attention may be used to attribute importance to individual channels, as they often are not equally important. Moreover, it yields more interpretable models as a by-product~\cite{vaswani2017attention}. These ideas will be explored later.
 
 % ##############################################################################
 \subsection{Deformable Convolutional Neural Networks}
-\label{ssec:DeformableCNNS}
+\label{ssec:DeformableCNNs}
 
 \Glspl{dcnn}~\cite{dai2017dcnn} are gaining popularity and are being applied to numerous sophisticated computer vision tasks, \egtext{}, object segmentation (dense predictions) and object detection (semi-dense predictions). Since object tracking revolves around the same requirements in terms of pixel-wise precision, we contemplated using this advancement, too.
 
@@ -91,7 +91,7 @@ in which $\vect{q}$ enumerates all integral locations and $\func{G}{\cdot}$ repr
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/methodology/dcn_standard_vs_deformable.png}}
+    \centerline{\includegraphics[width=0.6\linewidth]{figures/methodology/dcn_standard_vs_deformable.png}}
     \caption[Standard vs. deformable convolution]{Visualization of the difference between the fixed \imgpartdesc{a} and adaptive \imgpartdesc{b} receptive fields. Stacking multiple deformable convolutions results in profound amplification of deformation, making the transformation capture diverse shapes that would otherwise be very coarsely approximated by a standard convolution. \externalsrc{\cite{dai2017dcnn}}}
     \label{fig:StandardVsDeformableCNN}
 \end{figure}
@@ -115,10 +115,92 @@ in which $\vect{q}$ enumerates all integral locations and $\func{G}{\cdot}$ repr
 
 The original paper~\cite{dai2017dcnn}, where \glspl{dcnn} were introduced showed, that learning dense spatial transformation in using deep learning by use of \glspl{cnn} or sophisticated vision tasks such as object detection and semantic segmentation is feasible as well as effective. After our experience, we add that object tracking may benefit from this extension, too.
 
+\subsection{Modulated Deformable Convolutional Neural Networks}
+\label{ssec:ModulatedDeformableCNNs}
+
+The original paper by Zhu~\etal{}~\cite{zhu2018mdcnn} aptly described their contribution in the headline that contained the words ``mode deformable, better results''. Because of this, we shall provide a concise description of the \glspl{mdcnn}, an extension to the previously discussed \glspl{dcnn}.
+
+Since we are simply adding a slight modifications to an already introduced equation, we will try to avoid repetition. Thus, let $\vect{p}_0$, $\vect{p}_n$ and $\Delta \vect{p}_n$ have the same meaning as in \eqtext{}~\ref{eq:DeformableConvolutionOutputCalc}. Then, the modified equation becomes
+\begin{equation}
+    \label{eq:ModulatedDeformableConvolutionOutputCalc}
+    \func{\vect{y}}{\vect{p}_0} =
+    \sum_{\forall \vect{p}_n \in \mset{R}}
+    \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n + \Delta \vect{p}_n} \cdot \Delta \vect{m}_n,
+\end{equation}
+where $\Delta \vect{m}_n$ is the modulation scalar for the current location, such that $\Delta \vect{m}_n \in \rbrackets{0, 1}$. Thus, there are two learnable parameters. The already described offsets, given by the $\Delta \vect{p}_n$ term, and the new modulation (weighting) coefficients, represented by the term $\Delta \vect{m}_n$.
+
+This trivial extension allows the system to not only learn how to sample features in a non-regular fashion if needed, but it also allows applying distinct weight to each sampling location to further adaptively intensify the deforming effect.
+
+From an implementation standpoint, \glspl{dcnn} as well as \glspl{mdcnn} have learnable offsets (and modulation coefficients, if used) set to zero during initialization. This produces no deformable effect, so the convolution behaves as usual in terms of location sampling. However, the modulation aspect is slightly different. Since the sigmoid function is commonly adopted to project the modulation weights into the $\rbrackets{0, 1}$ interval, it multiplies each location by the value of $\func{sigmoid}{0} = \nicefrac{1}{2}$ at the beginning.
+
 % ##############################################################################
 \subsection{Deformable Siamese Attention}
 \label{ssec:DeformableSiameseAttention}
 
-The two independent ideas above led us to experiment with a self-attention mechanism aimed enhancing feature selection in both spatial and channel domain. Such experiments resulted in slight improvements for the reasons outlined in the motivation section. To support that our proposals were based on properly identified reasons, we found a recently published work that demonstrated the effectiveness and potential use of our ideas, too.
+The two independent ideas above led us to experiment with a self-attention mechanism aimed at enhancing feature selection in both spatial and channel domains. Such experiments resulted in slight improvements for the reasons outlined in the motivation section. To support that our proposals were based on properly identified causes, we found a recently published work that demonstrated the effectiveness and potential use of our ideas, too.
 
-Yu~\etal{}~\cite{yu2021dsa} formulated their \gls{dsa}, which covered both of our suggestions above, and plus introduced the notion of cross-attention as an enhancement to the self-attention itself. Considering their contribution and promising outcomes for the single object tracking demonstrated on \siamrpn{} framework, we decided to implement their proposed module into the \siammot{} tracker.
+Yu~\etal{}~\cite{yu2021dsa} formulated their \gls{dsa}, which covered both of our suggestions above and additionally introduced the notion of cross-attention as an enhancement to the self-attention itself. What primarily motivated the introduction of the cross-attention was that the exemplar and search region features in Siamese trackers are computed separately, yet they may frequently compensate each other. It is reasonable to assume that multiple objects appear at the same time even in \gls{sot}, let alone \gls{mot}. Consequently, it is of paramount importance for the search branch to have as much information as possible about the exemplar during the computation of the response map for better discrimination. By the same token, the exemplar features may be enhanced by information from the search features. To this end, the cross-attention, at the acceptable computational cost, serves well.
+
+Considering their contribution and promising outcomes for the single object tracking demonstrated on the \siamrpn{} framework (first discussed in \sectiontext{}~\ref{ssec:TrackingUsingSiameseNetworks} on page \pageref{ssec:TrackingUsingSiameseNetworks}), we decided to implement their proposed module into the \siammot{} tracker as described in their paper. However, with the prospect of greater improvement, we adopted \glspl{dcnn}, instead of pure \glspl{dcnn}. The rationale behind this is the following. \Glspl{mdcnn} have all the advantages of the standard deformable convolution, but they additionally learn a modulation (weighting) for individual elements of the feature map while taking the underlying features into account. For our purposes, this seemed to intensify the spatial attention effect, since not only the deformable part was responsible for choosing features using irregular sampling patterns, the network was even allowed to weigh them differently. We conjectured that such an extension may either have no dramatic effect or influence it only positively.
+
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+    \centerline{\includegraphics[width=\linewidth]{figures/methodology/deformable_siamese_attention.pdf}}
+    \caption[\Gls{dsa} diagram]{The \gls{dsa} extension introduces two sub-modules for both template (exemplar) and search branch. The self-attention is further divided into two operations, namely the spatial and channel attention. The very same attention network is used to process both features independently. Notice how the channel attention is computed only once as part of the self-attention process and then directly fused with the channel self-attention of the other branch, creating the cross-attention effect, which is the strongest one from all three, according to authors. In this figure, we modified the deformable convolution operation to include the modulated version, which is our modification compared to the original formulation. \externalsrc{\cite{yu2021dsa}}}
+    \label{fig:DeformableSiameseAttention}
+\end{figure}
+% ------------------------------------------------------------------------------
+
+\subsubsection{Self-Attention}
+
+Self-attention is computed separately on the template (exemplar) and search branch independently. This operation can be easily achieved since exemplar and search tensors only differ in width and height, which does not pose a problem to convolution at all (fully-convolutional networks exploit this property). The following description of the self-attention computation conforms to the established attention principles regarding ``queries, keys and values'' introduced in \sectiontext{}~\ref{ssec:Attention}. For better understanding of the computation, see the diagram in \figtext{}~\ref{fig:DeformableSiameseAttention}.
+
+Let $\mtx{X} \in \setrnnn{C}{H}{W}$ be the input features. To produce query features $\mtx{Q}$ and key features $\mtx{K}$, such that $\mtx{Q}, \mtx{K} \in \setrnnn{C^{\prime}} {H}{W}$ and $C^{\prime} = \frac{1}{4}C$, where $C^{\prime}$ is the reduced number of channels, first two separate $1 \times 1$ convolution layers are applied. The two obtained features then need to be reshaped into $\mtx{\bar{Q}}, \mtx{\bar{K}} \in \setrnn{C^{\prime}}{N}$, where $N = H \times W$. The spatial self-attention $\mtxsubsup{A}{S}{S} \in \setrnn{N}{N}$ is then produced via matrix multiplication and a column-wise softmax operation as
+\begin{equation}
+    \label{eq:SpatialSelfAttention}
+    \mtxsubsup{A}{S}{S} =
+    \func{softmax_{col}}{\mtx{\bar{Q}}^T \mtx{\bar{K}}}.
+\end{equation}
+Authors used $C^{\prime} = \frac{1}{8}C$, but in \gls{mot}, the number of objects to track is often a lot greater, thus the computation graph grows dramatically with the higher number of channels. Furthermore, in our case $C = 128$, and we considered using $32$ channels for the attention to be the bare minimum.
+
+Meanwhile, an analogous sequence of operations is adopted to produce the value features. A $1 \times 1$ convolution layer without the subsequent reshape operation transforms the input features $\mtx{X}$ into the value features $\mtx{\bar{V}} \in \setrnn{C}{N}$. At this point, we have matched the queries and keys as well as computed the values. We may proceeed further to the weighted selection from the values and to incorporate the attention into the features as follows
+\begin{equation}
+    \label{eq:SpatialSelfAttentionApplication}
+    \mtxsubsup{\bar{X}}{S}{S} =
+    \alpha \mtx{\bar{V}} \mtxsubsup{A}{S}{S} + \mtx{\bar{X}},
+\end{equation}
+where $\alpha$ is a learnable scalar parameter, and $\mtxsubsup{\bar{X}}{S}{S} \in \setrnn{C}{N}$. The outputs $\mtxsubsup{\bar{X}}{S}{S}$ are then reshaped back to the original size, specifically $\mtxsubsup{X}{S}{S} \in \setrnnn{C}{H}{W}$. From our experience, the parameter $\alpha$ is very useful for training stabilization.
+
+The corresponding channel self-attention $\mtxsubsup{A}{C}{S}$ and the channel-wise attentional features $\mtxsubsup{X}{C}{S}$ are obtained similarly. Due to space limitations and the fact that the upcoming formulation of the cross-attention exploits the channel self-attention, we will omit a detailed description. We will just point out that the ``queries, keys and values'' for the channel self-attention are produced directly from the features on the input, with no $1 \times 1$ convolutions whatsoever. The final self-attentional features are generated by an element-wise sum using the partial spatial and channel self-attentions, $\mtxsubsup{X}{S}{S}$ and $\mtxsubsup{X}{C}{S}$, respectively.
+
+\subsubsection{Cross-Attention}
+
+Let $\mtx{Z} \in \setrnn{C}{h}{w}$, $\mtx{X} \in \setrnnn{C}{H}{W}$ denote the exemplar and search region features, respectively. The following description introduces the computation of the cross-attention from the perspective of the search branch. First, the target features $\mtx{Z}$ are reshaped into $\mtx{\bar{Z}} \in \setrnn{C}{n}$, where $n = h \times w$. Then, the cross-attention from the exemplar branch is computed. We emphasize that the channel attention is reused, therefore, the computation below serves as a recipe for how to compute the channel self-attention. So, we compute the channel cross-attention $\mtxsup{A}{C} \in \setrnn{C}{C}$ as
+\begin{equation}
+    \label{eq:CrossAttentionCalc}
+    \mtxsup{A}{C} =
+    \func{softmax_{row}}{\mtx{\bar{Z}} \mtx{\bar{Z}}^T}.
+\end{equation}
+The real benefit comes from the merging stage, where the above-computed attention is merged with the other, in this case, the search branch as
+\begin{equation}
+    \label{eq:CrossAttentionMerge}
+    \mtxsup{\bar{X}}{C} =
+    \gamma \mtxsup{A}{C} \mtx{\bar{X}} + \mtx{\bar{X}},
+\end{equation}
+where $\gamma$ is a learnable scalar parameter. The merged features $\mtxsup{\bar{X}}{C}$, once again, have to be reshaped, so the features $\mtxsup{X}{C} \in \setrnnn{C}{H}{W}$ are the final output.
+
+At last, the self-attentional features are combined with the cross-attentional features using element-wise sum. The cross-attention from the perspective of the exemplar branch can be obtained using a similar sequence of operations. In total, there are six steps that involve addition for the purpose of feature merging (see \figtext{}~\ref{fig:DeformableSiameseAttention}).
+
+Once the attention is applied to tracking, the corresponding response map is altered as expected. Discriminative power of the tracker is enhanced by appropriate suppression of the semantic background. As \figtext{}~\ref{fig:DSAAttentionVisualization} shows, activations in the search regions as viewed through the response map vary if the \gls{dsa} module is included in the computation, making the tracker less prone to drifting to scene or semantic background objects.
+
+\subsubsection{Deformable Convolution Phase}
+
+The attention is finalized by processing the obtained feature tensors by another layer of deformable convolution, in our case, modulated deformable convolution. The resulting features the shape of which is identical to the input shape are used to compute the response map. As a result, this extension can be easily integrated into an existing pipeline thanks to its ability to preserve tensor shapes.
+
+% ------------------------------------------------------------------------------
+\begin{figure}[t]
+    \centerline{\includegraphics[width=0.5\linewidth]{figures/methodology/dsa_attention_visualization.pdf}}
+    \caption[\Gls{dsa} attention visualization]{Visualization of response (confidence) maps. The first column represents the search image, the second column represents the activation levels without the \gls{dsa} module, whereas the third column clearly demonstrates the improved target-background discirminability in the computed attentional features. \externalsrc{\cite{yu2021dsa}}}
+    \label{fig:DSAAttentionVisualization}
+\end{figure}
+% ------------------------------------------------------------------------------
