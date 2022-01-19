@@ -1,5 +1,5 @@
-\section{Visual Object Tracking}
-\label{sec:VisualObjectTracking}
+\section{Single Object Tracking}
+\label{sec:SingleObjectTracking}
 
 In this section, we will focus on the main topic of this thesis: tracking objects visually. Many research activities have been devoted to dealing with tracking of objects where visual input is the only information a model is provided with. Since the field of computer vision as a whole has transitioned from manual feature engineering in combination with shallow machine learning algorithms to using deep neural networks in end-to-end style, \gls{vot} as a subfield is no exception. We are going to discuss primarily \gls{sota} approaches, and if we do mention older, maybe even obsolete methods, it will be only for the sake of reference and historical motivation. Furthermore, unless stated otherwise, we will assume a general object tracking model.
 
@@ -240,7 +240,7 @@ Inspiration from techniques for the problem of object segmentation yielded anoth
 As always, the \siamfc{}~\cite{bertinetto2016siamfc} was employed as the fundamental building block. However, a notable alternation consisted of the use of a depth-wise cross-correlation layer instead of a simple cross-correlation layer. The latter one compresses all the information into one channel, impeding the potential to encode richer information about the target object. As a reminder, the original model used $6 \times 6 \times 128$ and $22 \times 22 \times 128$ tensors to produce a $17 \times 17 \times 1$ response map (\figtext{}~\ref{fig:FullyCNNSiamTrackingArch}). Here, a multi-channel response maps are utilized (\figtext{}~\ref{fig:SiamMaskArchitecture}).
 
 % ------------------------------------------------------------------------------
-\begin{figure}[t]
+\begin{figure}[!t]
     \centering
     \begin{subfigure}[b]{0.68\textwidth}
         \centering
@@ -286,4 +286,4 @@ The utilization of cross-correlation has a great share of the leading performanc
 
 Speaking of cross-correlation, its core principle of performing a ``learned template matching'' using the exemplar and the search region, it raises the question whether and how the exemplar template should change during the training. Several works have remarked that incorporating memory or template updating strategies could potentially enhance the tracker performance, e.g,~\cite{bertinetto2016siamfc, liang2019lssiam}. It seems that relying solely upon the exemplar image from the initial frame may have detrimental effects as the object undergoes severe visual deformations, so the tracker may eventually loose its track.
 
-Even though our discussed survey focused on \gls{sot}, there are emerging works where Siamese architectures such as \siamfc{}~\cite{bertinetto2016siamfc} were integrated into a \gls{mot} pipeline. For instance, Shuai~\etal{}~\cite{shuai2020multisiamrcnn} proposed one such framework that can simultaneously handle object tracking, detection, and \gls{reid}. In addition, the formulation allows the use of any Siamese tracker, which is a great contribution. Another trivial, yet very effective extension of the often-mentioned \siamfc{} tracker was to utiliation $n$ exemplars to produce $n$ response maps and, therefore, to perform tracking of $n$ objects at the same time~\cite{vaquero2021siammt}. We believe this paradigm of tracking is yet to uncover its full potential. As a matter of fact, our research ended up with working with \siammot{}~\cite{shuai2021siammot} (Section~\ref{sec:SiamMOT}) architecture, which we will introduce in great detail later on. It is a multi-object tracker that practically encompasses some of the best approaches we have discussed so far into an end-to-end framework, such as Siamese tracker (multi-channel cross-correlation), \gls{rpn} head, centerness, feature fusion, and much more.
+Even though our discussed survey focused on \gls{sot}, there are emerging works where Siamese architectures were integrated into a \gls{mot} pipeline. We shall cover some important works in the next section.
