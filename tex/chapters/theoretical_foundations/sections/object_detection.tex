@@ -3,7 +3,7 @@
 
 Since the topic of this thesis concerns the task of \emph{visual} object tracking, an indispensable step in the processing pipeline will unquestionably be object detection. Here we give an overview of various types of image inference to highlight the importance of object detection. The general task of image inference comes in three types, where each builds upon the previous one. The dependency chain is the following: \emph{object classification} $\to$ \emph{object detection} $\to$ \emph{image segmentation}.
 
-Object detection comes in various flavors discussed in the following sections. From a holistic point of view, there are \emph{fast} object detectors, such as the most prominent one, \gls{yolo}~\cite{redmon2016yolo} (\sectiontext{}~\ref{ssec:YouLookOnlyOnce}), or \gls{ssd}~\cite{liu2016ssd}. Here, we use the term \emph{fast} to denote that the detector can operate on high \gls{fps}. This comes at a cost of relatively lower accuracy, though, as compared to \emph{slower} but more accurate approaches based on region proposals, such as various versions of \fasterrcnn{} (\sectiontext{}~\ref{ssec:FasterRCNN}).
+Object detection comes in various flavors discussed in the following sections. From a holistic point of view, there are \emph{fast} object detectors, such as the most prominent one, \gls{yolo}~\cite{redmon2016yolo} (\sectiontext{}~\ref{ssec:YouLookOnlyOnce}), or \gls{ssd}~\cite{liu2016ssd}. Here, we use the term \emph{fast} to denote that the detector can operate on high \gls{fps}. This comes at a cost of relatively lower accuracy, though, as compared to \emph{slower} but more accurate approaches based on region proposals, such as various versions of \gls{fasterrcnn} (\sectiontext{}~\ref{ssec:FasterRCNN}).
 
 Historically speaking, object detection in its early stages of development depended on feature engineering followed by some shallow machine learning model (\egtext{}, \gls{svm}~\cite{cortes1995support}) to classify the proposed object. Feature extraction was achieved using approaches such as \gls{sift}~\cite{lowel1999objrecognition}, an algorithm capable of producing description of local features in images. Another eminent approach was \gls{hog}~\cite{mcconnell1986osti}, equally used for feature extraction by taking advantage of a change in orientation of gradients in localized portions of the image and subsequently counting occurrences of various orientations. But, as we stated, robust object detection is what our task demands, and the goal of getting the top performance is unattainable without deep learning-based object detection, the principal topic of this section.
 
@@ -69,14 +69,14 @@ For a more formal description, let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2
 \subsection{Faster R-CNN}
 \label{ssec:FasterRCNN}
 
-The \fasterrcnn{}~\cite{ren2017fasterrcnn} is the most prominent \emph{two-stage} object detector. The first stage consists of generating region proposals using the \gls{rpn} (see \figtext{}~\ref{fig:FasterRCNNRPN}), where the input image is processed by a feature extractor~\cite{huang2017speedacctradeoff}. These class-agnostic proposals, a set of rectangular \glspl{bbox}, are produced from an input of arbitrary size (allowed by the fact that this process is modeled by a fully convolutional network) (see \figtext{}~\ref{fig:FasterRCNNMetaArch} and \figtext{}~\ref{fig:FasterRCNNPipeline}).
+The \gls{fasterrcnn}~\cite{ren2017fasterrcnn} is the most prominent \emph{two-stage} object detector. The first stage consists of generating region proposals using the \gls{rpn} (see \figtext{}~\ref{fig:FasterRCNNRPN}), where the input image is processed by a feature extractor~\cite{huang2017speedacctradeoff}. These class-agnostic proposals, a set of rectangular \glspl{bbox}, are produced from an input of arbitrary size (allowed by the fact that this process is modeled by a fully convolutional network) (see \figtext{}~\ref{fig:FasterRCNNMetaArch} and \figtext{}~\ref{fig:FasterRCNNPipeline}).
 
 As far as the second stage is concerned, the proposed regions (usually $300$) serve as a basis for subsequent cropping of features from the same intermediate feature map which are then fed to the remaining feature extractor to predict the class. Based on this class prediction, the proposed box is further refined. The name for this stage is \emph{box classifier}.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/faster_rcnn_rpn_module.pdf}}
-    \caption[\fasterrcnn{} with the \gls{rpn}]{The \fasterrcnn{} is built as a unified network for object detection, with its \gls{rpn} module serving the purpose of an \emph{attention}. \externalsrc{\cite{ren2017fasterrcnn}}}
+    \caption[\gls{fasterrcnn} with the \gls{rpn}]{The \gls{fasterrcnn} is built as a unified network for object detection, with its \gls{rpn} module serving the purpose of an \emph{attention}. \externalsrc{\cite{ren2017fasterrcnn}}}
     \label{fig:FasterRCNNRPN}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ As far as the second stage is concerned, the proposed regions (usually $300$) se
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.65\linewidth]{figures/theoretical_foundations/faster_rcnn_metaarchitecture.pdf}}
-    \caption[\fasterrcnn{} meta-architecture]{A meta-architecture of the \fasterrcnn{} model. \externalsrc{\cite{huang2017speedacctradeoff}}}
+    \caption[\gls{fasterrcnn} meta-architecture]{A meta-architecture of the \gls{fasterrcnn} model. \externalsrc{\cite{huang2017speedacctradeoff}}}
     \label{fig:FasterRCNNMetaArch}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ As the endeavor is to diminish unnecessary computations, the proposals are not c
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/theoretical_foundations/fastercnn_diagram.pdf}}
-    \caption[\fasterrcnn{} processing diagram]{A conceptual diagram of the \fasterrcnn{} model demonstrating the information pipeline when processing an input image.}
+    \caption[\gls{fasterrcnn} processing diagram]{A conceptual diagram of the \gls{fasterrcnn} model demonstrating the information pipeline when processing an input image.}
     \label{fig:FasterRCNNPipeline}
 \end{figure}
 % ------------------------------------------------------------------------------

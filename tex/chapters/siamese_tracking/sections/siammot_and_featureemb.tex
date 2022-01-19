@@ -4,9 +4,9 @@
 % ##############################################################################
 \subsection{Motivation}
 
-One of our experiments involved an end-to-end training of the whole \siammot{} model together with a custom head supposed to create embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The motivation was to force the training process into extracting features that are not only satisfactory for detection and tracking, but also contain the necessary information to create embeddings for subsequent \gls{reid} purposes during the inference.
+One of our experiments involved an end-to-end training of the whole \gls{siammot} model together with a custom head supposed to create embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The motivation was to force the training process into extracting features that are not only satisfactory for detection and tracking, but also contain the necessary information to create embeddings for subsequent \gls{reid} purposes during the inference.
 
-We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \siammot{} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending a huge model that already requires a significant amount of GPU VRAM made it even more demanding.
+We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \gls{siammot} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending a huge model that already requires a significant amount of GPU VRAM made it even more demanding.
 
 During the research related to our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using global average pooling operation into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represents the kernel for the cross-correlation operation in the majority of the Siamese trackers discussed so far.
 
@@ -48,7 +48,7 @@ As far as the vector embedding computation was concerned, we attached the embedd
 % ##############################################################################
 \subsection{Training Phase}
 
-The training phase was altered by adding another loss function to the sum of already existing three loss functions from the original model. In particular, the general \siammot{} loss function defined in \eqtext{}~\ref{eq:SiamMOTGeneralLoss} was reformulated as
+The training phase was altered by adding another loss function to the sum of already existing three loss functions from the original model. In particular, the general \gls{siammot} loss function defined in \eqtext{}~\ref{eq:SiamMOTGeneralLoss} was reformulated as
 \begin{equation}
     \label{eq:SiamMOTFeatureEmbLoss}
     \lossf = l_{rpn} + l_{detect} + l_{motion} + l_{emb}.
