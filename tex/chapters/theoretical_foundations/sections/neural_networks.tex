@@ -1,30 +1,20 @@
 \section{Neural Networks}
 
-In this section, we briefly describe artificial neural networks and their various types relevant to this thesis. However, we assume that the reader is sufficiently equipped with the knowledge regarding deep machine learning.
-
 % ##############################################################################
 \subsection{Artificial Neural Networks}
 \label{ssec:ArtificialNeuralNetworks}
 
-Artificial neural networks (or just neural networks for short) are computing systems that are inspired by, but not identical to, biological neural networks that constitute animal brains. Such systems essentially \emph{learn} to perform tasks by considering multiple samples, generally without being programmed with task-specific rules. This technology has acquired a status of paramount importance when solving a problem using machine learning. They form a basis for modern deep machine learning. Artificial neural networks are also known in the literature as the multilayer perceptron~\cite{rosenblatt1958perceptron}, feedforward neural networks, or deep feedforward neural networks~\cite{goodfellow2016dl}.
+Artificial neural networks (or just neural networks for short) are computing systems that are inspired by, but not identical to, biological neural networks that constitute animal brains. Such systems essentially \emph{learn} to perform tasks by considering multiple samples, generally without being programmed with task-specific rules. They form a basis for deep machine learning, and are also known in the literature as the multilayer perceptron~\cite{rosenblatt1958perceptron}, feedforward neural networks, or deep feedforward neural networks~\cite{goodfellow2016dl}.
 
 In mathematical terms, the goal of a neural network is to approximate some unknown function $f$. For instance, when considering a classiﬁer, the transformation $y = \func{f}{\vx}$  maps the given input $\vx$ to a category $y$. Such a network, therefore, defines a mapping and learns the value of the parameters that result in the best function approximation~\cite{goodfellow2016dl}.
 
-The name \emph{feedforward} is derived from the fact that the information flows through the function being evaluated from $\vx$, through the intermediate computations, and ﬁnally to the output $\vy$. Such a model can be described with a directed acyclic graph denoting the sequential composition of several functions. More concretely, we might have three functions $\suprbrackets{f}{1}$, $\suprbrackets{f}{2}$ and $\suprbrackets{f}{3}$, forming a chain, $\func{f}{\vx} = \func{\suprbrackets{f}{3}}{\func{\suprbrackets{f}{2}}{\func{\suprbrackets{f}{1}}{\vx}}}$. These chain structures are the most commonly used structures in neural networks~\cite{goodfellow2016dl} (see \figtext{}~\ref{fig:WebFCArchitecture}). Deep machine learning consists of multiple such layers of neurons stacked onto each other that are trained using the \emph{backpropagation} algorithm~\cite{rumelhart1986backprop}.
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/typical_fcn_architecture.pdf}}
-    \caption[A typical fully conntected architecture]{An illustration of a typical fully connected neural network. \externalsrc{\cite{webfcarchitecture}}}
-    \label{fig:WebFCArchitecture}
-\end{figure}
-% ------------------------------------------------------------------------------
+The name \emph{feedforward} is derived from the fact that the information flows through the function being evaluated from $\vx$, through the intermediate computations, and ﬁnally to the output $\vy$. Such a model can be described with a directed acyclic graph denoting the sequential composition of several functions. More concretely, we might have three functions $\suprbrackets{f}{1}$, $\suprbrackets{f}{2}$ and $\suprbrackets{f}{3}$, forming a chain, $\func{f}{\vx} = \func{\suprbrackets{f}{3}}{\func{\suprbrackets{f}{2}}{\func{\suprbrackets{f}{1}}{\vx}}}$. These chain structures are the most commonly used structures in neural networks~\cite{goodfellow2016dl}. Deep machine learning consists of multiple such layers of neurons stacked onto each other that are trained using the \emph{backpropagation} algorithm~\cite{rumelhart1986backprop}.
 
 % ##############################################################################
 \subsection{Convolutional Neural Networks}
 \label{ssec:ConvolutionalNeuralNetworks}
 
-This type of neural network has gained popularity in the computer vision community thanks to a never-seen-before performance on image classification task~\cite{krizhevsky2012classification}. This approach images or other high dimensional, grid-like input and then learns the importance (weights and biases) of various aspects of the input data. Simply put, \glspl{cnn} are neural networks that use in at least one of their layers the convolution operation instead of a general matrix multiplication~\cite{goodfellow2016dl} (see \figtext{}~\ref{fig:WebCNNArchitecture}).
+This type of neural network has gained popularity in the computer vision community thanks to a never-seen-before performance on image classification task~\cite{krizhevsky2012classification}. This approach processes images or other high dimensional, grid-like input and then learns the importance (weights and biases) of various aspects of the input data.
 
 The successful ability of these networks to capture spatial properties via learned convolutional filters is the fundamental principle. Let $f$ and $g$ be functions. Then, the operation of convolution denoted by $\star$ produces a third function, as a result of the following computation (demonstrating the commutativity property, too)~\cite{goodfellow2016dl}:
 \begin{equation}
@@ -41,7 +31,7 @@ The successful ability of these networks to capture spatial properties via learn
 \end{equation}
 In this setting, $f$ is the input, and $g$ is the kernel. The output of this operation is a feature map. During the training, the aim is to learn the weights of the kernel matrix that produces a feature map based on which the model can solve the given task according to some objective function.
 
-Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Then, for a given position $\rbrackets{i, j}$ in the input image $I$, the convolution can be written in its discrete form as
+Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Then, for a given position $\rbrackets{i, j}$ in the input image $I$, the discrete convolution can be written as
 \begin{equation}
     \label{eq:ConvolutionDiscrete}
     \func{\rbrackets{f \star g}}{i, j} =
@@ -50,7 +40,7 @@ Let $I$ be a two-dimensional input image and $K$ be a two-dimensional kernel. Th
     \func{I}{m, n}
     \func{K}{i - m, j - n}.
 \end{equation}
-Nonetheless, many machine learning libraries implement the cross-correlation operation, not the convolution operation by its strict definition. This operation is the same except for the fact that the kernel is not flipped, thus the commutative property is not preserved, which is not demanded in neural networks. In that case, the result of the cross-correlation is given by~\cite{goodfellow2016dl}
+Many machine learning libraries implement the cross-correlation operation, not the convolution operation by its strict definition. This operation is the same except for the fact that the kernel is not flipped. Thus, the result of the cross-correlation is given by~\cite{goodfellow2016dl}
 
 \begin{equation}
     \label{eq:CrossCorrelation}
@@ -63,12 +53,4 @@ Nonetheless, many machine learning libraries implement the cross-correlation ope
 
 An indispensable outcome of \glspl{cnn} is the ability to capture hierarchical relations. Layers placed near the input of the model capture low-level features such as edges, colors, gradient orientations, and so on. On the other hand, layers placed further, deeper in the model, highlight semantic, abstract features that are specific to the task at hand. We will refer to this fact many times in our work since visual object trackers need to accurately discriminate between the foreground and background. The exploitation of the mentioned qualities of convolutional layers will be demonstrated in \sectiontext{}~\ref{sec:SingleObjectTracking}.
 
-Another prominent use case of \glspl{cnn} is \emph{transfer learning}, where a pre-trained model is adopted for a new task, utilizing the already learned features. These pre-trained models may come in various flavors, but typical ones are pre-trained for an image classification task using the \datasetname{ImageNet} dataset~\cite{deng2009imagenet}. The reasoning is that visual features such as edges and contours are vital to general object recognition tasks, hence it is not needed to learn coarse, rudimentary, low-level features from scratch all the time. Our work will certainly require the \emph{transfer learning}, and also additional \emph{fine-tuning} of the pre-trained model of choice.
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.9\linewidth]{figures/theoretical_foundations/typical_cnn_architecture.pdf}}
-    \caption[A typical \gls{cnn} architecture]{An illustration of a typical convolutional neural network architecture for a quintessential classification task. An image of a car is fed into the model that extracts visual features that are subsequently processed by the fully connected layers resulting in the probability distribution over target classes. \externalsrc{\cite{webcnnarchitecture}}}
-    \label{fig:WebCNNArchitecture}
-\end{figure}
-% ------------------------------------------------------------------------------
+Another prominent use case of \glspl{cnn} is \emph{transfer learning}, where a pre-trained model is adopted for a new task, utilizing the already learned features. These pre-trained models may come in various flavors, but typical ones are pre-trained for an image classification task using the \datasetname{ImageNet} dataset~\cite{deng2009imagenet}. The reasoning is that visual features such as edges and contours are vital to general object recognition tasks, hence it is not needed to learn coarse, rudimentary, low-level features from scratch all the time. Our work will certainly require the \emph{transfer learning}, and additional \emph{fine-tuning} of the pre-trained model.

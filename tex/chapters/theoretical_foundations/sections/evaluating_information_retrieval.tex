@@ -1,7 +1,7 @@
 \section{Evaluating Information Retrieval}
 \label{sec:EvaluatingInformationRetrieval}
 
-In this section, we assume the reader is fully equipped with the basic notions of accuracy, precision, recall, and some other derived metrics. We will use the standard terminology to denote whether the classification is correct (true) or not (false), for both positive and negative categories. All these measures can be obtained from the confusion matrix (see \tabletext{}~\ref{tab:ConfusionMatrix}), which we provide for completeness.
+In this section, we will use the standard terminology to denote whether the classification is correct (true) or not (false), for both positive and negative categories, as given by the confusion matrix (\tabletext{}~\ref{tab:ConfusionMatrix}).
 
 \begin{table}[t]
     \centering
@@ -16,7 +16,7 @@ In this section, we assume the reader is fully equipped with the basic notions o
         \bottomrule
     \end{tabular}
 
-    \caption[Confusion matrix]{A confusion matrix in the standard form. \externalsrc{\cite{davis2016prcurves}}}
+    \caption[Confusion matrix]{A confusion matrix in the standard form.}
     \label{tab:ConfusionMatrix}
 \end{table}
 
@@ -29,9 +29,7 @@ In this section, we assume the reader is fully equipped with the basic notions o
 
 \glslocalreset{iou}
 
-\Gls{iou} measures the overlap between two boundaries. It is a quantitative measure of overlap between two \glspl{bbox}, where one is the ground truth \gls{bbox} and the other is the predicted one (see \figtext{}~\ref{fig:IntersectionOverUnion}).
-
-Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox} described by vectors containing $4$ integer elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner and the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+\Gls{iou} measures the overlap between two \glspl{bbox}. Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox} described by vectors containing $4$ elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner and the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
     \begin{aligned}
         \vect{b}_1 \cap \vect{b}_2 =
@@ -46,7 +44,7 @@ and the area of their union is given by
 \begin{equation}
     \vect{b}_1 \cup \vect{b}_2 = w_1 h_1 + w_2 h_2 - \vect{b}_1 \cap \vect{b}_2.
 \end{equation}
-Then, the final \gls{iou} metric between $\vect{b_1}$ and $\vect{b_2}$ is computed as
+Then, the final \gls{iou} metric between $\vect{b_1}$ and $\vect{b_2}$ is computed as (\figtext{}~\ref{fig:IntersectionOverUnion})
 \begin{equation}
     \label{eq:IntersectionOverUnion}
     \func{\IOU}{\vect{b}_1, \vect{b}_2} =
@@ -68,7 +66,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 
 \glslocalreset{map}
 
-\Gls{map} belongs to commonly used approaches for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm. Such evaluation measures are used to determine how well the search results satisfied the user's query intent.
+\Gls{map} is commonly used for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm.
 
 \subsubsection{Object Re-Identification}
 \label{sssec:ObjectReIdentification}
@@ -89,7 +87,7 @@ where $Q$ is the total number of query images, as described in~\cite{kuma2019veh
 
 \subsubsection{Object Detection}
 
-Object detection models seek to identify the presence of objects in images and then classify them. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. Even though we defined \gls{map} for object \gls{reid} (\sectiontext{}~\ref{sssec:ObjectReIdentification}), the \gls{map} is also used for object detection~\cite{everingham2010pascalvoc}.
+Object detectors seek to identify the presence of objects in images. The evaluation metric of such a model has to take the \gls{bbox} prediction into account, as there can be just a partial overlap of the predicted \gls{bbox} with the ground truth one. The previously defined \gls{map} is also used for object detection~\cite{everingham2010pascalvoc}.
 
 In a ranked retrieval context, appropriate sets of retrieved documents are naturally given by the \emph{top-k} retrieved documents and for each such set, the precision-recall curve can be plotted. With this in mind, recall is defined as the proportion of all positive examples ranked above a given rank. Precision is the proportion of all examples above that rank which are from the positive class. In~\cite{everingham2010pascalvoc}, the \gls{ap} is computed for $11$ equally spaced discrete recall levels, specifically $\sbrackets{0.0, 0.1, 0.2, \dots, 1.0}$, using
 \begin{equation}
