@@ -1,27 +1,26 @@
-\section{Siamese Multi-Object Tracking and Re-identification}
+\section{Siamese Multi-Object Tracking and ReID}
 \label{sec:SiamMOTandReID}
 
 % ##############################################################################
 \subsection{Motivation}
 
-The use of \gls{reid} has been emphasized numerous times during our preliminary research for this thesis. We conjectured that once full occlusion ensues, \ietext{}, the object completely disappears, the \gls{reid} mechanism could be adopted to recover the lost track since the object appears at the scene as a new one, thus a corresponding reasoning whether to assing a new or previously track identified is necessary. The presence of occlusion percolates traffic scenes all the time, especially if the camera does not view the road from a higher position. At the beginning of our Ph.D. research, we worked on the \interreg{} project where we tackled vehicle tracking when the camera was positioned next to the road. Under such circumstances, occlusion was inevitable. Such a setup inexorably lead to situations in which a vehicle appeared for a second on the left side of the frame, then ended up fully covered by a truck, and re-appeared for a miniscule amount of time at the other side of frame. The task of maintaining the same object identifier in such situations was burdensome and often impossible with high degree of precision.
+The use of \gls{reid} has been emphasized numerous times during our preliminary research for this thesis. We conjectured that once full occlusion ensues, the \gls{reid} mechanism could be adopted to recover the lost track since the object appears at the scene as a new one. The presence of occlusion percolates traffic scenes, especially if the camera does not view the road from a higher position. At the beginning of our Ph.D. research, we worked on the \interreg{} project where we tackled vehicle tracking when the camera was positioned next to the road (\figtext{}~\ref{fig:InterregDatasetSample}). Under these circumstances, occlusion was inevitable. Such a setup inexorably led to situations in which a vehicle appeared for a second on the left side of the frame, then ended up fully covered by a truck, and re-appeared for a miniscule amount of time at the other side of frame. The task of maintaining the same object identifier was burdensome and often impossible with high degree of precision.
 
 % ##############################################################################
 \subsection{Preliminary Discussion}
 
-To make a full disclosure right at the beginning, we expected that the adoption of \gls{reid} enhancements within the \gls{siammot} framework would bring improvements in certain areas. Retrospectively, our experiments showed detrimental effects upon the tracker accuracy. In this section, we will elaborate further on why it is so in order to learn from such an experience as much as possible. Our surprise stems primarily from the fact that our thesis goals largely revolved around the application of \gls{reid} in object tracking. Therefore, finding that such approach does not yield the desired outcome raises multiple questions, namely the following ones:
+To make a full disclosure right at the beginning, we expected that the adoption of \gls{reid} enhancements within the \gls{siammot} framework would bring improvements in certain areas. Retrospectively, our experiments showed detrimental effects upon the tracker accuracy. Despite our negative outcome, we still consider the performed research to be a contribution to the \gls{mot} area. We will elaborate further on why it is so in order to learn from such an experience as much as possible. Our surprise stems primarily from the fact that our thesis goals revolved around the application of \gls{reid} in object tracking. Therefore, finding that such approach does not yield the desired outcome raises multiple questions, specifically the following ones:
 \begin{enumerate}
     \item Does the inclusion of \gls{reid} into \gls{mot} frameworks have a potential to resolve cases of full occlusion without exacerbating other areas?
-    \item Is the \gls{reid} extension suitable to the chosen \gls{mot} model, specifically, the \gls{siammot} tracker?
+    \item Is the \gls{reid} extension suitable to the chosen \gls{mot} model, namely, the \gls{siammot}?
     \item Is the target use case in terms of datasets adequate to showcase the potential of \gls{reid} applied in the \gls{siammot} tracker?
 \end{enumerate}
-In our dicussion, we will answer these questions. Despite our negative outcome, we still consider the performed research to be a contribution to the \gls{mot} area.
 
 % ##############################################################################
 \subsection{Proposed ReID-Enhanced Architecture}
 \label{ssec:ProposedReIDEnhancedArchitecture}
 
-We adopted the object \gls{reid} architecture published in~\cite{luo2019bagoftricksreid} by Luo~\etal{}. The authors proposed a simple yet very robust framework for person \gls{reid}. We adopted this architecture (\figtext{}~\ref{fig:BagOfTricksReIDArchitecture}) for vehicle \gls{reid} due to its simplicity accompanied with \gls{sota} performance at the time of publishing.
+We adopted the object \gls{reid} approach published in~\cite{luo2019bagoftricksreid}, a simple yet very robust framework for person \gls{reid}. We employed this architecture (\figtext{}~\ref{fig:BagOfTricksReIDArchitecture}) for vehicle \gls{reid} due to its simplicity accompanied with \gls{sota} performance at the time of publishing.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
