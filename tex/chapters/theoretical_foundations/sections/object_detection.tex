@@ -11,42 +11,45 @@ Object detection is, by its very nature, a difficult task, because the number of
 
 Object detectors have hugely profited from the end-to-end learning paradigm in which features, object proposals, and the classifier become part of one model~\cite{hosang2017learningnms}. A proposal is nothing but a region containing a potential object of interest. However, the number of proposals may grow considerably, outnumbering the real count of present objects. Moreover, these proposals may have a large overlapping region as measured by \gls{iou} (\sectiontext{}~\ref{eq:IntersectionOverUnion}), rendering most of them useless in terms of conveying new information. To filter such proposals, the \gls{nms} algorithm introduced below is used (\figtext{}~\ref{fig:NonMaximumSuppression}). The objective is to iteratively select only proposals the \gls{iou} of which is below a specific threshold.
 
-Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. Let $\lambda$, such that $0 \leq \lambda < 1$, denote the threshold for the maximum allowed portion of the overlap between regions. $\mset{B}_{nms}$ is the set of filtered proposal instances from the set $\mset{B}$ produced using the \gls{nms} algorithm below:
+Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. Let $\lambda$, such that $0 \leq \lambda < 1$, denote the threshold for the maximum allowed portion of the overlap between regions. $\mset{B}_{nms}$ is the set of filtered proposal instances from the set $\mset{B}$ produced using \gls{nms} (\algtext{}~\ref{alg:NonMaximumSuppression}).
 
-\begin{algorithmic}[1]
-    \Function{NMS}{$\mset{B}$, $\mset{S}$, $\lambda$}
+\begin{algorithm}[t]
+    \caption{Non-Maximum Suppression}
+    \label{alg:NonMaximumSuppression}
+    \begin{algorithmic}[1]
+        \Function{NMS}{$\mset{B}$, $\mset{S}$, $\lambda$}
 
-    \State $\mset{B}_{nms}$ $\gets$ $\emptyset$
-    \Comment{initialize the output (filtered) set of region proposals}
+        \State $\mset{B}_{nms}$ $\gets$ $\emptyset$
+        \Comment{initialize the output (filtered) set of region proposals}
 
-    \While {$\mset{B} \neq \emptyset$}
-    \Comment{loop until all the proposals are processed}
+        \While {$\mset{B} \neq \emptyset$}
+        \Comment{loop until all the proposals are processed}
 
-    \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
-    \Comment{find an index of a proposal with the highest score}
+        \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
+        \Comment{find an index of a proposal with the highest score}
 
-    \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$
-    \Comment{remove the proposal}
+        \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$
+        \Comment{remove the proposal}
 
-    \State $\mset{B}_{nms} \gets \mset{B}_{nms} \cup \vect{b}_m$
-    \Comment{save the proposal with the highest score}
+        \State $\mset{B}_{nms} \gets \mset{B}_{nms} \cup \vect{b}_m$
+        \Comment{save the proposal with the highest score}
 
-    \For{$i \gets 1$ to $\msetsize{B}$}
-    \Comment{iterate through remaining proposals}
+        \For{$i \gets 1$ to $\msetsize{B}$}
+        \Comment{iterate through remaining proposals}
 
-    \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \lambda$}
-    \Comment{\gls{iou} (\eqtext{}~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
+        \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \lambda$}
+        \Comment{\gls{iou} (\eqtext{}~\ref{eq:IntersectionOverUnion}) exceeds the threshold}
 
-    \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$
-    \Comment{remove the proposal}
-    \EndIf
-    \EndFor
-    \EndWhile
+        \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$
+        \Comment{remove the proposal}
+        \EndIf
+        \EndFor
+        \EndWhile
 
-    \State \Return $\mset{B}_{nms}$
-    \EndFunction
-\end{algorithmic}
-
+        \State \Return $\mset{B}_{nms}$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/non_maximum_suppression.pdf}}
