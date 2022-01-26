@@ -103,36 +103,42 @@ We computed the relative improvement in \% for each $k$-th homography according 
     \label{alg:EvaluationAlgorithm}
     \begin{algorithmic}[1]
         \State $\hmatrices, \sortres \gets $ \Call{rankhomographies}{\ }
-        \Comment{Algorithm~\ref{alg:HomographyRanking}}
+        \Comment{apply homography ranking (\algtext{}~\ref{alg:HomographyRanking})}
 
         \State $e_b \gets 0$
-        \Comment{baseline}
+        \Comment{baseline error, initially zero due to summation}
 
         \State $\meanerrs \gets \arraydef \left[ m \right]$
-        \Comment{reprojection errors}
+        \Comment{empty array to store reprojection errors}
 
         \State $\errdiffs \gets \arraydef \left[ m \right]$
-        \Comment{relative improvements}
+        \Comment{empty array to store relative improvements}
 
         \For{$i \gets 1, \dots , m$}
+        \Comment{for each marker}
+
         \State $\meanerrs \left[ i \right] \gets $ $\xi_{\text{reproj}}$
-        \Comment{\eqtext{}~\ref{eq:ReprojectionErrorSingle}}
+        \Comment{compute reprojection error (\eqtext{}~\ref{eq:ReprojectionErrorSingle})}
 
         \State $e_b \gets e_b + \meanerrs \left[ i \right]$
+        \Comment{update baseline error}
         \EndFor
 
         \State $e_b \gets e_b / m$
-        \Comment{mean reprojection error}
+        \Comment{compute the mean reprojection error}
 
         \For{$i \gets 1, \dots , m$}
+        \Comment{for each marker}
+
         \State $k \gets \sortres \left[ i \right]$
         \Comment{position of $i$-th best homography}
 
         \State $\errdiffs \left[ i \right] \gets \rbrackets{e_b - \meanerrs \left[ k \right]} / e_b$
-        \Comment{relative improvement}
+        \Comment{compute the relative improvement}
         \EndFor
 
         \State \Return $\errdiffs$
+        \Comment{return the array of relative improvements}
     \end{algorithmic}
 \end{algorithm}
 

@@ -112,35 +112,42 @@ In what follows, we describe the proposed Algorithm~\ref{alg:HomographyRanking} 
     \label{alg:HomographyRanking}
     \begin{algorithmic}[1]
         \State $\hmatrices \gets \arraydef \left[ m \right]$
-        \Comment{output array of homographies}
+        \Comment{empty array for the homography matrices}
 
         \State $\scores \gets \arraydef \left[ m \right]$
-        \Comment{array of scores}
+        \Comment{array of scores computed before the ranking (sorting)}
 
         \For{$i \gets 1, \dots , m$}
+        \Comment{for each reference marker}
 
         \State $\hmatrices \left[ i \right] \gets$
         \Call{homography}{$\suprbrackets{\mtx{W}}{i}$, $\mtx{T}$}
-        \Comment{retrieve or estimate perspective}
+        \Comment{retrieve or estimate perspective transform.}
 
         \State $\suprbrackets{\mtx{\bar{S}}}{i} \gets \mtx{I}_{3 \times 3}$
+        \Comment{identity matrix to stand for a similarity transformation}
 
         \State $\mset{\bar{S}} \gets \cbrackets{\suprbrackets{\mtx{\bar{S}}}{i}}$
         \Comment{set of similarity matrices}
 
         \ForAll{$j$ : $\cbrackets{1, \dots, m} - \cbrackets{i}$}
+        \Comment{for each auxiliary marker}
 
         \State $\suprbrackets{\mtx{\bar{S}}}{j} \gets$ \Call{similarity}{$\hmatrices \left[ i \right] \cdot \suprbrackets{\mtx{W}}{j}$, $\mtx{T }$}
+        \Comment{estimate similarity transformation}
 
         \State$\mset{\bar{S}} \gets \mset{\bar{S}} \cup \suprbrackets{\mtx{\bar{S}}}{j}$
+        \Comment{store the similarity matrix}
+
         \EndFor
 
         \State $\scores \left[ i \right] \gets \func{\scoref}{\hmatrices \left[ i \right], \mset{\bar{S}}}$
-        \Comment{evaluate score function \ref{eq:HomographyScoreFunction}}
+        \Comment{evaluate score function (\eqtext{}~\ref{eq:HomographyScoreFunction})}
         \EndFor
         \State $\sortres \gets \Call{argsort}{\scores}$
-        \Comment{indirect sort}
+        \Comment{indirect sort, only obtain indices of ``would-be'' sorted elements}
 
         \State \Return $\hmatrices, \sortres$
+        \Comment{return homographies and their respective ranking positions}
     \end{algorithmic}
 \end{algorithm}

@@ -4,17 +4,7 @@
 % ##############################################################################
 \subsection{Motivation}
 
-The use of \gls{reid} has been emphasized numerous times during our preliminary research for this thesis. We conjectured that once full occlusion ensues, the \gls{reid} mechanism could be adopted to recover the lost track since the object appears at the scene as a new one. The presence of occlusion percolates traffic scenes, especially if the camera does not view the road from a higher position. At the beginning of our Ph.D. research, we worked on the \interreg{} project where we tackled vehicle tracking when the camera was positioned next to the road (\figtext{}~\ref{fig:InterregDatasetSample}). Under these circumstances, occlusion was inevitable. Such a setup inexorably led to situations in which a vehicle appeared for a second on the left side of the frame, then ended up fully covered by a truck, and re-appeared for a miniscule amount of time at the other side of frame. The task of maintaining the same object identifier was burdensome and often impossible with high degree of precision.
-
-% ##############################################################################
-\subsection{Preliminary Discussion}
-
-To make a full disclosure right at the beginning, we expected that the adoption of \gls{reid} enhancements within the \gls{siammot} framework would bring improvements in certain areas. Retrospectively, our experiments showed detrimental effects upon the tracker accuracy. Despite our negative outcome, we still consider the performed research to be a contribution to the \gls{mot} area. We will elaborate further on why it is so in order to learn from such an experience as much as possible. Our surprise stems primarily from the fact that our thesis goals revolved around the application of \gls{reid} in object tracking. Therefore, finding that such approach does not yield the desired outcome raises multiple questions, specifically the following ones:
-\begin{enumerate}
-    \item Does the inclusion of \gls{reid} into \gls{mot} frameworks have a potential to resolve cases of full occlusion without exacerbating other areas?
-    \item Is the \gls{reid} extension suitable to the chosen \gls{mot} model, namely, the \gls{siammot}?
-    \item Is the target use case in terms of datasets adequate to showcase the potential of \gls{reid} applied in the \gls{siammot} tracker?
-\end{enumerate}
+The use of \gls{reid} has been emphasized numerous times during our preliminary research for this thesis. We conjectured that once full occlusion ensues, the \gls{reid} mechanism could be adopted to recover the lost track since the object appears at the scene as a new one. The presence of occlusion percolates traffic scenes, especially if the camera does not view the road from a higher position. At the beginning of our Ph.D. research, we worked on the \interreg{} project where we tackled vehicle tracking when the camera was positioned next to the road (\figtext{}~\ref{fig:InterregDatasetSample}). Under these circumstances, occlusion was inevitable. Such a setup inexorably led to situations in which a vehicle appeared for a second on the left side of the frame, then ended up fully covered by a truck, and re-appeared for a minuscule amount of time at the other side of the frame. The task of maintaining the same object identifier was burdensome and often impossible with a high degree of precision.
 
 % ##############################################################################
 \subsection{Proposed ReID-Enhanced Architecture}
@@ -34,14 +24,20 @@ We adopted the object \gls{reid} approach published in~\cite{luo2019bagoftricksr
 % ##############################################################################
 \subsection{Training Phase}
 
-Since this experiment was the first one we embarked upon, we tried to avoid modifications to the underlying tracker framework. Only upon obtaining prospective tracking improvements we would consider incorporating the object \gls{reid} into the whole end-to-end pipeline. As a result, the \gls{siammot} training phase was not modified. We employed an external object \gls{reid} network to perform embedding computation during the inference phase. As far as the training of the \gls{reid} network is concerned, we adopted a standard approach of using the triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page \pageref{eq:TripletLoss}) in conjunction with the categorical cross-entropy loss for additional learning signal. We trained the model using the \verisss{} dataset on which the evaluation was performed, too. The model was trained to produce $l_2$-normalized embedding vectors that were then used to measure the degree of similarity between vehicles.
+Since this experiment was the first one we embarked upon, we tried to avoid modifications to the underlying tracker framework. Only upon obtaining prospective tracking improvements, we would consider incorporating the object \gls{reid} into the whole end-to-end pipeline. As a result, the \gls{siammot} training phase was not modified. We employed an external object \gls{reid} network to perform embedding computation during the inference phase. As far as the training of the \gls{reid} network is concerned, we adopted a standard approach of using the triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page \pageref{eq:TripletLoss}) in conjunction with the categorical cross-entropy loss for additional learning signal. We trained the model using the \verisss{} dataset on which the evaluation was performed, too. The model was trained to produce $l_2$-normalized embedding vectors that were then used to measure the degree of similarity between vehicles.
 
 % ##############################################################################
 \subsection{Inference Phase}
 
-The online solver algorithm was, from our point of view, the primary suspect for potential improvements due to its inherent simplicity that we considered inferior compared to the rest of the architecture. The aim was to adopt the already trained \gls{reid} model to help re-instantiate lost tracks due to occlusion. This external module would be invoked on demand, in a deterministic way as part of the online solver phase. At this stage of research we did strive for simplicity rather than efficiency. Consequently, the model inference was substantially impaired by a four-fold speed reduction as measured by \gls{fps}, because there was another independent model to process the input frame.
+The online solver algorithm was, from our point of view, the primary suspect for potential improvements due to its inherent simplicity that we considered inferior compared to the rest of the architecture. The aim was to adopt the already trained \gls{reid} model to help re-instantiate lost tracks due to occlusion. This external module would be invoked on-demand, in a deterministic way as part of the online solver phase. At this stage of research, we did strive for simplicity rather than efficiency. Consequently, the model inference was substantially impaired by a four-fold speed reduction as measured by \gls{fps}, because there was another independent model to process the frames.
 
-We isolated the modifications to the inference phase only within the online solver itself. Thus, we developed a whole new algorithm that handled the newly trained external model as well. The original processing steps of the online solver are outlines in \figtext{}~\ref{fig:SiamMOTOnlineSolver}. Our custom inference algorithm is described \algtext{}~\ref{alg:OnlineSolverReID}.
+We isolated the modifications to the inference phase only to the online solver itself. Thus, we developed a whole new algorithm that handled the newly trained external model as well. The original processing steps of the online solver are outlined in \figtext{}~\ref{fig:SiamMOTOnlineSolver}. Our custom inference algorithm is described \algtext{}~\ref{alg:OnlineSolverReID}.
+
+The algorithm works as follows. The input to the online solver is the set of active tracks, dormant tracks, and newly detected (still unassigned) objects. As in the original implementation, the greatest emphasis during the \gls{nms} processing is put on the active tracks, then dormant tracks, and the last ones are the new detections. This ranking establishes the priority with which the \gls{nms} algorithm processes the inputs. Our approach was based on altering the first \gls{nms} phase by incorporating only the active tracks and unassigned detections (hence the common name ``non-dormant'' in the pseudocode). Thus, if the overlap between an active track \gls{bbox} and detection was too high (above the value of $t_{nms}$), we considered them to be the same object, and thus the active track was preserved.
+
+Then, after suspending the removed active tracks, we adopted Munkres' algorithm~\cite{munkres1957assignment} to solve the linear sum assignment (minimum cost assignment optimization) problem. It is reasonable to assume that a new detection can be assigned to only one dormant track and vice versa, if necessary. The cost matrix was computed based on the cosine similarity (\eqtext{}~\ref{eq:CosineSimilarity} on page \pageref{eq:CosineSimilarity}) between the embedding vectors belonging to the regions of the unassigned detections and the dormant tracks. However, only the visual features where the dormant object was last visible (its visibility confidence was above the threshold $t_{track}$) were used, as we assumed the object might have been fully occluded. The task was to find an optimal assignment between the new detections with sufficiently high confidence (above the threshold $t_{resume}$) and the dormant tracks. Then, after obtaining the assignment matrix, we processed all possible pairs and if the similarity between the embedding vectors surpassed the value of $t_{sim}$, we then resumed the dormant track and re-used the new detection for the object \gls{bbox}.
+
+Subsequently, we collected all the remaining unassigned detections the confidence of which was above $t_{start}$, and initiated new tracks based on them. At last, we searched for active tracks with low visibility confidence (below the threshold $t_{track}$) to suspend them, thus, making them dormant.
 
 \begin{algorithm}[t]
     \caption[\Gls{reid}-enhanced online solver inference]{\Gls{reid}-enhanced online solver inference. This algorithm receives active ($\mset{A}$) and dormant ($\mset{D}$) tracks together with unassigned ($\mset{U}$) detections on the input. Besides, there are four threshold parameters, the \gls{nms} overlap ($t_{nms}$), and three confidence-related inputs, namely the minimum value for the track to stay active ($t_{track}$), the minimum value for the track to become resumed ($t_{resume}$), and the minimum value for the track to start from an unassigned detection ($t_{start}$). Usually, $t_{track} < t_{resume} < t_{start}$. In practice, these values may be $0.3$, $0.4$, and $0.5$, respectively.}
@@ -67,6 +63,15 @@ We isolated the modifications to the inference phase only within the online solv
         \State $\mset{U}_{resume}$ $\gets$ \Call{get_resume_dets}{$\mset{U}_{nms}$, $t_{resume}$}
         \Comment{dets. with conf. $\geq t_{resume}$}
 
+        \State $\mset{E}_u$ $\gets$ \Call{calc_embeddings}{$\mset{U}_{resume}$}
+        \Comment{embeddings for the unassigned dets.}
+
+        \State $\mset{E}_d$ $\gets$ \Call{calc_embeddings}{$\mset{D}$}
+        \Comment{embeddings for the dormant tracks}
+
+        \State $\mtx{M}$ $\gets$ \Call{build_cost_matrix}{$\mset{E}_u$, $\mset{E}_d$}
+        \Comment{initialize a cost assignment matrix}
+
         \State $\mset{P}$ $\gets$ \Call{min_cost_assignment}{$\mset{U}_{nms}$, $\mset{D}$}
         \Comment{Munkres' algorithm~\cite{munkres1957assignment}}
 
@@ -76,16 +81,10 @@ We isolated the modifications to the inference phase only within the online solv
         \ForAll{$u_{idx}$, $d_{idx}$ : $\mset{P}$}
         \Comment{for each pair of unassigned det. and dormant track}
 
-        \State $b_u$ $\gets$ \Call{get_bbox}{$u_{idx}$}
-        \Comment{\gls{bbox} of the unassigned detection}
-
-        \State $b_d$ $\gets$ \Call{get_bbox}{$d_{idx}$}
-        \Comment{\gls{bbox} of the dormant track}
-
-        \State $e_u$ $\gets$ \Call{calc_embedding}{$b_u$}
+        \State $e_u$ $\gets$ $\mset{E}_u \sbrackets{u_{idx}}$
         \Comment{embedding vector of the unassigned region}
 
-        \State $e_d$ $\gets$ \Call{calc_embedding}{$b_d$}
+        \State $e_d$ $\gets$ $\mset{E}_d \sbrackets{d_{idx}}$
         \Comment{embedding vector of the dormant region}
 
         \If{\Call{cos_sim}{$e_u$, $e_d$} $\geq t_{sim}$}
@@ -116,11 +115,20 @@ We isolated the modifications to the inference phase only within the online solv
 % ##############################################################################
 \subsection{Experimental Evaluation and Discussion}
 
-Due to an already excessive length of this document and inferior results this experiment brought in terms of tracking accuracy and inference speed, we decided to omit extensive documentation. There are more important experiments that deserve a deeper elaboration.
+To make a full disclosure right at the beginning, we expected that the adoption of \gls{reid} enhancements within the \gls{siammot} framework would bring improvements in certain areas and for the most part maintain the performance at others. Retrospectively, our experiments showed detrimental effects upon the tracker accuracy. Despite our negative outcome, we still consider the performed research to be a contribution to the \gls{mot} area. We will elaborate further on why it is so in order to learn from such an experience as much as possible. Our surprise stems primarily from the fact that the goals of this thesis revolved around the application of \gls{reid} in object tracking. Therefore, finding that such an approach does not yield the desired outcome raises multiple questions, specifically the following ones:
+\begin{enumerate}
+    \item Does the inclusion of \gls{reid} into \gls{mot} frameworks have a potential to resolve cases of full occlusion without exacerbating other areas?
+    \item Is the \gls{reid} extension suitable to the chosen \gls{mot} model, namely, the \gls{siammot}?
+    \item Is the target use case in terms of datasets adequate to showcase the potential of \gls{reid} applied in the \gls{siammot} tracker?
+\end{enumerate}
 
-To say the least, we encountered several situations that indicated improvments. At certain occasions, the model was capable of properly identifying the lost object based on the embedding vector distance. However, such situations were rare. What decreased the tracker's accuracy was the detrimental effect of the \gls{reid} module during the \gls{nms} phase. The original online solver uses the \gls{nms} algorithm to assign detections to either active or dormant tracks. This phase is very effective and covers a great deal of common situations.
+Due to an already excessive length of this document and inferior results this experiment brought in terms of tracking accuracy and inference speed, we decided to omit extensive documentation, especially tables with quantitative comparison. There are more important experiments that deserve a deeper elaboration.
 
-Our observations brought the following question. Is it more likely for the occluded object to appear at completely different position within the frame or somewhere near the position of disappearance? If we constraint ourselves to the \interreg{} project with the road viewed from the side (\figtext{}~\ref{fig:InterregDatasetSample}), then it might hold true most of the time. However, in general traffic analysis, especially in the scenes from the \uadetrac{} dataset (\figtext{}~\ref{fig:DatasetUADETRAC} on page \pageref{fig:DatasetUADETRAC}), it is scarcely true. Vehicles often re-appear near the position where they last disappeared. As a result, the original online solver dealt with such situations competently. In fact, it even outperformed the entire \gls{reid} model due to its inherent ability to implicitly assess the object similarity when producing the response map. Remember that the search region commonly encompasses an area with sides twice as long as the exemplar region.
+To say the least, we encountered several situations that indicated improvements. On certain occasions, the model was capable of properly identifying the lost object based on the embedding vector similarity. However, such situations were rare. What decreased the tracker's accuracy was the detrimental effect of the \gls{reid} module on the modified \gls{nms} phase. The original online solver uses the \gls{nms} algorithm to assign detections to either active or dormant tracks. This phase is very effective and covers a lot of common situations.
+
+Besides the expected slow performance, we noticed $\approx 3$\% reduction in \gls{mota}. The number of misses (\gls{fn}) also significantly increased as the model failed to properly assign the detection to the dormant track. Overall, there was no metric that would improve. We either managed to match the original baseline online solver performance, or we performed substantially worse.
+
+Our observations brought the following question. Is it more likely for the occluded object to appear at a completely different position within the frame or somewhere near the position of disappearance? If we constraint ourselves to the \interreg{} project with the road viewed from the side (\figtext{}~\ref{fig:InterregDatasetSample}), then it might hold true most of the time. However, in general traffic analysis, especially in the scenes from the \uadetrac{} dataset (\figtext{}~\ref{fig:DatasetUADETRAC} on page \pageref{fig:DatasetUADETRAC}), it is scarcely true. Vehicles often re-appear near the position where they last disappeared. As a result, the original online solver dealt with such situations competently. In fact, it outperformed the entire \gls{reid} model due to its inherent ability to implicitly assess the object similarity when producing the response map. Remember that the search region commonly encompasses a square area with sides twice as long as the exemplar region.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
@@ -133,6 +141,6 @@ Our observations brought the following question. Is it more likely for the occlu
 
 Another problem appears during partial occlusion. A vehicle is often severely occluded by another vehicle, so the two \glspl{bbox} enclose both objects (\figtext{}~\ref{fig:UADETRACPartialOcclusionMultiple}). Thus, the embedding distances for the two objects are very close. In terms of the \gls{reid} mechanism, the two delineated regions given by the two \glspl{bbox} of closely positioned objects with severe occlusion are sometimes considered to be the same object. Consequently, the two tracks are merged into one.
 
-We conjecture that the \gls{reid} is useful for multi-camera scenarios where the task is to re-identify the object from completely different angle, often without partial occlusion. In common crossroad situations that are abundant in the \uadetrac{} dataset, the first formulation of the online solver approach handles partial occlusion with a lot higher precision than our \gls{reid} extension.
+We conjecture that the \gls{reid} is useful for multi-camera scenarios where the task is to re-identify the object from a totally different angle, often without partial occlusion. In common crossroad situations that are abundant in the \uadetrac{} dataset, the first formulation of the online solver approach handles partial occlusion with a lot higher precision than our \gls{reid} extension.
 
-This experiment showed that the inclusion of \gls{reid} mechanism into the inference algorithm brings a lot more disadvantages than benefits and we did not continue with this path. To address the question of whether a joint training of the tracker and embeddings would bring an improvement, we provide the upcoming experiment, discussed next.
+This experiment showed that the inclusion of \gls{reid} mechanism into the inference algorithm brings a lot more disadvantages than benefits and we did not continue with this path. It was not possible to justify the additional complexity we introduced to the model by being able to improve very few cases according to our expectations and by simultaneously exacerbating the performance in other situations. Nevertheless, to address the question of whether a joint training of the tracker and embeddings would bring an improvement, we provide the upcoming experiment, discussed next.
