@@ -50,20 +50,68 @@ We isolated the modifications to the inference phase only within the online solv
         \Function{OnlineSolverReID}{$\mset{A}$, $\mset{D}$, $\mset{U}$, $t_{nms}$, $t_{track}$, $t_{resume}$, $t_{start}$, $t_{sim}$}
 
         \State $\mset{\bar{D}}$ $\gets$ \Call{merge}{$\mset{A}$, $\mset{U}$}
-        \Comment{extract non-dormant detections (active and unassigned)}
+        \Comment{non-dormant items (active tracks, unassigned dets.)}
 
         \State $\mset{\bar{D}}_{nms}$ $\gets$ \Call{NMS}{$\mset{\bar{D}}$}
-        \Comment{\algtext{}~\ref{alg:NonMaximumSuppression} on page \pageref{alg:NonMaximumSuppression}}
+        \Comment{non-maximum suppression (\algtext{}~\ref{alg:NonMaximumSuppression} on page \pageref{alg:NonMaximumSuppression})}
 
         \State $\mset{A}_{nms}$, $\mset{U}_{nms}$ $\gets$ \Call{split}{$\mset{\bar{D}}_{nms}$}
-        \Comment{obtain after-\gls{nms} active and unassigned}
+        \Comment{``after-\gls{nms}'' active tracks and unassigned dets.}
 
         \State $\mset{R}$ $\gets$ \Call{get_removed}{$\mset{A}$, $\mset{A}_{nms}$}
+        \Comment{obtain \gls{nms}-removed active tracks}
+
+        \State \Call{suspend_tracks}{$\mset{R}$}
+        \Comment{suspend \gls{nms}-removed active tracks}
+
+        \State $\mset{U}_{resume}$ $\gets$ \Call{get_resume_dets}{$\mset{U}_{nms}$, $t_{resume}$}
+        \Comment{dets. with conf. $\geq t_{resume}$}
+
+        \State $\mset{P}$ $\gets$ \Call{min_cost_assignment}{$\mset{U}_{nms}$, $\mset{D}$}
+        \Comment{Munkres' algorithm~\cite{munkres1957assignment}}
+
+        \State $\mset{U}_{reid\_used}$ $\gets$ \Call{init_empty_set}{}
+        \Comment{unassigned detections used by \gls{reid}}
+
+        \ForAll{$u_{idx}$, $d_{idx}$ : $\mset{P}$}
+        \Comment{for each pair of unassigned det. and dormant track}
+
+        \State $b_u$ $\gets$ \Call{get_bbox}{$u_{idx}$}
+        \Comment{\gls{bbox} of the unassigned detection}
+
+        \State $b_d$ $\gets$ \Call{get_bbox}{$d_{idx}$}
+        \Comment{\gls{bbox} of the dormant track}
+
+        \State $e_u$ $\gets$ \Call{calc_embedding}{$b_u$}
+        \Comment{embedding vector of the unassigned region}
+
+        \State $e_d$ $\gets$ \Call{calc_embedding}{$b_d$}
+        \Comment{embedding vector of the dormant region}
+
+        \If{\Call{cos_sim}{$e_u$, $e_d$} $\geq t_{sim}$}
+        \Comment{similarity check (\eqtext{}~\ref{eq:CosineSimilarity} on page \pageref{eq:CosineSimilarity})}
+
+        \State \Call{resume_track}{$d_{idx}$}
+        \Comment{resume dormant track using unassigned det.}
+
+        \State \Call{add}{$\mset{U}_{reid\_used}$, $u_{idx}$}
+        \Comment{unassigned det. was assigned to a dormant track}
+        \EndIf
+
+        \EndFor
+
+        \State $\mset{U}_{free}$ $\gets$ \Call{get_free_unassigned}{$\mset{U}_{nms}$, $\mset{U}_{reid\_used}$}
+        \Comment{still free unassigned dets.}
+
+        \State \Call{start_new_tracks}{$\mset{U}_{free}$, $t_{start}$}
+        \Comment{unassigned dets. with confidence $\geq t_{start}$}
+
+        \State \Call{suspend_tracks}{$\mset{A}_{nms}$, $t_{track}$}
+        \Comment{active tracks with confidence $< t_{track}$}
+
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
-
-\todo[inline]{Add pseudocode for the ``track solver + ReID'' solution.}
 
 % ##############################################################################
 \subsection{Experimental Evaluation and Discussion}
@@ -78,7 +126,7 @@ Our observations brought the following question. Is it more likely for the occlu
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{figures/siamese_tracking/uadetrac_partial_occlusion_multiple_cars.pdf}
-    \caption[Partial occlusion in \uadetrac{} dataset]{Partial occlusion in the \uadetrac{} dataset where the object \gls{bbox} covers a great deal of the region belonging to another object.}
+    \caption[Partial occlusion in \uadetrac{} dataset]{Partial occlusion in the \uadetrac{} dataset where the object \gls{bbox} covers a great part of the region belonging to another object.}
     \label{fig:UADETRACPartialOcclusionMultiple}
 \end{figure}
 % ------------------------------------------------------------------------------
