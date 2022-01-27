@@ -1,7 +1,7 @@
 \section{Evaluating Visual Multiple Object Tracking}
 \label{sec:EvaluatingMOT}
 
-When it comes to evaluating \gls{mot} performance, there is still no consensus on how to approach the evaluation and subsequent comparison of multiple-object trackers. There is one established metric, however, called \gls{clear} metric~\cite{bernardin2008clearmot}, that we will employ to quantitatively assess the performance of a \gls{mot} system. The reasons are:
+When it comes to evaluating \gls{mot} performance, there is still no consensus on how to approach the evaluation and subsequent comparison of multi-object trackers. There is one established metric, however, called \gls{clear} metric~\cite{bernardin2008clearmot}, that we will employ to quantitatively assess the performance of a \gls{mot} system. The reasons are:
 \begin{itemize}
     \item This metric is still considered a reasonably effective and intuitive metric to use, despite multiple proposals for improvements~\cite{wen2020uadetrac}.
     \item Numerous works in object tracking, especially tracking of people, report statistics from the \gls{mot} challenges that historically have utilized this metric.
@@ -18,7 +18,7 @@ Bernardin~\etal{}~\cite{bernardin2008clearmot}, the authors of the \gls{clear} m
     \item contains expressive values rich in information yet not abundant in quantity.
 \end{enumerate}
 
-Let $t$ denote a time for a specific frame. For each frame $t$, the multiple-object tracker produces a set of hypotheses $\cbrackets{h_1, h_2, \dots, h_m}$ for a set of visible objects $\cbrackets{o_1, o_2, \dots, o_n}$. The evaluation procedure can be briefly described in the following pseudocode.
+Let $t$ denote a time for a specific frame. For each frame $t$, the multi-object tracker produces a set of hypotheses $\cbrackets{h_1, h_2, \dots, h_m}$ for a set of visible objects $\cbrackets{o_1, o_2, \dots, o_n}$. The evaluation procedure can be briefly described in the following pseudocode.
 
 For each time frame $t$:
 \begin{enumerate}
@@ -145,6 +145,6 @@ Besides the two primary performance metrics discussed in the previous section, t
         \gls{mota}               & Multiple object tracker accuracy.                                    \\
         \bottomrule
     \end{tabular}
-    \caption{Other important \gls{clear} metrics that we adopted for evaluation of our experiments with various \gls{mot} approaches.}
+    \caption[Other \gls{mot} metrics]{Other important \gls{clear} metrics that we adopted for evaluation of our experiments with various \gls{mot} approaches.}
     \label{tab:OtherCLEARMetrics}
 \end{table}
