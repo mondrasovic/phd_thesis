@@ -4,11 +4,11 @@
 % ##############################################################################
 \subsection{Motivation}
 
-One of our experiments involved an end-to-end training of the \gls{siammot} model together with a custom head aimed at embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The goal was to force the training process into extracting features that are not only satisfactory for detection and tracking but also contain the necessary information to create embeddings for \gls{reid} purposes during the inference.
+One of our experiments involved an end-to-end training of the \gls{siammot} model together with a custom head aimed at embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The goal was to force the training process into extracting features that are not only satisfactory for detection and tracking but also contain necessary information to create embeddings for \gls{reid} purposes during the inference.
 
 We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \gls{siammot} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending a huge model that already requires a significant amount of \gls{gpu} \gls{vram} made it even more demanding.
 
-During the research related to our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using \gls{gap} operation into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represents the kernel for the cross-correlation operation utilized by the majority of the Siamese trackers discussed so far.
+During the research related to our Siamese tracking survey~\cite{ondrasovic2021siamese} we noticed one work where the exemplar features were projected using \gls{gap} operation into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represented the kernel for the cross-correlation operation utilized by the majority of the Siamese trackers discussed so far.
 
 More concretely, suppose the extracted features were represented by a tensor of shape $8 \times 8 \times 256$. Then, the \gls{gap} operation along the channel dimension would produce a tensor of shape $1 \times 1 \times 256$, which could then be further flattened into a single $256$-dimensional vector. In the end, the obtained vector was $l_2$-normalized and thus projected onto a unit hypersphere. In the work of Li~\etal{}~\cite{li2020figsiam}, these embedding vectors were exploited for template updating and for combining multiple templates within a pool of size $n$ in an exponential fashion.
 
@@ -34,20 +34,20 @@ As far as the vector embedding computation was concerned, we attached the embedd
         \toprule
         \textbf{layer}    & \textbf{tensor shape}        & \textbf{parameters no.} \\
         \midrule
-        input             & $\sbrackets{B, 256, 15, 15}$ & $0$                     \\
+        input             & $\sbrackets{B, 128, 15, 15}$ & $0$                     \\
         \midrule
-        conv $3 \times 3$ & $\sbrackets{B, 256, 13, 13}$ & $589\ 824$              \\
-        ReLU              & $\sbrackets{B, 256, 13, 13}$ & $0$                     \\
+        conv $3 \times 3$ & $\sbrackets{B, 128, 13, 13}$ & $147\ 456$              \\
+        ReLU              & $\sbrackets{B, 128, 13, 13}$ & $0$                     \\
         \midrule
-        conv $3 \times 3$ & $\sbrackets{B, 512, 11, 11}$ & $1\ 179\ 648$           \\
-        ReLU              & $\sbrackets{B, 512, 11, 11}$ & $0$                     \\
+        conv $3 \times 3$ & $\sbrackets{B, 256, 11, 11}$ & $294\ 912$              \\
+        ReLU              & $\sbrackets{B, 256, 11, 11}$ & $0$                     \\
         \midrule
-        flatten           & $\sbrackets{B, 61952}$       & $0$                     \\
-        linear            & $\sbrackets{B, 1024}$        & $63\ 439\ 872$          \\
+        flatten           & $\sbrackets{B, 30976}$       & $0$                     \\
+        linear            & $\sbrackets{B, 1024}$        & $31\ 720\ 448$          \\
         \midrule
         $l_2$-normalize   & $\sbrackets{B, 1024}$        & $0$                     \\
         \bottomrule
-                          & \textbf{total}               & $65\ 209\ 344$          \\
+                          & \textbf{total}               & $32\ 162\ 816$          \\
         \cline{2-3}
     \end{tabular}
     \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors. It is built from two convolutional layers separated by a \gls{relu} nonlinearity followed by a fully connected layer which produces a $1024$ dimensional feature embedding. The batch size dimension is given by $B$ in the tensor shape. Since each embedding vector is normalized to unit length, we avoided learning biases throughout the whole network.}
@@ -137,12 +137,13 @@ Here we provide a pseudocode of the \featurenms{} algorithm:
 % ##############################################################################
 \subsection{Experimental Evaluation and Discussion}
 
-The proposed embedding-based enhancement was evaluated against the baseline model without the embedding head. For a fair comparison, we made sure that all the hyperparameters were identical. The only hyperparameter that we had to change compared to the original model was the batch size. Since the triplet loss requires computation of a great number of triplets, especially the batch-all strategy, we had to decrease the batchsize to avoid crashes due to not having enough \gls{gpu} \gls{vram} available.
+The proposed embedding-based enhancement was evaluated against the baseline model without the embedding head. For a fair comparison, we made sure that all the hyperparameters were identical. The only hyperparameters that we had to change compared to the original model were the batch size and learning rate. Since the triplet loss requires computation of a great number of triplets, especially the batch-all strategy, we had to decrease the batch size to avoid crashes due to not having enough \gls{gpu} \gls{vram} available.
 
-We ackowledge that it is diffcult to compare the baseline model with the proposed extension since they progress differently during the training. Therefore, we saved the model state after $K$ training iterations and then evaluated the performance using the validation dataset. We repeated the same process for the baseline architecture, which we trained it from scratch using smaller batch sizes. Furthermore, the embedding evaluation also requires the cosine similarity threshold. We tried multiple different values to see the effect.
+We ackowledge that it is diffcult to compare the baseline model with the proposed extension since they progress differently during the training. Therefore, we saved the model state after $K$ training iterations and then evaluated the performance using the validation dataset. We repeated the same process for the baseline architecture, which we trained from scratch using smaller batch sizes. Furthermore, the embedding evaluation also requires the cosine similarity threshold. We tried multiple different values to see the effect.
 
-\todo[inline]{Add $2$D scatter plot with the baseline vs. embedding - \gls{mota} vs. \gls{motp}.}
-\todo[inline]{Add $2$D scatter plot with the baseline vs. embedding - precision vs. recall.}
+\todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - \gls{mota} vs. \gls{motp}.}
+\todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - precision vs. recall.}
+\todo[inline]{Consider adding table with quantitative comparison.}
 
 % ##############################################################################
 \subsection{Discussion}
