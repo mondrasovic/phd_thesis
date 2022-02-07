@@ -191,7 +191,7 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figures/siamese_tracking/siammot_inference_diagram.pdf}
-    \caption[\gls{siammot} inference diagram]{The inference pipeline in the \gls{siammot} tracker. Backbone features that are a result of intricate \gls{dla} and \gls{fpn} processing are fed into the detector and the tracker. The predictions from the tracker are further refined using the detector head. The two heads function on top of backbone features through the lens of \gls{roi} align operations. During the inference, the ``online solver'' works only with the final \glspl{bbox} produced by the tracker and the detector. It utilizes a simple caching mechanism to store the features belonging to active or dormant objects. The ``'track pool'' module performs track initialization, suspension, and removal.}
+    \caption[\gls{siammot} inference diagram]{The inference pipeline in the \gls{siammot} tracker. Backbone features that are a result of intricate \gls{dla} and \gls{fpn} processing are fed into the detector and the tracker. The predictions from the tracker are further refined using the detector head. The two heads function on top of backbone features through the \gls{roi} align operations. During the inference, the ``online solver'' works only with the final \glspl{bbox}. It utilizes a simple caching mechanism to store the features belonging to active or dormant objects. The ``'track pool'' module manages the track lifetime.}
     \label{fig:SiamMOTInference}
 \end{figure}
 % ------------------------------------------------------------------------------
