@@ -50,7 +50,7 @@ Then, the final \gls{iou} metric between $\vect{b_1}$ and $\vect{b_2}$ is comput
     \func{\IOU}{\vect{b}_1, \vect{b}_2} =
     \frac{\vect{b}_1 \cap \vect{b}_2}{\vect{b}_1 \cup \vect{b}_2},
 \end{equation}
-where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0$ represents no intersection, while value of $1$ represents a complete overlap. In terms of object detection or object tracking evaluation, an \gls{iou} threshold, $t$, such that $0 \leq t \leq 1$, can be associated with this metric, denoting the decision boundary whether the prediction is a \gls{tp} or a \gls{tn}.
+where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0$ represents no intersection, while value of $1$ represents a complete overlap. In terms of object detection or object tracking evaluation, an \gls{iou} threshold, $t$, such that $0 \leq t \leq 1$, can be associated with this metric, denoting the decision boundary whether the prediction is a \gls{tp} or a \gls{fp}.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -83,7 +83,7 @@ where $\func{P}{k}$ represents precision at rank $k$, $\func{N_{gt}}{q}$ is the 
     \label{eq:MeanAveragePrecision}
     \MAP = \frac{1}{Q} \sum_q \func{\AP}{q},
 \end{equation}
-where $Q$ is the total number of query images, as described in~\cite{kuma2019vehiclereid}. \eqtext{}~\ref{eq:MeanAveragePrecision} essentially tells us is that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in \eqtext{}~\ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to queries on average.
+where $Q$ is the total number of query images, as described in~\cite{kuma2019vehiclereid}. \eqtext{}~\ref{eq:MeanAveragePrecision} essentially tells us that, for a given query $q$, we calculate its corresponding \gls{ap} (defined in \eqtext{}~\ref{eq:AveragePrecision}), and then take the mean of the all these \gls{ap} scores, quantifying how well our model responds to queries on average.
 
 \subsubsection{Object Detection}
 

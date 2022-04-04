@@ -30,7 +30,7 @@ For each time frame $t$:
     \item Perform accumulation of all errors (\figtext{}~\ref{fig:CLEARHypotheses}) in the found correspondences:
           \begin{enumerate}
               \item count false negatives (misses), \ietext{}, objects without assigned hypothesis,
-              \item count ala false positives, \ietext{}, hypotheses for which there was no object,
+              \item count all false positives, \ietext{}, hypotheses for which there was no object,
               \item count mismatch errors (swaps of object IDs), \ietext{}, situations in which the hypothesis for a given object changed compared to the previous frame.
           \end{enumerate}
 \end{enumerate}
@@ -114,10 +114,6 @@ We would like to emphasize that the errors have to be first summed up across all
     \label{fig:LocalGlobalRatioEval}
 \end{figure}
 % ------------------------------------------------------------------------------
-
-
-% ##############################################################################
-\subsection{Other Performance Metrics}
 
 Besides the two primary performance metrics discussed in the previous section, there are also partial metrics that are worth evaluating to get a better grasp of the tracker's performance. For our purposes, we computed metrics outlined in \tabletext{}~\ref{tab:OtherCLEARMetrics}.
 

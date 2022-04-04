@@ -160,7 +160,7 @@ Given a training set, the task is to produce reasonable triplets off-line, for i
 
 \subsubsection{Online Triplet Mining}
 
-Online mining is performed by selecting the hard positive/negative exemplars from within a mini-batch (\figtext{}~\ref{fig:TripletArchitectureOnlineMining}). A condition that a minimum number of exemplars for any identity is present in each mini-batch has to be met. For example, Schroff~\etal{}~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per mini-batch. Let $P$ be the number of different objects/identities (\egtext{}, people, vehicles) and $K$ be the number of different images for a concrete identity (\egtext{} different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
+Online mining is performed by selecting the hard positive/negative exemplars from within a minibatch (\figtext{}~\ref{fig:TripletArchitectureOnlineMining}). A condition that a minimum number of exemplars for any identity is present in each minibatch has to be met. For example, Schroff~\etal{}~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per minibatch. Let $P$ be the number of different objects/identities (\egtext{}, people, vehicles) and $K$ be the number of different images for a concrete identity (\egtext{} different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
