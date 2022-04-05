@@ -13,12 +13,12 @@ Consequently, we set out to search for different datasets, preferably with a tar
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
     \centering
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/siamese_tracking/interreg_sample_01.jpg}
         \caption[]{}
     \end{subfigure}
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/siamese_tracking/interreg_sample_02.jpg}
         \caption[]{}
@@ -234,7 +234,7 @@ Overall, the model is not difficult to train in terms of instability and sensiti
 
 \subsubsection{Gradient Accumulation}
 
-Since the majority of our experiments involved expanding the model by adding additional heads, we often struggled with the amount of available \gls{gpu} \gls{vram} to preserve a reasonable size of minibatches. To this end, we experimented with gradient accumulation, which allows the user to postpone the model weight updating after more minibatches have been processed (\figtext{}~\ref{fig:GradientAccumulation}). Therefore, the programmer may simulate using larger minibatches than are actually utilized. We emphasize the importance of not updating the model variables must during the accumulation phase so as to ensure that all the minibatches are processed by the same model to calculate their gradients. Only after accumulating the gradients of the values of the model weights can be adjusted accordingly.
+Since the majority of our experiments involved expanding the model by adding additional heads, we often struggled with the amount of available \gls{gpu} \gls{vram} to preserve a reasonable size of minibatches. To this end, we experimented with gradient accumulation, which allows the user to postpone the model weight updating after more minibatches have been processed. Therefore, the programmer may simulate using larger minibatches than are actually utilized. We emphasize the importance of not updating the model variables must during the accumulation phase so as to ensure that all the minibatches are processed by the same model to calculate their gradients. Only after accumulating the gradients of the values of the model weights can be adjusted accordingly.
 
 For a brief illustration, let $w$ be a single weight we want to update with respect to the computed gradient using the loss function $f$. Our goal is to adjust the weight at time $t$ and thus produce the weight at time $t + 1$. The learning rate is denoted by $\alpha$. So, the gradient update is usually performed as
 \begin{equation}
@@ -245,14 +245,5 @@ When using gradient accumulation, the update step is modified as
     w^{t + 1} = w^t - \alpha \sum_{i = 1}^{n} \nabla \func{f}{w^t}_i,
 \end{equation}
 where $n$ is the number of accumulated minibatches.
-
-% ------------------------------------------------------------------------------
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=0.6\linewidth]{figures/siamese_tracking/gradient_accumulation.png}
-    \caption[Gradient accumulation]{Gradient accumulation is a mechanism that allows splitting the minibatch of samples — used for training a neural network — into several even smaller minibatches of samples that will be processed sequentially. \externalsrc{\cite{webgradaccumulation}}}
-    \label{fig:GradientAccumulation}
-\end{figure}
-% ------------------------------------------------------------------------------
 
 Considering these advantages, it is necessary to acknowledge potential drawbacks. For example, if batch normalization~\cite{ioffe2015batchnorm} layers are used within the model, then the gradient accumulation may have a detrimental effect. The reason is that batch normalization layers compute the statistics with respect to a single minibatch. These layers, in their standard formulation and commonly adopted implementation, are incapable of accomodating their inner workings to adequately administer multiple sequential minibatches. However, there is ongoing research in the direction of group normalization as well, namely the works~\cite{wu2018groupnorm}~and~\cite{zhou2020batchgroupnorm}.

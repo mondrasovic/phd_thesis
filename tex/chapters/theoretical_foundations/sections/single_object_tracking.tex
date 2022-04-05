@@ -166,26 +166,7 @@ Later on, a fork of publications emerged with an endeavor to improve the trackin
 
 Inspiration from object segmentation yielded another approach where the tracking process was assisted with additional semi-supervised object segmentation~\cite{wang2019siammask}. The relevant contribution is the augmentation of the training loss with a binary segmentation task. Further, once trained, the model (dubbed \gls{siammask}) relies exclusively upon a single \gls{bbox} initialization and operates online while producing rotated \glspl{bbox} instead of axis-aligned ones together with class-agnostic object segmentation masks.
 
-Again, the \gls{siamfc}~\cite{bertinetto2016siamfc} served as the fundamental building block. However, a notable modification consisted of the use of a depth-wise cross-correlation layer instead of a simple cross-correlation layer. The latter compresses all the information into a single channel, impeding the potential to encode richer information about the object. As a reminder, the original model used $6 \times 6 \times 128$ and $22 \times 22 \times 128$ tensors to produce a $17 \times 17 \times 1$ response map (\figtext{}~\ref{fig:FullyCNNSiamTrackingArch}). Here, a multi-channel response maps are utilized (\figtext{}~\ref{fig:SiamMaskArchitecture}).
-
-% ------------------------------------------------------------------------------
-\begin{figure}[!t]
-    \centering
-    \begin{subfigure}[b]{0.68\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/siam_mask_architecture_3_branch.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.31\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/theoretical_foundations/siam_mask_architecture_2_branch_head.pdf}
-        \caption[]{}
-    \end{subfigure}
-    \caption[\gls{siammask} architecture]{Illustration of the two \gls{siammask} variants: \imgpartdesc{a} a three-branch architecture (full), \imgpartdesc{b} a two-branch architecture (head), both with depth-wise correlation layers. \externalsrc{\cite{wang2019siammask}}}
-    \label{fig:SiamMaskArchitecture}
-\end{figure}
-% ------------------------------------------------------------------------------
+Again, the \gls{siamfc}~\cite{bertinetto2016siamfc} served as the fundamental building block. However, a notable modification consisted of the use of a depth-wise cross-correlation layer instead of a simple cross-correlation layer. The latter compresses all the information into a single channel, impeding the potential to encode richer information about the object. As a reminder, the original model used $6 \times 6 \times 128$ and $22 \times 22 \times 128$ tensors to produce a $17 \times 17 \times 1$ response map (\figtext{}~\ref{fig:FullyCNNSiamTrackingArch}). Here, a multi-channel response maps are utilized.
 
 An incremental improvement of \gls{siammask} model came when~\cite{chen2019rotbboxes} proposed a novel, efficient algorithm for the estimation of the \gls{bbox} rotation when the object segmentation mask is given. Particularly, a mask produced by the \gls{siammask} model, as this work builds on top of~\cite{wang2019siammask}, under the derived name \gls{siammaske}. In addition, their approach can be used to generate a rotated box ground truth from any segmentation datasets to train a rotation angle regression model. To estimate the rotation angle, they adopted the least-squared scheme as part of the ellipse fitting algorithm.
 

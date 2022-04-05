@@ -1,7 +1,7 @@
 \section{Evaluating Visual Multiple Object Tracking}
 \label{sec:EvaluatingMOT}
 
-When it comes to evaluating \gls{mot} performance, there is still no consensus on how to approach the evaluation and subsequent comparison of multi-object trackers. There is one established metric, however, called \gls{clear} metric~\cite{bernardin2008clearmot}, that we will employ to quantitatively assess the performance of a \gls{mot} system. The reasons are:
+When it comes to evaluating \gls{mot}, there is still no consensus on how to approach the evaluation and subsequent comparison of multi-object trackers. There is one established metric called \gls{clear} metric~\cite{bernardin2008clearmot}, that we will employ to assess the performance of a \gls{mot} system. The reasons are:
 \begin{itemize}
     \item This metric is still considered a reasonably effective and intuitive metric to use, despite multiple proposals for improvements~\cite{wen2020uadetrac}.
     \item Numerous works in object tracking, especially tracking of people, report statistics from the \gls{mot} challenges that historically have utilized this metric.
@@ -109,7 +109,7 @@ We would like to emphasize that the errors have to be first summed up across all
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/local_vs_global_ratio_evaluation.pdf}}
+    \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/local_vs_global_ratio_evaluation.pdf}}
     \caption[Local vs. global ratio evaluation]{Computing of error ratios needs to be performed on a global level, rather than on a local, frame level. Assume a sequence consisting of $8$ frames. Moreover, assume that objects $o_1, \dots, o_4$ are visible on the frames from $t_1$ to $t_4$, but none of them is being tracked. The situation changes at frame $t_4$ where only the object $o_4$ is being tracked properly by the hypothesis $h_1$. As a result, in frames $t_1, \dots, t_4$, the resulting miss rate is $100\%$, whereas in frames $t_5, \dots, t_8$ it is exactly $0\%$. Applying arithmetic average to these values yields a global miss rate of $\frac{1}{8} \rbrackets{4 \cdot 100 + 4 \cdot 0} = \frac{1}{2}$, or, $50\%$. Conversely, performing summation prior to quantifying the final global ratio produces far more intuitive result of $16$ out of $20$ misses, or the miss rate of $80\%$. \externalsrc{\cite{bernardin2008clearmot}}}
     \label{fig:LocalGlobalRatioEval}
 \end{figure}

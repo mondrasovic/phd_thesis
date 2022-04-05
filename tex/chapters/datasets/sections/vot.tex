@@ -11,7 +11,7 @@ As we have already mentioned, the principle of one-shot learning has been advert
 \subsection{VOT 2015-2019}
 \label{ssec:VOTDataset}
 
-This prominent dataset (web:~\cite{webvot2019dataset}) is a benchmark in \gls{vot}~\cite{kristan2019motyolovot19}. It has a long history of development and annual challenges for the best visual tracker. All \gls{vot} datasets are available through the \gls{vot} toolkit. The pipeline for evaluating a tracker is automated to facilitate ease of use and a framework for researchers to allow an objective comparison with others. The dataset provides multiple video sequences where a single object is present under various conditions. For example, people running, a fish swimming behind corals, a vehicle driving in a city, and so forth. Each object is annotated by a single \gls{bbox} per each frame in which it appears. There are various versions of this benchmark, with incremental updates every year to existing challenges or with the introduction of new challenges altogether.
+This prominent dataset (web:~\cite{webvot2019dataset}) is a benchmark in \gls{vot}~\cite{kristan2019motyolovot19}. It has a long history of development and annual challenges for the best visual tracker. All \gls{vot} datasets are available through the \gls{vot} toolkit. The dataset provides multiple video sequences where a single object is present under various conditions. For example, people running, a fish swimming behind corals, a vehicle driving in a city, and so forth. Each object is annotated by a single \gls{bbox} per each frame in which it appears. There are various versions of this benchmark, with incremental updates every year.
 
 % ##############################################################################
 \subsection{KITTI Object Tracking}
@@ -70,31 +70,4 @@ The most important benchmark dataset for our work is \uadetrac{}~\cite{wen2020ua
 
 Since this dataset is of paramount importance to our research, here we provide more details about the structure and properties of the contained data compared to other datasets described in our work. The dataset consists of $100$ videos, where $60$ of them are dedicated to training, while the remaining $40$ are used for testing. Ground-truth annotations are provided in both variations. This is not always the case, as several benchmarks do not disclose annotations for the test dataset, \egtext{}, \datasetname{KITTI}~\cite{geiger2012cvpr}.
 
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/datasets/uadetrac_ignored_regions.png}}
-    \caption[Ignored regions in \uadetrac{}]{A demonstration of a possible distribution of ignored regions in the \uadetrac{} dataset. \externalsrc{\cite{webuadetracdataset}}}
-    \label{fig:UADETRACIgnoredRegions}
-\end{figure}
-% ------------------------------------------------------------------------------
-
-The dataset authors provide extensive information about the vehicle, including its speed in frames per second, color, orientation, and occlusion. Due to space restrictions, we limit our elaboration on how the data was obtained only to the fields pertinent to our usage. In the beginning, there is a section describing some ignored regions (\figtext{}~\ref{fig:UADETRACIgnoredRegions}). The authors decided to omit regions with very dense traffic. Nevertheless, the dataset contains a plethora of scenes where the number of cars is very high. More specifically, \tabletext{}~\ref{tab:UADETRACVehicleDensity} describes some basic statistical properties of the distribution of the number of cars throughout the dataset. The data were obtained by collecting the number of annotated cars for each frame. Training and testing data were merged for simplicity.
-
-\begin{table}[t]
-    \centering
-
-    \begin{tabular}{ccccc}
-        \toprule
-        \tblcolname{Min.}   &
-        \tblcolname{Max.}   &
-        \tblcolname{Mean}   &
-        \tblcolname{Stdev.} &
-        \tblcolname{Median}                         \\
-        \midrule
-        1                   & 49 & 9.21 & 6.60 & 21 \\
-        \bottomrule
-    \end{tabular}
-
-    \caption[\uadetrac{} vehicle density.]{Basic statistics for the per-frame vehicle density in the \uadetrac{} dataset.}
-    \label{tab:UADETRACVehicleDensity}
-\end{table}
+The dataset authors provide extensive information about the vehicle, including its speed in frames per second, color, orientation, and occlusion. Due to space restrictions, we limit our elaboration on how the data was obtained only to the fields pertinent to our usage. In the beginning, there is a section describing some ignored regions. The authors decided to omit regions with very dense traffic. Nevertheless, the dataset contains a plethora of scenes where the number of cars is very high. More specifically, some basic statistical properties of the distribution of the number of cars throughout the dataset are: mean $9.21$, standard deviation $6.60$, median $21$ and maximum $49$. The data were obtained by collecting the number of annotated cars for each frame. Training and testing data were merged for simplicity.

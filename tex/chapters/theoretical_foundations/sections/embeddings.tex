@@ -5,17 +5,15 @@
 \subsection{Learning Metric Embedding}
 \label{ssec:LearningMetricEmbedding}
 
-As Hermans~\etal{}~\cite{hermans2017triplet} describe, the goal of learning metric embedding is to learn a function $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$, which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$.
+As Hermans~\etal{}~\cite{hermans2017triplet} describe, the goal of learning metric embedding is to learn a function $\func{f_\theta}{x}: \mathbb{R}^F \to \mathbb{R}^D$ which maps semantically similar points from the data manifold in $\mathbb{R}^F$ onto metrically close points in $\mathbb{R}^D$. Analogously, $\func{f_\theta}{\cdot}$ should map semantically different points in $\mathbb{R}^F$ onto metrically distant points in $\mathbb{R}^D$.
 
-Suppose the use of this transformation for vehicle \gls{reid}. The corresponding embedding vector would be produced by a learned function that would map the images of vehicles into a latent space, where images of the same vehicle would be mapped closer together. Moreover, such mapping should be invariant to variations in lighting conditions, vehicle rotations, and many others. Among other things, embedding trained this way can be used to produce a feature vector for classification, one-shot learning tasks~\cite{koch2015siameseoneshot}, clustering~\cite{schroff2015facenet}, face recognition~\cite{parkhi2015deepface} and last, but not least, object \gls{reid}~\cite{kuma2019vehiclereid}.
+Suppose the use of this transformation for vehicle \gls{reid}. The corresponding embedding vector would be produced by a learned function that would map the images of vehicles into a latent space where images of the same vehicle would be mapped closer together. Moreover, such mapping should be invariant to variations in lighting conditions, vehicle rotations, and many others. Among other things, embedding trained this way can be used to produce a feature vector for classification, one-shot learning tasks~\cite{koch2015siameseoneshot}, clustering~\cite{schroff2015facenet}, face recognition~\cite{parkhi2015deepface} and last, but not least, object \gls{reid}~\cite{kuma2019vehiclereid}.
 
 % ##############################################################################
 \subsection{Embedding Vector Similarity}
 \label{ssec:EmbeddingVectorSimilarity}
 
-There are various ways to evaluate the degree of similarity between embedding vectors. For simplicity as well as our purposes, we will discuss the two most common approaches, \ietext{}, Euclidean distance and cosine similarity.
-
-Let $\vect{u}$ and $\vect{v}$ be arbitrary $D$-dimensional vectors representing our embedding vectors. The Euclidean distance between the vector $\vect{u}$ and $\vect{v}$ is defined as
+The two most common approaches to evaluating the degree of similarity between embedding vectors are Euclidean distance and cosine similarity. Let $\vect{u}$ and $\vect{v}$ be arbitrary $D$-dimensional vectors representing our embedding vectors. The Euclidean distance between the vector $\vect{u}$ and $\vect{v}$ is defined as
 \begin{equation}
     \label{eq:EuclideanDistance}
     \euclnorm{\vect{u} - \vect{v}} =
@@ -63,7 +61,7 @@ For the upcoming discussion, let $\func{D}{x, y}: \mathbb{R}^D \times \mathbb{R}
 
 \subsubsection{Contrastive Loss}
 
-Consider a sample $\rbrackets{x_0, x_1, y}$, where $x_0$ and $x_1$ represent the input, and the label $y = 1$ if $x_0$ and $x_1$ belong to the same category, otherwise $y = 0$. $\func{D}{\cdot}$ is the previously defined metric function, and $\alpha$ is the margin representing the minimum distance in the metric space to separate positive from negative samples. Then the contrastive function for any sample is defined as~\cite{hadsell2006dimreduction}
+Consider a sample $\rbrackets{x_0, x_1, y}$, where $x_0$ and $x_1$ represent the input, and the label $y = 1$ if $x_0$ and $x_1$ belong to the same category, otherwise $y = 0$. Let $\alpha$ be the margin representing the minimum distance in the metric space to separate positive from negative samples. The contrastive function for any sample is then defined as~\cite{hadsell2006dimreduction}
 \begin{equation}
     \label{eq:ContrastiveLoss}
     \func{\mathcal{L}_{contr}}{\theta} =
@@ -77,7 +75,7 @@ The two inputs $x_0$ and $x_1$ are fed to the shared model at the same time. The
 
 \subsubsection{Triplet Loss}
 
-Apart from the contrastive loss, this time three samples are required to compute the loss. The rationale is to supply additional context when forming the metric space. Siamese networks are usually implemented using shared model weights, but there are better approaches when the triplet loss is used. Conceptually speaking, the model could be implemented as shown in \figtext{}~\ref{fig:SiameseAndTripletArchitectures} \imgpartdesc{b}. However, as we will discuss later, triplet mining strategies are required for the triplet loss to work properly. The model can be thus simplified from an architectural point of view at the cost of moving the complexity to the computation of the loss function.
+Apart from the contrastive loss, this time three samples are required to compute the loss. The rationale is to supply additional context when forming the metric space. Siamese networks are usually implemented using shared model weights, but there are better approaches when the triplet loss is used. Conceptually speaking, the model could be implemented as shown in \figtext{}~\ref{fig:SiameseAndTripletArchitectures} \imgpartdesc{b}. However, as we will discuss later, triplet mining strategies are required for the triplet loss to work properly.
 
 Let $N$ be the number of all possible valid triplets $\rbrackets{x_a^i, x_p^i, x_n^i}$ for a given dataset. For any $i$-th triplet, let $x_a^i$ be the \emph{anchor} for a specific object (person, vehicle, etc.) with label $\func{y}{x_a^i}$, $x_p^i$ be the positive sample of the same object with label $\func{y}{x_p^i}$, such that $x_a^i \neq x_p^i \land \func{y}{x_a^i} = \func{y}{x_p^i}$, and let $x_n^i$ with label $\func{y}{x_n^i}$ be a sample of any other object, satisfying $\func{y}{x_a^i} \neq \func{y}{x_n^i}$, $\forall i = 1, \dots, N$. Let $\alpha$ be the margin value that is enforced between positive and negative pairs. Then, we want the relationship
 \begin{equation}
@@ -95,7 +93,7 @@ to hold true. The triplet loss function is therefore defined as
         \func{D}{\func{f_\theta}{x_a^i}, \func{f_\theta}{x_n^i}}
     }}_+.
 \end{equation}
-During the training using the triplet loss, the model should learn to push negative samples further away from the positive samples, ideally exceeding the margin $\alpha$. Assuming a situation when the negative sample is mapped closer than a positive sample, the training should result in the desired situation of bringing the positive sample closer while pushing the negative one further (\figtext{}~\ref{fig:TripletLossLearningProcess}).
+During the training, the model should learn to push negative samples further away from the positive samples, ideally exceeding the margin $\alpha$. When a negative sample is mapped closer than a positive sample, the training should result in the desired situation of bringing the positive sample closer while pushing the negative one further (\figtext{}~\ref{fig:TripletLossLearningProcess}).
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
@@ -109,7 +107,7 @@ During the training using the triplet loss, the model should learn to push negat
 \subsection{Triplet Mining Strategies}
 \label{ssec:TripletMiningStrategies}
 
-Contrastive (\eqtext{}~\ref{eq:ContrastiveLoss}) and triplet (\eqtext{}~\ref{eq:TripletLoss}) loss functions play an important role in training an embedding model. However, the way that pairs or triplets are selected is crucial, and as Hermans~\etal{}~\cite{hermans2017triplet} and Manmatha~\etal{}~\cite{manmatha2017samplingmatters} showed, it may significantly influence the training. Moreover, as the dataset gets larger, then the number of possible triplets grows cubically, rendering the use of all of them impractical. The majority of those triplets would be so-called \emph{easy triplets}, thus hindering the learning process. To paraphrase the analogy from~\cite{hermans2017triplet}, showing the model that people with different clothes are not the same person after a certain point does not bring any new information. On the other hand, explicitly \emph{mining} images of similar-looking yet different people with the same clothes (\emph{hard negatives}) or of the same person with dramatically different poses (\emph{hard positives}) vastly contributes to an understanding of the notion of the \emph{same person}. As suggested, there are different kinds of triplets which are defined in \tabletext{}~\ref{tab:TripletCategoriesDefinitions}, using a general $\rbrackets{x_a^i, x_p^i, x_n^i}$ triplet for clarity. We encourage the reader to observe \figtext{}~\ref{fig:PositiveAndNegativeTripletsCategories}, too.
+Contrastive (\eqtext{}~\ref{eq:ContrastiveLoss}) and triplet (\eqtext{}~\ref{eq:TripletLoss}) loss functions play an important role in training an embedding model. However, the way that pairs or triplets are selected is crucial as it may significantly influence the training~\cite{hermans2017triplet, manmatha2017samplingmatters}. Moreover, as the dataset gets larger, then the number of possible triplets grows cubically, rendering the use of all of them impractical. The majority of those triplets would be so-called \emph{easy triplets}. To paraphrase the analogy from~\cite{hermans2017triplet}, showing the model that people with different clothes are not the same person after a certain point does not bring any new information. On the other hand, explicitly \emph{mining} images of similar-looking yet different people with the same clothes (\emph{hard negatives}) or of the same person with dramatically different poses (\emph{hard positives}) vastly contributes to an understanding of the notion of the \emph{same person}. As suggested, there are different kinds of triplets which are defined in \tabletext{}~\ref{tab:TripletCategoriesDefinitions}, using a general $\rbrackets{x_a^i, x_p^i, x_n^i}$ triplet for clarity. We encourage the reader to observe \figtext{}~\ref{fig:PositiveAndNegativeTripletsCategories}, too.
 
 \begin{table}[t]
     \centering
@@ -156,16 +154,16 @@ In order to attain an effective convergence during the training, it is necessary
 
 \subsubsection{Offline Triplet Mining}
 
-Given a training set, the task is to produce reasonable triplets off-line, for instance, at the epoch beginning. First, a list of $N$ different valid triplets is randomly generated, then separated into $\lfloor \nicefrac{N}{B} \rfloor$ batches of $B$ triplets, followed by computation of $3N$ embeddings using the most recent model checkpoint. Then, hard or semi-hard triplets may be selected. Since this strategy has been shown on multiple occasions~\cite{schroff2015facenet, hermans2017triplet, kuma2019vehiclereid} as an inferior choice compared to the online triplet mining, we will not discuss this approach further.
+Given a training set, the task is to produce reasonable triplets off-line, for instance, at the epoch beginning. First, a list of $N$ different valid triplets is randomly generated, then separated into $\lfloor \nicefrac{N}{B} \rfloor$ batches of $B$ triplets, followed by computation of $3N$ embeddings using the most recent model checkpoint. Then, hard or semi-hard triplets may be selected. Since this strategy has been shown on multiple occasions~\cite{schroff2015facenet, hermans2017triplet, kuma2019vehiclereid} as an inferior choice compared to online triplet mining, we will not discuss this approach further.
 
 \subsubsection{Online Triplet Mining}
 
-Online mining is performed by selecting the hard positive/negative exemplars from within a minibatch (\figtext{}~\ref{fig:TripletArchitectureOnlineMining}). A condition that a minimum number of exemplars for any identity is present in each minibatch has to be met. For example, Schroff~\etal{}~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per minibatch. Let $P$ be the number of different objects/identities (\egtext{}, people, vehicles) and $K$ be the number of different images for a concrete identity (\egtext{} different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
+Online mining is performed by selecting the hard positive/negative exemplars from within a minibatch (\figtext{}~\ref{fig:TripletArchitectureOnlineMining}). A condition that minimum number of exemplars for any identity is present in each minibatch has to be met. For example, Schroff~\etal{}~\cite{schroff2015facenet} used $40$ different images of a single person (an identity) per minibatch. Let $P$ be the number of different objects/identities (\egtext{}, people, vehicles) and $K$ be the number of different images for a concrete identity (\egtext{} different views of the same vehicle). There are two prominent approaches to online mining: \emph{batch all} and \emph{batch hard}.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/theoretical_foundations/triplet_architecture_online_mining.pdf}}
-    \caption[Triplet loss online mining architecture]{The architecture of a triplet network where an online triplet loss function is used for training. In this architecture, no weight sharing is required as the triplet selection happens \emph{online} solely in the loss function.}
+    \caption[Triplet loss online mining architecture]{A triplet network with an online triplet loss function. In this architecture, no weight sharing is required as the triplet selection happens \emph{online} solely in the loss function.}
     \label{fig:TripletArchitectureOnlineMining}
 \end{figure}
 % ------------------------------------------------------------------------------

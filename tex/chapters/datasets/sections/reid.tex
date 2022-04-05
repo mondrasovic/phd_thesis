@@ -5,15 +5,7 @@
 \subsection{PKU VehicleID}
 \label{ssec:DatasetPKUVehicleID}
 
-The \datasetname{VehicleID} dataset~\cite{liu2016deepreldist} (web:~\cite{webpkuvehicledataset}) contains data captured during daytime by multiple real-world surveillance cameras distributed in a small city. There are $26\ 267$ vehicles ($221\ 763$ images in total). Each image is attached with an ID label corresponding to its identity in the real world (\figtext{}~\ref{fig:VehicleIDDataset}). In addition, there are manually labeled $10\ 319$ vehicles ($90\ 196$ images in total) of their vehicle model information (\ietext{} “MINI-cooper”, “Audi A6L”, “BWM 1 Series”, etc.). This dataset is usable thanks to the information about the model. We posit that at some point a hypothesis could be tested whether incorporating car model information into the machine learning model would improve its robustness. Nevertheless, only the front or rear view of the vehicle is available. This disadvantage is lessened by a reasonable number of training images. This dataset is also available only upon request and only for research purposes.
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.5\linewidth]{figures/datasets/vehicleid_overview.pdf}}
-    \caption[\datasetname{VehicleID} dataset]{Few samples from the \datasetname{VehicleID} dataset. Each vehicle has at least two images in the dataset, but only its front and rear view were obtained. \externalsrc{\cite{liu2016deepreldist}}}
-    \label{fig:VehicleIDDataset}
-\end{figure}
-% ------------------------------------------------------------------------------
+The \datasetname{VehicleID} dataset~\cite{liu2016deepreldist} (web:~\cite{webpkuvehicledataset}) contains data captured during daytime by multiple real-world surveillance cameras distributed in a small city. There are $26\ 267$ vehicles ($221\ 763$ images in total). Each image is attached with an ID label corresponding to its identity in the real world. In addition, there are manually labeled $10\ 319$ vehicles ($90\ 196$ images in total) of their vehicle model information (\ietext{} “MINI-cooper”, “Audi A6L”, “BWM 1 Series”, etc.). This dataset is usable thanks to the information about the model. We posit that at some point a hypothesis could be tested whether incorporating car model information into the machine learning model would improve its robustness. Nevertheless, only the front or rear view of the vehicle is available. This disadvantage is lessened by a reasonable number of training images. This dataset is also available only upon request and only for research purposes.
 
 % ##############################################################################
 \subsection{VeRI-776}
