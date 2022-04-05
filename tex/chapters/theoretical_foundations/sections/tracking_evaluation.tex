@@ -121,24 +121,24 @@ Besides the two primary performance metrics discussed in the previous section, t
     \centering
     \begin{tabular}{p{0.3\linewidth}p{0.65\linewidth}}
         \toprule
-        \textbf{Metric Name}     & \textbf{Description}                                                 \\
+        \textbf{Metric Name}     & \textbf{Description}                                        \\
         \midrule
-        no. of frames            & Total number of frames.                                              \\
-        no. of matches           & Total number matches.                                                \\
-        no. of switches          & Total number of track ID switches.                                   \\
-        no. of false positives   & Total number of false positives (false alarms).                      \\
-        no. of misses            & Total number of misses (false negatives).                            \\
-        no of detections         & Total number of detected objects including matches and switches.     \\
-        no. of objects           & Total number of unique object appearances over all frames.           \\
-        no. of predictions       & Total number of unique prediction appearances over all frames.       \\
-        no. of fragmentations    & Total number of switches from tracked to not tracked.                \\
-        no. of mostly tracked    & Number of objects tracked for at least $80\%$ of lifespan.           \\
-        no. of partially tracked & Number of objects tracked with lifespan from $20\%$ to $80\%$.       \\
-        precision                & Number of detected objects over sum of detected and false positives. \\
-        recall                   & Number of detections over number of objects.                         \\
-        IDF1                     & ID measures: global min-cost F1 score.                               \\
-        \gls{motp}               & Multiple object tracker precision.                                   \\
-        \gls{mota}               & Multiple object tracker accuracy.                                    \\
+        no. of frames            & Total no. of frames.                                        \\
+        no. of matches           & Total no. matches.                                          \\
+        no. of switches          & Total no. of track ID switches.                             \\
+        no. of \gls{fp}          & Total no. of false alarms.                                  \\
+        no. of \gls{fn}          & Total no. of misses.                                        \\
+        no of detections         & Total no. of detected objects (matches and switches).       \\
+        no. of objects           & Total no. of unique object appearances over all frames.     \\
+        no. of predictions       & Total no. of unique prediction appearances over all frames. \\
+        no. of fragmentations    & Total no. of switches from tracked to not tracked.          \\
+        no. of mostly tracked    & No. of objects tracked for at least $80\%$ of lifespan.     \\
+        no. of partially tracked & No. of objects tracked with lifespan from $20\%$ to $80\%$. \\
+        precision                & No. of detected objects over sum of detected and \gls{fp}.  \\
+        recall                   & No. of detections over no. of objects.                      \\
+        IDF1                     & ID measures: global min-cost F1 score.                      \\
+        \gls{motp}               & Multiple object tracker precision.                          \\
+        \gls{mota}               & Multiple object tracker accuracy.                           \\
         \bottomrule
     \end{tabular}
     \caption[Other \gls{mot} metrics]{Other important \gls{clear} metrics that we adopted for evaluation of our experiments with various \gls{mot} approaches.}

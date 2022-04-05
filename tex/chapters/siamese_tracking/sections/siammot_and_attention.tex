@@ -51,7 +51,7 @@ In our work, we also exploited the notion of self-attention. Since attention was
 \subsection{Deformable Convolutional Neural Networks}
 \label{ssec:DeformableCNNs}
 
-\Glspl{dcnn}~\cite{dai2017dcnn} are gaining popularity and are being applied to numerous sophisticated computer vision tasks, \egtext{}, object segmentation (dense predictions) and object detection (semi-dense predictions). Since object tracking revolves around the same requirements in terms of pixel-wise precision, we contemplated using this advancement, too.
+\glspl{dcnn}~\cite{dai2017dcnn} are gaining popularity and are being applied to numerous sophisticated computer vision tasks, \egtext{}, object segmentation (dense predictions) and object detection (semi-dense predictions). Since object tracking revolves around the same requirements in terms of pixel-wise precision, we contemplated using this advancement, too.
 
 Although \glspl{cnn} (\sectiontext{}~\ref{ssec:ConvolutionalNeuralNetworks} on page~\pageref{ssec:ConvolutionalNeuralNetworks}) are an excellent tool for a plethora of deep learning tasks involving image processing, they are still limited in their capabilities to model a broad range geometric transformation. To address this, practitioners apply a broad range of data augmentation techniques (\egtext{}, rotation, translation, scaling, shearing, and cropping) to provide the necessary samples of some particular transformation during the training. However, such an approach is limited to tailor-made transformations that may not cover the entire set of possibilities the model may face at test time.
 
@@ -97,7 +97,7 @@ in which $\vect{q}$ enumerates all integral locations and $\func{G}{\cdot}$ repr
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.6\linewidth]{figures/siamese_tracking/deformable_convolution.pdf}}
-    \caption[\Gls{dcnn}]{Illustration of a $3 \times 3$ deformable convolution operation. Unlike the standard convolution operation used in neural networks, this one employs one additional step of predicting variable offsets instead of using a fixed rectangular grid. \externalsrc{\cite{dai2017dcnn}}}
+    \caption[\gls{dcnn}]{Illustration of a $3 \times 3$ deformable convolution operation. Unlike the standard convolution operation used in neural networks, this one employs one additional step of predicting variable offsets instead of using a fixed rectangular grid. \externalsrc{\cite{dai2017dcnn}}}
     \label{fig:DeformableCNN}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -139,17 +139,17 @@ Yu~\etal{}~\cite{yu2021dsa} formulated their \gls{dsa}, which covered both of ou
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/siammot_attention_training.pdf}}
-    \caption[\Gls{siammot} with attention]{Our proposal to incorporate attention into the \gls{siammot} pipeline. This diagram shows the relationships between individual parts of the framework during the training phase.}
+    \caption[\gls{siammot} with attention]{Our proposal to incorporate attention into the \gls{siammot} pipeline. This diagram shows the relationships between individual parts of the framework during the training phase.}
     \label{fig:SiamMOTWithAttention}
 \end{figure}
 % ------------------------------------------------------------------------------
 
-Considering their contribution and promising outcomes for the \gls{sot} demonstrated on the \gls{siamrpn} framework (\sectiontext{}~\ref{ssec:TrackingUsingSiameseNetworks} on page \pageref{ssec:TrackingUsingSiameseNetworks}), we decided to implement their proposed module into the \gls{siammot} tracker as described in their paper (\figtext{}~\ref{fig:SiamMOTWithAttention}). However, with the prospect of greater improvement, we adopted modulated \glspl{dcnn}, instead of pure \glspl{dcnn}, because the \Glspl{mdcnn} have all the advantages of the standard deformable convolution, but they additionally learn a modulation (weighting) for individual elements of the feature map while taking the underlying features into account. For our purposes, this seemed to intensify the spatial attention effect, since not only the deformable part was responsible for choosing features using irregular sampling patterns, the network was even allowed to weigh them differently. We conjectured that such an extension may either have no dramatic effect or influence it only positively.
+Considering their contribution and promising outcomes for the \gls{sot} demonstrated on the \gls{siamrpn} framework (\sectiontext{}~\ref{ssec:TrackingUsingSiameseNetworks} on page \pageref{ssec:TrackingUsingSiameseNetworks}), we decided to implement their proposed module into the \gls{siammot} tracker as described in their paper (\figtext{}~\ref{fig:SiamMOTWithAttention}). However, with the prospect of greater improvement, we adopted modulated \glspl{dcnn}, instead of pure \glspl{dcnn}, because the \glspl{mdcnn} have all the advantages of the standard deformable convolution, but they additionally learn a modulation (weighting) for individual elements of the feature map while taking the underlying features into account. For our purposes, this seemed to intensify the spatial attention effect, since not only the deformable part was responsible for choosing features using irregular sampling patterns, the network was even allowed to weigh them differently. We conjectured that such an extension may either have no dramatic effect or influence it only positively.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/deformable_siamese_attention.pdf}}
-    \caption[\Gls{dsa} diagram]{The \gls{dsa} extension introduces two sub-modules for both exemplar and search branch. The self-attention is further divided into two operations, namely the spatial and channel attention. The very same attention network is used to process both features independently. Notice how the channel attention is computed only once as part of the self-attention process and then directly fused with the channel self-attention of the other branch, creating the cross-attention effect, which is the strongest one from all three, according to authors. \externalsrc{\cite{yu2021dsa}}}
+    \caption[\gls{dsa} diagram]{The \gls{dsa} extension introduces two sub-modules for both exemplar and search branch. The self-attention is further divided into two operations, namely the spatial and channel attention. The very same attention network is used to process both features independently. Notice how the channel attention is computed only once as part of the self-attention process and then directly fused with the channel self-attention of the other branch, creating the cross-attention effect, which is the strongest one from all three, according to authors. \externalsrc{\cite{yu2021dsa}}}
     \label{fig:DeformableSiameseAttention}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ The attention is finalized by processing the obtained feature tensors by another
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.5\linewidth]{figures/siamese_tracking/dsa_attention_visualization.pdf}}
-    \caption[\Gls{dsa} attention visualization]{Visualization of response (confidence) maps. The first column represents the search image, the second column represents the activation levels without the \gls{dsa} module, whereas the third column clearly demonstrates the improved target-background discirminability in the computed attentional features. \externalsrc{\cite{yu2021dsa}}}
+    \caption[\gls{dsa} attention visualization]{Visualization of response (confidence) maps. The first column represents the search image, the second column represents the activation levels without the \gls{dsa} module, whereas the third column clearly demonstrates the improved target-background discirminability in the computed attentional features. \externalsrc{\cite{yu2021dsa}}}
     \label{fig:DSAAttentionVisualization}
 \end{figure}
 % ------------------------------------------------------------------------------

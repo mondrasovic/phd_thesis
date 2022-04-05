@@ -16,7 +16,7 @@ Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonl
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.8\linewidth]{figures/theoretical_foundations/resnet_motivation.pdf}}
-    \caption[\Gls{resnet} motivation]{A motivation behind the \glspl{resnet}. The training error and the test error are greater for the deeper model than for the shallower model. Therefore, the inevitable conclusion is that in order to learn better networks, it takes more than just stacking more layers. \externalsrc{\cite{he2015resnet}}}
+    \caption[\gls{resnet} motivation]{A motivation behind the \glspl{resnet}. The training error and the test error are greater for the deeper model than for the shallower model. Therefore, the inevitable conclusion is that in order to learn better networks, it takes more than just stacking more layers. \externalsrc{\cite{he2015resnet}}}
     \label{fig:ResnetMotivation}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonl
 
 \glsreset{fpn}
 
-\Gls{fpn}~\cite{lin2017fpn} is an extension to existing backbones used for feature extraction serving various tasks ranging from image classification, object detection, object tracking or even image segmentation. Its greatest strength is the combination of low-resolution, semantically strong features with high-resolution, semantically weak but discriminative features via a top-down pathway and lateral connections.
+\gls{fpn}~\cite{lin2017fpn} is an extension to existing backbones used for feature extraction serving various tasks ranging from image classification, object detection, object tracking or even image segmentation. Its greatest strength is the combination of low-resolution, semantically strong features with high-resolution, semantically weak but discriminative features via a top-down pathway and lateral connections.
 
 \figtext{}~\ref{fig:FPNVariousApproaches} compares competing methods of feature aggregation by their core principles. Regarding the \gls{fpn} itself, observe the two pathways in \figtext{}~\ref{fig:FPNVariousApproaches} \imgpartdesc{d}. The bottom-up pathway represents a feed-forward computation of the backbone (\egtext{}, a basic \gls{cnn}), where one pyramid level corresponds to one stage. The output of the last layer of each stage will serve the purpose of enriching the feature maps when processing the top-down pathway by the use of lateral connections. The top-down pathway consists of upsampling operations followed by an application of $1 \times 1$ convolutions to align tensor channels dimensions and then element-wise addition of features.
 
@@ -68,12 +68,12 @@ Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonl
 
 \glsreset{dla}
 
-A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architectural extension emphasizes the importance of feature aggregation across multiple levels to merge information from different stages of input processing (\figtext{}~\ref{fig:DLAMotivation}). Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda}. The two mentioned approaches above are independent as well as compatible enough to facilitate combining the two for even richer feature aggregation. A great advantage is that these structures are expressed through an architectural framework, which is, more importantly, independent of the choice of backbone, thus preserving the compatibility with current and future networks.
+A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architectural extension emphasizes the importance of feature aggregation across multiple levels to merge information from different stages of input processing (\figtext{}~\ref{fig:DLAMotivation}). Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda}. The two mentioned approaches above are independent as well as compatible enough to facilitate combining the two for even richer feature aggregation. A great advantage is that these structures are expressed through an architectural framework, that is independent of the choice of backbone, thus preserving the compatibility with current and future networks.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.75\linewidth]{figures/theoretical_foundations/dla_comparison.pdf}}
-    \caption[\Gls{dla} comparison]{A demonstration of unification of semantic and spatial information. The \gls{dla} architecture extends densely connected networks, \ietext{}, \glspl{densenet}, and \glspl{fpn}. This extension builds on the idea of skip connections for enhanced feature fusion. \externalsrc{\cite{yu2019dla}}}
+    \caption[\gls{dla} comparison]{A demonstration of unification of semantic and spatial information. The \gls{dla} architecture extends densely connected networks, \ietext{}, \glspl{densenet}, and \glspl{fpn}. This extension builds on the idea of skip connections for enhanced feature fusion. \externalsrc{\cite{yu2019dla}}}
     \label{fig:DLAMotivation}
 \end{figure}
 % ------------------------------------------------------------------------------

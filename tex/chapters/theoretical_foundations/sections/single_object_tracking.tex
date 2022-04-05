@@ -7,15 +7,7 @@
 
 At the time of publishing the work of Held~\etal{}~\cite{held2016goturn}, most generic object trackers required online training from scratch, without taking advantage of available datasets to at least provide a starting point by initial offline training. This was the incentive behind the development of the famous \gls{goturn}~\cite{held2016goturn}. This approach used to be \gls{sota} in single-object tracking, but nowadays it is considered obsolete. A major issue is that the object has to be located initially, and occlusion handling is not performed as well as management of abrupt changes in position. So it is common for the object to drift away. Nevertheless, it stands to reason that the notion of leveraging data for offline training has pervaded the \gls{vot} community ever since. Nowadays, it is scarce to find a tracker that is trained online purely from scratch.
 
-Given an initial state in a form of a \gls{bbox} belonging to the first frame (a search region), the network then crops a new region in the next frame and tries to find the location of the target object within this region. It practically performs a comparison of the current search region given the predicted target location from the previous frame (\figtext{}~\ref{fig:GOTURNFramework}). A key concept to highlight is that \gls{goturn} addresses the tracking as a box regression problem.
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/theoretical_foundations/goturn_framework.pdf}}
-    \caption[\Gls{goturn} architecture]{The architecture of \gls{goturn} showing the input as a search region from the current frame where the target from the previous frame is to be searched for. The network essentially learns to localize the target within the cropped region. \externalsrc{\cite{held2016goturn}}}
-    \label{fig:GOTURNFramework}
-\end{figure}
-% ------------------------------------------------------------------------------
+Given an initial state in a form of a \gls{bbox} belonging to the first frame (a search region), the network then crops a new region in the next frame and tries to find the location of the target object within this region. It practically performs a comparison of the current search region given the predicted target location from the previous frame. A key concept to highlight is that \gls{goturn} addresses the tracking as a box regression problem.
 
 % ##############################################################################
 \subsection{Fully Convolutional Tracking}
@@ -45,7 +37,7 @@ The \glspl{cnn} provide valuable spatial clues about the image content. Thus, in
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fully_cnn_tracking_feature_maps_3.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[Fully convolutional tracking]{\imgpartdesc{a} Input image with an associated ground truth mask. \imgpartdesc{b} Visualization of feature maps from convolutional layers placed at the bottom of the model, capturing differences between foreground and background of a particular object instance. \imgpartdesc{c} As opposed to the previous group of images, a more holistic, abstract view on the object category itself is provided by feature maps from top convolutional layers. The top row in the \imgpartdesc{b} and \imgpartdesc{c} represents feature maps, whereas the bottom row represents the corresponding saliency map with spatial information of the category. \externalsrc{\cite{wang2015votcnn}}}
+    \caption[Fully convolutional tracking]{\imgpartdesc{a} Input image with an associated ground truth mask. \imgpartdesc{b} Visualization of feature maps from convolutional layers placed at the bottom of the model, capturing differences between foreground and background. \imgpartdesc{c} As opposed to the previous group of images, a more holistic, abstract view on the object category itself is provided by feature maps from top convolutional layers. The top row in the \imgpartdesc{b} and \imgpartdesc{c} represents feature maps, whereas the bottom row represents the corresponding saliency map with spatial information of the category. \externalsrc{\cite{wang2015votcnn}}}
     \label{fig:FullyCNNTrackingFeatureMaps}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -74,7 +66,7 @@ As such, when Euclidean distance or cosine similarity measure is computed by the
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
     \centerline{\includegraphics[width=0.9\linewidth]{figures/theoretical_foundations/fully_cnn_siam_tracking_architecture.pdf}}
-    \caption[\Gls{siamfc} architecture]{The fully convolutional Siamese architecture produces a scalar-valued score map. The similarity function is computed for all sub-windows within the search image and stored in a $2$D score map, rather than just a pure $1$D embedding vector. This computation requires only one evaluation. In this image, the red, green and yellow pixels in the output score map represent similarity values for the three sub-windows on the input.}
+    \caption[\gls{siamfc} architecture]{The fully convolutional Siamese architecture produces a scalar-valued score map. The similarity function is computed for all sub-windows within the search image and stored in a $2$D score map, rather than just a pure $1$D embedding vector. This computation requires only one evaluation. In this image, the red, green and yellow pixels in the output score map represent similarity values for the three sub-windows on the input.}
     \label{fig:FullyCNNSiamTrackingArch}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -124,7 +116,7 @@ where the template feature maps $\sbrackets{\func{\gamma}{z}}_{cls}$ and $\sbrac
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/theoretical_foundations/siam_rpn_architecture.pdf}}
-    \caption[\Gls{siamrpn} architecture]{The pipeline starts with the original \gls{siamfc} network followed by the \gls{rpn} which has two branches: classification and regression. The output of the two branches is obtained using a pair-wise correlation. Foreground/background classification and the box regression are given by the $17 \times 17 \times 2k$ and $17 \times 17 \times 4k$ feature maps, respectively. \externalsrc{\cite{li2018siamrpn}}}
+    \caption[\gls{siamrpn} architecture]{The pipeline starts with the original \gls{siamfc} network followed by the \gls{rpn} which has two branches: classification and regression. The output of the two branches is obtained using a pair-wise correlation. Foreground/background classification and the box regression are given by the $17 \times 17 \times 2k$ and $17 \times 17 \times 4k$ feature maps, respectively. \externalsrc{\cite{li2018siamrpn}}}
     \label{fig:SiamRPNNetArchitecture}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -190,7 +182,7 @@ Again, the \gls{siamfc}~\cite{bertinetto2016siamfc} served as the fundamental bu
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/siam_mask_architecture_2_branch_head.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[\Gls{siammask} architecture]{Illustration of the two \gls{siammask} variants: \imgpartdesc{a} a three-branch architecture (full), \imgpartdesc{b} a two-branch architecture (head), both with depth-wise correlation layers. \externalsrc{\cite{wang2019siammask}}}
+    \caption[\gls{siammask} architecture]{Illustration of the two \gls{siammask} variants: \imgpartdesc{a} a three-branch architecture (full), \imgpartdesc{b} a two-branch architecture (head), both with depth-wise correlation layers. \externalsrc{\cite{wang2019siammask}}}
     \label{fig:SiamMaskArchitecture}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -202,7 +194,7 @@ The idea to employ fully convolutional networks seems to pertain to the modern c
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/theoretical_foundations/siamcar_architecture.pdf}}
-    \caption[\Gls{siamcar} architecture]{\Gls{siamcar} architecture. The left side consists of the original \gls{siamfc}~\cite{bertinetto2016siamfc} model, with a simple amendment of using depth-wise correlation for multi-channel response map extraction. The right side depicts the subnetworks for foreground/background classification and \gls{bbox} regression. \externalsrc{\cite{guo2019siamcar}}}
+    \caption[\gls{siamcar} architecture]{\gls{siamcar} architecture. The left side consists of the original \gls{siamfc}~\cite{bertinetto2016siamfc} model, with a simple amendment of using depth-wise correlation for multi-channel response map extraction. The right side depicts the subnetworks for foreground/background classification and \gls{bbox} regression. \externalsrc{\cite{guo2019siamcar}}}
     \label{fig:SiamCARArchitecture}
 \end{figure}
 % ------------------------------------------------------------------------------

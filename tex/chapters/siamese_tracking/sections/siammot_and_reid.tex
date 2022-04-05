@@ -16,7 +16,7 @@ We adopted the object \gls{reid} approach published in~\cite{luo2019bagoftricksr
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{figures/siamese_tracking/bagoftricks_reid_architecture.pdf}
-    \caption[\Gls{reid} baseline]{A object \gls{reid} baseline which we used for our experiments. \externalsrc{\cite{luo2019bagoftricksreid}}}
+    \caption[\gls{reid} baseline]{A object \gls{reid} baseline which we used for our experiments. \externalsrc{\cite{luo2019bagoftricksreid}}}
     \label{fig:BagOfTricksReIDArchitecture}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ Then, after suspending the removed active tracks, we adopted Munkres' algorithm~
 Subsequently, we collected all the remaining unassigned detections the confidence of which was above $t_{start}$, and initiated new tracks based on them. At last, we searched for active tracks with low visibility confidence (below the threshold $t_{track}$) to suspend them, thus, making them dormant.
 
 \begin{algorithm}[t]
-    \caption[\Gls{reid}-enhanced online solver inference]{\Gls{reid}-enhanced online solver inference. This algorithm receives active ($\mset{A}$) and dormant ($\mset{D}$) tracks together with unassigned ($\mset{U}$) detections on the input. Besides, there are four threshold parameters, the \gls{nms} overlap ($t_{nms}$), and three confidence-related inputs, namely the minimum value for the track to stay active ($t_{track}$), the minimum value for the track to become resumed ($t_{resume}$), and the minimum value for the track to start from an unassigned detection ($t_{start}$). Usually, $t_{track} < t_{resume} < t_{start}$. In practice, these values may be $0.3$, $0.4$, and $0.5$, respectively.}
+    \caption[\gls{reid}-enhanced online solver inference]{\gls{reid}-enhanced online solver inference. This algorithm receives active ($\mset{A}$) and dormant ($\mset{D}$) tracks together with unassigned ($\mset{U}$) detections on the input. Besides, there are four threshold parameters, the \gls{nms} overlap ($t_{nms}$), and three confidence-related inputs, namely the minimum value for the track to stay active ($t_{track}$), the minimum value for the track to become resumed ($t_{resume}$), and the minimum value for the track to start from an unassigned detection ($t_{start}$). Usually, $t_{track} < t_{resume} < t_{start}$. In practice, these values may be $0.3$, $0.4$, and $0.5$, respectively.}
     \label{alg:OnlineSolverReID}
     \begin{algorithmic}[1]
         \Function{OnlineSolverReID}{$\mset{A}$, $\mset{D}$, $\mset{U}$, $t_{nms}$, $t_{track}$, $t_{resume}$, $t_{start}$, $t_{sim}$}

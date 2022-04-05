@@ -29,7 +29,7 @@ In this section, we will use the standard terminology to denote whether the clas
 
 \glslocalreset{iou}
 
-\Gls{iou} measures the overlap between two \glspl{bbox}. Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox} described by vectors containing $4$ elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner and the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
+\gls{iou} measures the overlap between two \glspl{bbox}. Let $\subsup{\vect{b}}{1}{T} = \sbrackets{x_1, y_1, w_1, h_1}$ and $\subsup{\vect{b}}{2}{T} = \sbrackets{x_2, y_2, w_2, h_2}$ be two \glspl{bbox} described by vectors containing $4$ elements. The respective elements are given by $x$, $y$ coordinates of the top-left corner and the \gls{bbox} width and height. The intersection area between $\vect{b}_1$ and $\vect{b}_2$ is defined as
 \begin{equation}
     \begin{aligned}
         \vect{b}_1 \cap \vect{b}_2 =
@@ -55,7 +55,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=0.2\linewidth]{figures/theoretical_foundations/intersection_over_union.pdf}}
-    \caption[\Gls{iou} visualization]{Computation of the \gls{iou} metric between two \glspl{bbox} using of ratio of the area of overlap and the area of the union.}
+    \caption[\gls{iou} visualization]{Computation of the \gls{iou} metric between two \glspl{bbox} using of ratio of the area of overlap and the area of the union.}
     \label{fig:IntersectionOverUnion}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ where $0 \leq \func{\IOU}{\vect{b}_1, \vect{b}_2} \leq 1$, such that value of $0
 
 \glslocalreset{map}
 
-\Gls{map} is commonly used for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm.
+\gls{map} is commonly used for evaluation of tracking algorithms, document searching systems, object detection, object \gls{reid}, and many others. Generally speaking, it measures the success rate of an information retrieval algorithm.
 
 \subsubsection{Object Re-Identification}
 \label{sssec:ObjectReIdentification}
