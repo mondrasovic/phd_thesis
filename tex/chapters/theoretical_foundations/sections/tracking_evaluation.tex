@@ -13,14 +13,13 @@ Bernardin~\etal{}~\cite{bernardin2008clearmot}, the authors of the \gls{clear} m
     \item allows assessing the tracker's precision regarding how well it is capable of determining the exact object location,
     \item reflects the tracker's ability to track objects consistently, \ietext{}, to correctly trace object trajectories such that one and only one trajectory is established per object,
     \item has as few free parameters as possible,
-    \item is clear and easy to interpret while emphasizing an intuitive human understanding of the tracking process,
+    \item is clear and easy to interpret,
     \item is general enough so that comparison of different types of trackers is possible,
     \item contains expressive values rich in information yet not abundant in quantity.
 \end{enumerate}
 
 Let $t$ denote a time for a specific frame. For each frame $t$, the multi-object tracker produces a set of hypotheses $\cbrackets{h_1, h_2, \dots, h_m}$ for a set of visible objects $\cbrackets{o_1, o_2, \dots, o_n}$. The evaluation procedure can be briefly described in the following pseudocode.
-
-For each time frame $t$:
+\noindent For each time frame $t$:
 \begin{enumerate}
     \item Establish the best possible correspondence between hypotheses $h_i$ and objects $o_j$, where $i = 1, 2, \dots m$ and $j = 1, 2, \dots, n$.
     \item For each determined correspondence between object and hypothesis:
@@ -80,8 +79,8 @@ Let $M_t = \cbrackets{\rbrackets{h_i, o_j}}$ be the set of mappings made up to t
 
 Let $M_0 = \cbrackets{\cdot}$. For each time frame $t$:
 \begin{enumerate}
-    \item Verify if mappings $\rbrackets{h_i, o_j}$ in $M_{t - 1}$ are still valid. A pair is deemed valid as long as the hypothesis $h_i$ exists at time $t$, the object $o_j$ is still visible while the distance between the two does not exceed $T$. If these conditions hold, establish a correspondence.
-    \item If there are objects for which no correspondence has been made so far, then a suitable matching hypothesis is searched for. This step involves one-to-one matching for pairs the distance of which does not exceed the threshold $T$. The matching procedure is formulated as a minimum cost assignment problem. In case there happens to be a correspondence that contradicts a mapping $\sbrackets{h_i, o_j}$ as part of $M_{t - 1}$, then replace the previous pair $\sbrackets{h_i, o_j}$ with $\sbrackets{h_k, o_j}$ and treat such an occurrence as a mismatch error. For simplicity, let $mme_t$ be the number of the mismatch errors for the frame $t$.
+    \item Verify if mappings $\rbrackets{h_i, o_j}$ in $M_{t - 1}$ are still valid. A pair is deemed valid as long as the hypothesis $h_i$ exists at time $t$, the object $o_j$ is still visible, and the distance between the two does not exceed $T$. If these conditions hold, establish a correspondence.
+    \item If there are objects for which no correspondence has been made so far, then a suitable matching hypothesis is searched for. This step involves one-to-one matching for pairs the distance of which does not exceed the threshold $T$. The matching procedure is formulated as a minimum cost assignment problem. In case there is a correspondence that contradicts a mapping $\sbrackets{h_i, o_j}$ as part of $M_{t - 1}$, then replace the previous pair $\sbrackets{h_i, o_j}$ with $\sbrackets{h_k, o_j}$ and treat such an occurrence as a mismatch error. For simplicity, let $mme_t$ be the number of the mismatch errors for the frame $t$.
     \item The two previous steps guarantee that a complete set of matching pairs has been generated for the current time $t$. At this point, we may start calculating values that will be utilized later for computing the final metrics. So, let $c_t$ be the number of matches found for time $t$. For each such match, compute the distance between the object $o_j$ and the corresponding hypothesis, denoted by $d_{ti}$.
     \item Every hypothesis that is not part of any pair up to this point is reckoned as false positive. Likewise, all the remaining objects are marked as misses. Thus, let $fp_t$ and $m_t$ be the number of false positives and misses, respectively. For future reference, let us define $g_t$ as the number of ground-truth objects visible at time $t$.
 \end{enumerate}
@@ -89,16 +88,16 @@ Let $M_0 = \cbrackets{\cdot}$. For each time frame $t$:
 % ##############################################################################
 \subsection{Performance Metrics}
 
-In light of the previously described procedure, here we present the two most relevant performance metrics by which the tracking performance can be intuitively expressed, namely the ``tracking precision'' and ``tracking accuracy''.
+Here we present the two most relevant performance metrics by which the tracking performance can be expressed, namely the ``tracking precision'' and ``tracking accuracy''.
 
-The role of tracking precision is to measure the alignment between the predicted object position and the ground-truth position only for the positive sample. For that reason, precision is not influenced by the ability (or lack thereof) of the tracker to detect objects. Therefore, the \gls{motp} metric can be defined as
+The \gls{motp} measures an alignment between the predicted object position and the ground-truth position for positive samples only. It is not influenced by the (in)ability of the tracker to detect objects. So, it can be defined as
 \begin{equation}
     \label{eq:MOTPMetric}
     \text{MOTP} = \frac{\sum_{\forall t} \sum_{\forall i} d_{ti}}{\sum_{\forall t} c_t},
 \end{equation}
-representing the total error in the estimated position for the pairs where the object-hypothesis relationship was correctly determined averaged over the total number of such matches made.
+representing the total error in the estimated position for the pairs where the object-hypothesis relationship was correct averaged over the total number of such matches made.
 
-Conversely, the accuracy metric attempts to reflect the number of mistakes the tracker made in terms of misses, false positives, object mismatches. Given this description, the \gls{mota} metric can be expressed as
+Conversely, the \gls{mota} metric attempts to reflect the number of mistakes the tracker made in terms of misses, false positives, object mismatches, in which case this metric can be expressed as
 \begin{equation}
     \label{eq:MOTAMetric}
     \text{MOTA} = 1 - \frac{\sum_{\forall t} \rbrackets{m_t + fp_t + mme_t}}{\sum_{\forall t} g_t},

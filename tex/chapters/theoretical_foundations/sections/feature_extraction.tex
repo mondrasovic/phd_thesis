@@ -7,9 +7,9 @@ As we have observed in our survey of Siamese trackers~\cite{ondrasovic2021siames
 \subsection{Residual Neural Networks}
 \label{ssec:ResidualNeuralNetworks}
 
-He~\etal{}~\cite{he2015resnet} aptly remarked that deeper neural networks are more difficult to train. In this work, a residual learning framework to facilitate easier training of neural networks that were significantly deeper than their previously used counterparts was proposed. The explicit reformulation of the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions, led to a breakthrough in the utilization of deep neural networks.
+He~\etal{}~\cite{he2015resnet} remarked that deeper neural networks are more difficult to train. In this work, a residual learning framework to facilitate easier training of neural networks that were significantly deeper than their previously used counterparts was proposed. The explicit reformulation of the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions, led to a breakthrough in the utilization of deep neural networks.
 
-The foundation of \glspl{resnet} is the adoption of skip connections that represent shortcuts to jump over certain layers. Typically, such models are implemented using double or even triple layer skips containing nonlinearities (\egtext{}, \gls{relu}) and batch normalization~\cite{ioffe2015batchnorm} in between. The primary reason for adding skip connections was to avoid vanishing gradient problems. As demonstrated in \figtext{}~\ref{fig:ResnetMotivation}, the degradation problem manifests itself out in deeper networks when their accuracy shows signs of saturation followed by a rapid decline, but not as a result of overfitting.
+The foundation of \glspl{resnet} is the adoption of skip connections that represent shortcuts to jump over certain layers. Typically, such models are implemented using double or even triple layer skips containing nonlinearities (\egtext{}, \gls{relu}) and batch normalization~\cite{ioffe2015batchnorm} in between. The primary reason for adding skip connections was to avoid vanishing gradient problems. As demonstrated in \figtext{}~\ref{fig:ResnetMotivation}, the degradation problem manifests itself in deeper networks when their accuracy shows signs of saturation followed by a rapid decline, but not as a result of overfitting.
 
 Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonlinear layers are then expected to fit a mapping $\func{F}{\vect{x}} = \func{H}{\vect{x}} - \vect{x}$. The original mapping is reformulated as $\func{H}{\vect{x}} = \func{F}{\vect{x}} + \vect{x}$. The initial hypothesis, which turned out to be correct, was that it is easier to optimize the residual mapping instead of the original, unreferenced mapping.
 
@@ -29,35 +29,35 @@ Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonl
 
 \gls{fpn}~\cite{lin2017fpn} is an extension to existing backbones used for feature extraction serving various tasks ranging from image classification, object detection, object tracking or even image segmentation. Its greatest strength is the combination of low-resolution, semantically strong features with high-resolution, semantically weak but discriminative features via a top-down pathway and lateral connections.
 
-\figtext{}~\ref{fig:FPNVariousApproaches} compares competing methods of feature aggregation by their core principles. Regarding the \gls{fpn} itself, observe the two pathways in \figtext{}~\ref{fig:FPNVariousApproaches} \imgpartdesc{d}. The bottom-up pathway represents a feed-forward computation of the backbone (\egtext{}, a basic \gls{cnn}), where one pyramid level corresponds to one stage. The output of the last layer of each stage will serve the purpose of enriching the feature maps when processing the top-down pathway by the use of lateral connections. The top-down pathway consists of upsampling operations followed by an application of $1 \times 1$ convolutions to align tensor channels dimensions and then element-wise addition of features.
+\figtext{}~\ref{fig:FPNVariousApproaches} compares competing methods of feature aggregation by their core principles. Regarding the \gls{fpn} itself, observe the two pathways in \figtext{}~\ref{fig:FPNVariousApproaches} \imgpartdesc{d}. The bottom-up pathway represents a feed-forward computation of the backbone, where one pyramid level corresponds to one stage. The output of the last layer of each stage will enrich the feature maps when processing the top-down pathway by the use of lateral connections. The top-down pathway consists of upsampling operations followed by $1 \times 1$ convolutions to align tensor channels dimensions and then element-wise addition of features.
 
 % ------------------------------------------------------------------------------
 \begin{figure}
     \centering
-    \begin{subfigure}[t]{0.4\textwidth}
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fpn_featurized_image_pyramid.pdf}
         \caption[]{}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.4\textwidth}
+    % \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fpn_single_feature_map.pdf}
         \caption[]{}
     \end{subfigure}
 
-    \begin{subfigure}[t]{0.4\textwidth}
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fpn_pyramidal_feature_hierarchy.pdf}
         \caption[]{}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.4\textwidth}
+    % \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/theoretical_foundations/fpn_feature_pyramid_network.pdf}
         \caption[]{}
     \end{subfigure}
-    \caption[\gls{fpn}]{A comparison of four traditional approaches to feature aggregation. \imgpartdesc{a} Computing features on distinct image scales (computationally expensive); \imgpartdesc{b} the use of single scale features only (fast, but not robust); \imgpartdesc{c} Reusing pyramidal feature hierarchy (fast and robust); \imgpartdesc{d} the proposed \gls{fpn} - pyramidal feature aggregation in both directions (practically fast as previous methods but considerably more accurate). \externalsrc{\cite{lin2017fpn}}}
+    \caption[\gls{fpn}]{Four traditional approaches to feature aggregation. \imgpartdesc{a} Computing features on distinct image scales (computationally expensive); \imgpartdesc{b} the use of single scale features only (fast, but not robust); \imgpartdesc{c} Reusing pyramidal feature hierarchy (fast and robust); \imgpartdesc{d} the proposed \gls{fpn} - pyramidal feature aggregation in both directions. \externalsrc{\cite{lin2017fpn}}}
     \label{fig:FPNVariousApproaches}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -68,11 +68,11 @@ Let $\func{H}{\vect{x}}$ denote the desired underlying mapping. The stacked nonl
 
 \glsreset{dla}
 
-A successor of the previously discussed \gls{fpn} is the \gls{dla}~\cite{yu2019dla}. This architectural extension emphasizes the importance of feature aggregation across multiple levels to merge information from different stages of input processing (\figtext{}~\ref{fig:DLAMotivation}). Experimentally, this technique shows significant improvements in both memory usage and performance over frequently employed baselines such as \gls{resnet}~\cite{he2015resnet} or \gls{densenet}~\cite{huang2018densenet}. In contrast with the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda}. The two mentioned approaches above are independent as well as compatible enough to facilitate combining the two for even richer feature aggregation. A great advantage is that these structures are expressed through an architectural framework, that is independent of the choice of backbone, thus preserving the compatibility with current and future networks.
+A successor of the \gls{fpn} is the \gls{dla}~\cite{yu2019dla}, which emphasizes the importance of feature aggregation across multiple levels to merge information from different stages of input processing (\figtext{}~\ref{fig:DLAMotivation}). This technique shows significant improvements in both memory usage and performance. Unlike the skip connections, the \gls{dla} introduces more depth and sharing. There are two main different approaches to \gls{dla}, namely \gls{ida} and \gls{hda}. These two approaches above are independent as well as compatible enough to facilitate combining the two for even richer feature aggregation. A great advantage is that these structures are independent of the choice of backbone, thus preserving the compatibility with current and future networks.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.75\linewidth]{figures/theoretical_foundations/dla_comparison.pdf}}
+    \centerline{\includegraphics[width=0.6\linewidth]{figures/theoretical_foundations/dla_comparison.pdf}}
     \caption[\gls{dla} comparison]{A demonstration of unification of semantic and spatial information. The \gls{dla} architecture extends densely connected networks, \ietext{}, \glspl{densenet}, and \glspl{fpn}. This extension builds on the idea of skip connections for enhanced feature fusion. \externalsrc{\cite{yu2019dla}}}
     \label{fig:DLAMotivation}
 \end{figure}
