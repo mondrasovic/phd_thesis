@@ -4,13 +4,9 @@
 % ##############################################################################
 \subsection{Motivation}
 
-One of our experiments involved an end-to-end training of the \gls{siammot} model together with a custom head aimed at embeddings based on \gls{roi}-pooled backbone-extracted features for the object \gls{bbox}. The goal was to force the training process into extracting features that are not only satisfactory for detection and tracking but also contain the necessary information to create embeddings for \gls{reid} purposes during the inference.
+One of our experiments involved an end-to-end training of the \gls{siammot} together with a custom head aimed at embeddings based on \gls{roi}-pooled features for the object \gls{bbox}. The goal was to force the training process into extracting features that are not only satisfactory for detection and tracking but also contain the necessary information to create embeddings for \gls{reid} purposes during the inference. We strived for simplicity by extending the processing pipeline without altering the existing infrastructure.
 
-We strived for simplicity by extending the processing pipeline without altering the existing infrastructure. From the standpoint of implementation, the \gls{siammot} project itself is organized in a proper object-oriented and modular fashion, which made this particular development task easy in this aspect. However, as we will discuss further, we encountered setbacks in terms of training stability and we had to take appropriate measures. Furthermore, extending a huge model that already requires a significant amount of \gls{gpu} \gls{vram} made it even more demanding.
-
-During the research related to our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using \gls{gap} operation into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor that represented the kernel for the cross-correlation operation utilized by the majority of the Siamese trackers discussed so far.
-
-More concretely, suppose the extracted features were represented by a tensor of shape $8 \times 8 \times 256$. Then, the \gls{gap} operation along the channel dimension would produce a tensor of shape $1 \times 1 \times 256$, which could then be further flattened into a single $256$-dimensional vector. In the end, the obtained vector was $l_2$-normalized and thus projected onto a unit hypersphere. In the work of Li~\etal{}~\cite{li2020figsiam}, these embedding vectors were exploited for template updating and for combining multiple templates within a pool of size $n$ in an exponential fashion.
+During research related to our Siamese tracking survey~\cite{ondrasovic2021siamese}, we noticed one work where the exemplar features were projected using \gls{gap} into an embedding space consisting of fewer dimensions~\cite{li2020figsiam}. The embedding vector was produced using the feature tensor representing the kernel for the cross-correlation operation. More concretely, let the extracted features be represented by a $8 \times 8 \times 256$ tensor. Then, the \gls{gap} along the channel dimension would produce a $1 \times 1 \times 256$ tensor, which could then be further flattened into a single $256$D vector. In the end, the obtained vector was $l_2$-normalized and thus projected onto a unit hypersphere. In the work of Li~\etal{}~\cite{li2020figsiam}, these embedding vectors were exploited for template updating and for combining multiple templates within a pool of size $n$ in an exponential fashion.
 
 This observation led us to the following hypothesis. Given the fact the Siamese exemplar features do contain some, although probably not sufficient information for pure object \gls{reid}, would it be possible to map them further using a non-linear function to produce embedding vectors that could serve for \gls{reid}? Such features are just a learned template, therefore, some notion of similarity needs to be already built into it.
 
@@ -26,7 +22,7 @@ This observation led us to the following hypothesis. Given the fact the Siamese 
 \end{figure}
 % ------------------------------------------------------------------------------
 
-As far as the vector embedding computation was concerned, we attached the embedding head (\tabletext{}~\ref{tab:FeatureEmbeddingHead}) into the backbone features but after the \gls{roi}-pooling operation (\figtext{}~\ref{fig:SiamMOTWithEmbeddings}). This ensured fixed tensor shapes and allowed us to process the very same features that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. In fact, we simply reused the extracted exemplar features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation (discussed next) with all the necessary operations such as various types of hard negative mining.
+As for the vector embedding computation, we attached the embedding head (\tabletext{}~\ref{tab:FeatureEmbeddingHead}) into the backbone features but after the \gls{roi}-pooling (\figtext{}~\ref{fig:SiamMOTWithEmbeddings}). This ensured fixed tensor shapes and allowed us to process the very same features that the object detector and Siamese tracker utilized, too. Simply put, for every proposal made for a particular frame, we looked at the delineated \gls{bbox} through the lens of \gls{roi}-pooling to extract backbone features. In fact, we simply reused the extracted exemplar features. Later on, we processed these features using our newly devised embedding head to produce feature embeddings. The resulting embeddings were subjected to the triplet loss computation with all the necessary operations such as various types of hard negative mining.
 
 \begin{table}[!t]
     \centering
@@ -50,7 +46,7 @@ As far as the vector embedding computation was concerned, we attached the embedd
                           & \textbf{total}               & $32\ 162\ 816$          \\
         \cline{2-3}
     \end{tabular}
-    \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors. It is built from two convolutional layers separated by a \gls{relu} nonlinearity followed by a fully connected layer which produces a $1024$ dimensional feature embedding. The batch size dimension is given by $B$ in the tensor shape. Since each embedding vector is normalized to unit length, we avoided learning biases throughout the whole network.}
+    \caption[Feature embedding head]{Our custom embedding head that we used to process backbone-extracted features to produce embedding vectors. It is built from two convolutional layers separated by a \gls{relu} nonlinearity followed by a fully connected layer that produces a $1024$ dimensional feature embedding. The batch size dimension is given by $B$ in the tensor shape. Since each embedding vector is normalized to unit length, we avoided learning biases throughout the whole network.}
     \label{tab:FeatureEmbeddingHead}
 \end{table}
 
@@ -62,7 +58,11 @@ The training phase was altered by adding another loss function to the sum of alr
     \label{eq:SiamMOTFeatureEmbLoss}
     \lossf = l_{rpn} + l_{detect} + l_{motion} + l_{emb}.
 \end{equation}
-The $l_{emb}$ loss incorporated triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). We also experimented with the contrastive loss (\eqtext{}~\ref{eq:ContrastiveLoss} on page~\pageref{eq:ContrastiveLoss}), but the effect was detrimental in every aspect, so we will not discuss it any further. As we remarked in \sectiontext{}~\ref{sec:LatentSpacesAndEmbeddings} on page \pageref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encounter harder and harder triplets to generate sufficient learning signals. To this end, we went for the semi-hard triplet mining strategy (\eqtext{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). However, we struggled with collapsing embeddings~\cite{levi2021rethinking}. This phenomenon happens when the embedding training forces the model to project all the features onto a single point in the embedding space, thus incurring the loss equal to the used margin. We claim that the use of semi-hard negative mining produced triplets that were too difficult. Since we used all the \gls{rpn} proposals to generate triplets, one may imagine that there would always be proposals covering only some small part of the object, making it problematic for the network to learn the concept of ``similarity'' and ``difference'' if it only processes very hard images. Nevertheless, these situations are very common in margin-based losses~\cite{levi2021rethinking}. The computed loss is so high that it is more suitable for the model to map all the features onto a single embedding vector. To remedy this, we implemented batch-all online mining strategy (\eqtext{}~\ref{eq:BatchAllLossFunction} on page \pageref{eq:BatchAllLossFunction}), which stabilized the training. We recommend first utilizing batch-all mining strategy during the training, and then slowly proceeding to batch-hard strategy after a certain point. We still have not implemented this approach, because it would be time-consuming to find the right hyperparameters. There are many open questions, such as to mine the \gls{rpn} proposals in a better way or to set the margin to a higher value. Loss functions aimed at object \gls{reid} are notoriously cumbersome to train. One last remark is that we implemented the entire mining algorithm followed by the loss computation in a \gls{gpu}-only fashion for fast execution and easy integration into the pipeline.
+The $l_{emb}$ loss incorporated triplet loss (\eqtext{}~\ref{eq:TripletLoss} on page~\pageref{eq:TripletLoss}). We also experimented with the contrastive loss (\eqtext{}~\ref{eq:ContrastiveLoss} on page~\pageref{eq:ContrastiveLoss}), but the effect was detrimental in every aspect, so we will not discuss it any further.
+
+As we remarked in \sectiontext{}~\ref{sec:LatentSpacesAndEmbeddings} on page \pageref{sec:LatentSpacesAndEmbeddings} aimed at latent spaces and embeddings, it is crucial to adopt appropriate sample mining strategies when using the triplet loss. The rationale is that for the training to keep progressing, the model needs to encounter harder and harder triplets to generate sufficient learning signals. To this end, we went for the semi-hard triplet mining strategy (\eqtext{}~\ref{eq:BatchHardMining} on page~\pageref{eq:BatchHardMining}). However, we struggled with collapsing embeddings~\cite{levi2021rethinking}. This phenomenon happens when the embedding training forces the model to project all the features onto a single point in the embedding space, thus incurring the loss equal to the used margin. We claim that the use of semi-hard negative mining produced triplets that were too difficult. Since we used all the \gls{rpn} proposals to generate triplets, one may imagine that there would always be proposals covering only some small part of the object, making it problematic for the network to learn the concept of ``similarity'' and ``difference'' if it only processes very hard images. Nevertheless, these situations are very common in margin-based losses~\cite{levi2021rethinking}. The computed loss is so high that it is more suitable for the model to map all the features onto a single embedding vector. To remedy this, we implemented batch-all online mining strategy (\eqtext{}~\ref{eq:BatchAllLossFunction} on page \pageref{eq:BatchAllLossFunction}), which stabilized the training.
+
+We recommend first utilizing batch-all mining strategy during the training, and then proceeding to batch-hard strategy after a certain point. However, this approach would be time-consuming to find the right hyperparameters. There are many open questions, such as how to mine the \gls{rpn} proposals in a better way or how to set the margin value. Loss functions aimed at object \gls{reid} are notoriously cumbersome to train. One last remark is that we implemented the entire mining algorithm followed by the loss computation in a \gls{gpu}-only fashion for fast execution and easy integration into the pipeline.
 
 % ##############################################################################
 \subsection{Inference Phase}
@@ -70,76 +70,76 @@ The $l_{emb}$ loss incorporated triplet loss (\eqtext{}~\ref{eq:TripletLoss} on 
 \subsubsection{Feature-based Non-Maximum Suppression}
 \label{sssec:FeatureNonMaximumSuppression}
 
-Salscheider~\cite{salscheider2020featurenms} proposed an extended \gls{nms} algorithm that incorporates a distance between feature embeddings dubbed as \featurenms{}. Considering our idea introduced above, we had to encompass the vector embeddings into the solver reasoning. In the beginning, we came up with the solution that exactly copied the one the mentioned author proposed. That provided further justification for attempting to implement the algorithm and test it in practice. The advantage is that this approach is restricted to the inference phase, thus experimenting with it did not require model re-training.
-
-We assume the reader is acquainted with the original \gls{nms} algorithm (more in \sectiontext{}~\ref{ssec:NonMaximumSuppression}.). Nevertheless, here we repeat the same definitions for clarity. Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. This time, we are also going to need the associated feature embedding vectors with each \gls{bbox}, represented by a set $\mset{E} = \cbrackets{\vect{e}_1, \vect{e}_2, \dots, \vect{e}_n}$. Let $\mset{B}_{fnms}$ be  the set of filtered proposal instances from the set $\mset{B}$ produced using the \featurenms{} algorithm.
+Salscheider~\cite{salscheider2020featurenms} proposed an extended \gls{nms} algorithm that incorporates a distance between feature embeddings dubbed as \featurenms{} (\algtext{}~\ref{alg:FeatureNMS}). Considering our idea introduced above, we had to encompass the vector embeddings into the solver reasoning. In the beginning, we came up with the solution that exactly copied the one the mentioned author proposed. That provided further justification for attempting to implement the algorithm and test it in practice. The advantage is that this approach is restricted to the inference phase, thus experimenting with it does not require model re-training.
 
 \def\threshlower{\tau_{\text{lower}}}
 \def\threshupper{\tau_{\text{upper}}}
 \def\threshsim{\delta}
 
-The distinction in terms of parameters is the following. The original algorithm required only one threshold for the maximum allowed portion of the overlap between regions. The \featurenms{} requires three parameters discussed below.
+We assume the reader is acquainted with the original \gls{nms} algorithm (\sectiontext{}~\ref{ssec:NonMaximumSuppression}). Nevertheless, here we repeat the same definitions for clarity. Let $\mset{B} = \cbrackets{\vect{b}_1, \vect{b}_2, \dots, \vect{b}_n}$ be a set of $n$ region proposals described by $n$ \glspl{bbox}. Scores for each detection are contained in a set $\mset{S} = \cbrackets{s_1, s_2, \dots, s_n}$, where $s_i$ denotes a detection score for the $i$-th box, $\vect{b_i}$. This time, we are also going to need the associated feature embedding vectors with each \gls{bbox}, represented by a set $\mset{E} = \cbrackets{\vect{e}_1, \vect{e}_2, \dots, \vect{e}_n}$. Let $\mset{B}_{fnms}$ be  the set of filtered proposal instances from the set $\mset{B}$ produced using the \featurenms{} algorithm. The distinction in parameters is the following. The original algorithm requires only one threshold for the maximum allowed portion of the overlap between regions. The \featurenms{} requires three parameters discussed below.
 \begin{itemize}
-    \item A minimum threshold $\threshlower$ denoting the boundary below which the two objects are deemed as different. This value should be low, for example, $0.2$, which means that if the \gls{iou} between the two objects is less than $0.2$, then the two instances should be treated as different objects.
-    \item A maximum threshold $\threshupper$ denoting a boundary above which the two objects are considered to be identical. Conversely to the $\threshlower$, this value should be high, for instance, $0.8$, which indicates that if the \gls{iou} of the two object instances surpasses this threshold, then it should be the same object, and thus, the \gls{bbox} with the lower confidence is discarded.
-    \item A threshold $\threshsim$ is used as a decision boundary between the embedding vectors. This threshold should reflect a measure of similarity. If the adopted measure of similarity (cosine distance, Euclidean distance, ...) falls below $\threshsim$, then the two objects are different, otherwise, they are considered the same one. This value of $\threshsim$ is used only if the two conditions above do not hold.
+    \item A minimum threshold $\threshlower$ denoting a boundary below which the two objects are deemed as different. This value should be low, for example, $0.2$, which means that if the \gls{iou} between the two objects is less than $0.2$, then the two instances should be treated as different objects.
+    \item A maximum threshold $\threshupper$ denoting a boundary above which the two objects are considered identical. Unlike the $\threshlower$, this value should be high, \egtext{}, $0.8$, indicating that if the \gls{iou} of the two object instances surpasses this threshold, then it should be the same object. The \gls{bbox} with the lower confidence is discarded.
+    \item A threshold $\threshsim$ is used as a decision boundary between the embedding vectors. This threshold should reflect a measure of similarity. If the adopted measure of similarity falls below $\threshsim$, then the two objects are different, otherwise, they are considered the same. This value of $\threshsim$ is used only if the two conditions above do not hold.
 \end{itemize}
 
-Here we provide a pseudocode of the \featurenms{} algorithm:
+\begin{algorithm}[t]
+    \caption[\featurenms{} algorithm]{\featurenms{} algorithm.}
+    \label{alg:FeatureNMS}
+    \begin{algorithmic}[1]
+        \Function{Feature-NMS}{$\mset{B}$, $\mset{S}$, $\mset{E}$, $\threshlower$, $\threshupper$, $\threshsim$}
 
-\begin{algorithmic}[1]
-    \Function{Feature-NMS}{$\mset{B}$, $\mset{S}$, $\mset{E}$, $\threshlower$, $\threshupper$, $\threshsim$}
+        \State $\mset{B}_{fnms}$ $\gets$ $\emptyset$
+        \Comment{initialize the output (filtered) set of region proposals}
 
-    \State $\mset{B}_{fnms}$ $\gets$ $\emptyset$
-    \Comment{initialize the output (filtered) set of region proposals}
+        \While {$\mset{B} \neq \emptyset$}
+        \Comment{loop until all the proposals are processed}
 
-    \While {$\mset{B} \neq \emptyset$}
-    \Comment{loop until all the proposals are processed}
+        \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
+        \Comment{find an index of a proposal with the highest score}
 
-    \State $m \gets \underset{i \in \cbrackets{1, 2, \dots, \msetsize{S}}}{\argmax{}} \mset{S}$
-    \Comment{find an index of a proposal with the highest score}
+        \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$, $\mset{E} \gets \mset{E} - \vect{e}_m$
+        \Comment{remove the proposal}
 
-    \State $\mset{B} \gets \mset{B} - \vect{b}_m$, $\mset{S} \gets \mset{S} - s_m$, $\mset{E} \gets \mset{E} - \vect{e}_m$
-    \Comment{remove the proposal}
+        \State $\mset{B}_{fnms} \gets \mset{B}_{fnms} \cup \vect{b}_m$
+        \Comment{save the proposal with the highest score}
 
-    \State $\mset{B}_{fnms} \gets \mset{B}_{fnms} \cup \vect{b}_m$
-    \Comment{save the proposal with the highest score}
+        \For{$i \gets 1$ to $\msetsize{B}$}
+        \Comment{iterate through remaining proposals}
 
-    \For{$i \gets 1$ to $\msetsize{B}$}
-    \Comment{iterate through remaining proposals}
+        \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \threshlower$}
+        \Comment{above the lower-bound threshold}
 
-    \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \threshlower$}
-    \Comment{above the lower-bound threshold}
+        \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \threshupper$}
+        \Comment{above the upper-bound threshold}
 
-    \If{\Call{iou}{$\vect{b}_m$, $\vect{b}_i$} $\geq \threshupper$}
-    \Comment{above the upper-bound threshold}
+        \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$, $\mset{E} \gets \mset{E} - \vect{e}_i$
+        \Comment{remove the proposal}
 
-    \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$, $\mset{E} \gets \mset{E} - \vect{e}_i$
-    \Comment{remove the proposal}
+        \Else
 
-    \Else
+        \If{\Call{similarity}{$\vect{e}_m$, $\vect{e}_i$} $\geq \threshsim$}
+        \Comment{similarity above threshold}
+        \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$, $\mset{E} \gets \mset{E} - \vect{e}_i$
+        \Comment{remove the proposal}
+        \EndIf
 
-    \If{\Call{similarity}{$\vect{e}_m$, $\vect{e}_i$} $\geq \threshsim$}
-    \Comment{similarity above threshold}
-    \State $\mset{B} \gets \mset{B} - \vect{b}_i$, $\mset{S} \gets \mset{S} - s_i$, $\mset{E} \gets \mset{E} - \vect{e}_i$
-    \Comment{remove the proposal}
-    \EndIf
+        \EndIf
+        \EndIf
+        \EndFor
+        \EndWhile
 
-    \EndIf
-    \EndIf
-    \EndFor
-    \EndWhile
-
-    \State \Return $\mset{B}_{fnms}$
-    \EndFunction
-\end{algorithmic}
+        \State \Return $\mset{B}_{fnms}$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 % ##############################################################################
 \subsection{Experimental Evaluation and Discussion}
 
-The proposed embedding-based enhancement was evaluated against the baseline model without the embedding head. For a fair comparison, we made sure that the hyperparameters were identical to the greatest possible extent. We only had to alter the batch size and learning rate. Since the triplet loss requires the computation of a great number of triplets, especially the batch-all strategy, we had to decrease the batch size to avoid crashes due to not having enough \gls{gpu} \gls{vram} available.
+The proposed embedding-based enhancement was evaluated against the baseline model without the embedding head. For a fair comparison, we made sure that the hyperparameters were identical to the greatest possible extent. We only had to alter the batch size and the learning rate. Since the triplet loss requires the computation of a great number of triplets, especially the batch-all strategy, we had to decrease the batch size to avoid crashes due to not having enough \gls{gpu} \gls{vram} available.
 
-We acknowledge that it is difficult to compare the baseline model with the proposed extension since they progress differently during the training. Therefore, we saved the model state after $K$ training iterations and then evaluated the performance using the validation dataset. The same process was repeated for the baseline architecture, which we trained from scratch using smaller batch sizes. Furthermore, the embedding evaluation also requires the cosine similarity threshold. We tried multiple different values to see the effect.
+We acknowledge that it is difficult to compare the baseline model with the proposed extension since they progress differently during the training. The notion of ``model equivalency'' is vague. We had to resort to answering the question whether it is possible to surpass the baseline performace at some point, provided that both models reach the state of being properly trained. Therefore, we saved the training state after $K$ training iterations and then evaluated the model performance using the validation dataset. The same process was repeated for the baseline architecture, which we trained from scratch using identical batch sizes. Furthermore, the embedding evaluation also requires the cosine similarity threshold, for which tried multiple different values.
 
 \todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - \gls{mota} vs. \gls{motp}.}
 \todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - precision vs. recall.}
