@@ -4,9 +4,9 @@
 % ##############################################################################
 \subsection{Motivation For Model and Dataset Selection}
 
-Our initial motivation to adopt the \gls{siammot}~\cite{shuai2021siammot} tracker as the base for our custom implementation was that it exploited the best practices honed within the \gls{sot} community and that it had been published very recently, reaping a \gls{sota} performance back then. Besides, we saw several potential parts for improvement, namely its ability to inherently handle trivial cases of short-term occlusion during the identity association stage. Even though we were above all concerned with Siamese \gls{sot}, we also knew that traffic analysis is naturally preoccupied with multiple objects. But still, we tried to avoid \gls{mot} at the beginning as it introduced additional problems to overcome.
+Our initial motivation to adopt the \gls{siammot}~\cite{shuai2021siammot} tracker as the base for our custom implementation was that it exploited the best practices honed within the \gls{sot} community and that it had been published very recently, reaping a \gls{sota} performance back then. Besides, we saw several potential parts for improvement, namely its ability to inherently handle trivial cases of short-term occlusion during the identity association stage.
 
-However, training, as well as evaluation of the developed tracker, requires a lot of annotated data. Admittedly, we devoted a great deal of time to finding datasets for tracking single vehicles, but to no avail. Nevertheless, the \interreg{} project provided a lot of data that involved traffic scenes. We mentioned this project as part of our discussion related to homography ranking (\chaptertext{}~\ref{chap:HomographyRanking} on page \pageref{chap:HomographyRanking}). The major drawback is that the dataset encompasses only a limited view of the road (\figtext{}~\ref{fig:InterregDatasetSample}).
+Training, as well as evaluation of the developed tracker, requires a lot of annotated data. Admittedly, we devoted a great deal of time to finding datasets for tracking single vehicles, but to no avail. Nevertheless, the \interreg{} project provided a lot of data that involved traffic scenes. We mentioned this project as part of our discussion related to homography ranking (\chaptertext{}~\ref{chap:HomographyRanking} on page \pageref{chap:HomographyRanking}). The major drawback is that the dataset encompasses only a limited view of the road (\figtext{}~\ref{fig:InterregDatasetSample}).
 
 Consequently, we set out to search for different datasets, preferably with a target use of benchmarking tracking algorithms. And we found the \uadetrac{} dataset (\sectiontext{}~\ref{ssec:DatasetUADETRAC} on page \pageref{ssec:DatasetUADETRAC}), which we consider one of the best available datasets. The data fit the task of traffic analysis using a static camera under various conditions very well. However, one needs to officially ask for the data annotations. We were unfortunate enough that the public web dedicated to this benchmark was broken for a long time and we had to personally negotiate with the authors to provide unofficial access to the data.
 
@@ -23,27 +23,27 @@ Consequently, we set out to search for different datasets, preferably with a tar
         \includegraphics[width=\textwidth]{figures/siamese_tracking/interreg_sample_02.jpg}
         \caption[]{}
     \end{subfigure}
-    \caption[Interreg dataset sample]{Road scenes we encountered when working on the \interreg{} project.}
+    \caption[interreg dataset sample]{road scenes we encountered when working on the \interreg{} project.}
     \label{fig:InterregDatasetSample}
 \end{figure}
 
 % ------------------------------------------------------------------------------
 
 % ##############################################################################
-\subsection{General Description}
+\subsection{General description}
 
-The authors of~\cite{shuai2021siammot} tracker focused on improving online \gls{mot}. As far as their methodology was concerned, they employed a region-based approach~\cite{ren2017fasterrcnn} in conjunction with a Siamese multi-object tracking network, hence the name \gls{siammot}. Broadly speaking, this architecture employs a Siamese tracker for motion estimation between two frames. We would like to note that all the principles so far discussed regarding Siamese trackers apply here. However, as already suggested, the adoption of \gls{rpn} enables this framework to have more information available. Not only does the Siamese tracker provide motion prediction, but it also produces detections using the \gls{fasterrcnn} object detector~\cite{ren2017fasterrcnn} that is integrated within the whole architecture. Subsequently, an online solver is utilized to merge the predictions obtained from the tracker and detector heads.
+The authors of~\cite{shuai2021siammot} tracker focused on improving online \gls{mot}. as far as their methodology was concerned, they employed a region-based approach~\cite{ren2017fasterrcnn} in conjunction with a siamese multi-object tracking network, hence the name \gls{siammot}. broadly speaking, this architecture employs a siamese tracker for motion estimation between two frames. we would like to note that all the principles so far discussed regarding siamese trackers apply here. however, as already suggested, the adoption of \gls{rpn} enables this framework to have more information available. not only does the siamese tracker provide motion prediction, but it also produces detections using the \gls{fasterrcnn} object detector~\cite{ren2017fasterrcnn} that is integrated within the whole architecture. subsequently, an online solver is utilized to merge the predictions obtained from the tracker and detector heads.
 
-We will dissect this framework in great detail since we have studied it scrupulously. We performed multiple experiments, many of which did not yield expected improvements. Nevertheless, the practical part of our work was focused on contributing to the open-source repository dedicated to this project developed by several Amazon researchers~\cite{websiammotoriggithub}. We followed a standard path of how contributing to open source projects should be done in a transparent and, more importantly, compatible fashion. We initialized a fresh fork of this project on our personal GitHub account~\cite{websiammotforkgithub} to preserve as much compatibility with the original software as possible and not to strip ourselves of the opportunity to easily receive potential updates from the original repository.
+we will dissect this framework in great detail since we have studied it scrupulously. we performed multiple experiments, many of which did not yield expected improvements. nevertheless, the practical part of our work was focused on contributing to the open-source repository dedicated to this project developed by several amazon researchers~\cite{websiammotoriggithub}. we followed a standard path of how contributing to open source projects should be done in a transparent and, more importantly, compatible fashion. we initialized a fresh fork of this project on our personal GitHub account~\cite{websiammotforkgithub} to preserve as much compatibility with the original software as possible and not to strip ourselves of the opportunity to easily receive potential updates from the original repository.
 
-During our development, we often engaged in discussions related to this project incentivized by other researchers who were also working on the very same codebase and trying to either only apply this work to their specific use case or even extend the model. Our detailed knowledge of this model acquired through deliberate work on this project often helped several other programmers who dealt with various issues. From the programming standpoint, our work involved a considerable amount of programming, although the base architecture was provided and was fully functional from the start. We would like to emphasize that the project consisted of several thousand lines of source code programmed purely in Python programming language. Concerning the deep learning aspect, the \pytorch{} library~\cite{paszke2019pytorch} was primarily used. It is a widely known library aimed at building deep neural network models while exploiting automatic differentiation.
+during our development, we often engaged in discussions related to this project incentivized by other researchers who were also working on the very same codebase and trying to either only apply this work to their specific use case or even extend the model. our detailed knowledge of this model acquired through deliberate work on this project often helped several other programmers who dealt with various issues. from the programming standpoint, our work involved a considerable amount of programming, although the base architecture was provided and was fully functional from the start. we would like to emphasize that the project consisted of several thousand lines of source code programmed purely in the Python programming language. concerning the deep learning aspect, the \pytorch{} library~\cite{paszke2019pytorch} was primarily used. it is a widely known library aimed at building deep neural network models while exploiting automatic differentiation.
 
 % ##############################################################################
-\subsection{Model Architecture}
+\subsection{Model architecture}
 
-The two key aspects of the the \gls{siammot} architecture are \gls{fasterrcnn}~\cite{ren2017fasterrcnn} object detector and Siamese tracker. The salient element of the \gls{fasterrcnn} is the \gls{rpn}. Simply put, \gls{siammot} adds a region-based Siamese tracker along the standard $2$-stage object detection pipeline in order to model instance-level motion.
+The two key aspects of the the \gls{siammot} architecture are \gls{fasterrcnn}~\cite{ren2017fasterrcnn} object detector and siamese tracker. the salient element of the \gls{fasterrcnn} is the \gls{rpn}. simply put, \gls{siammot} adds a region-based siamese tracker along the standard $2$-stage object detection pipeline in order to model instance-level motion.
 
-As depicted in \figtext{}~\ref{fig:SiamMOTArchitecture}, the input consists of two frames, namely $\mtxsup{I}{t}$ and $\mtxsup{I}{t + \delta}$, accompanied by a set of detected object instances $\mtxsup{R}{t} = \cbrackets{\subsup{R}{1}{t}, \subsup{R}{2}{t}, \dots, \subsup{R}{i}{t}, \dots}$ at time $t$. During inference, the detection head produces a set of detected object instances $\mtxsup{R}{t + \delta}$ whilst the tracker's task is to propage the detections $\mtxsup{R}{t}$ to time $t + \delta$, and yielding the tracker output denoted as $\mtxsup{\tilde{R}}{t + \delta}$. Please note that it is not the output of the entire tracker, only of the Siamese tracker itself. These instances have to be further processed.
+As depicted in \figtext{}~\ref{fig:SiamMOTArchitecture}, the input consists of two frames, namely $\mtxsup{i}{t}$ and $\mtxsup{i}{t + \delta}$, accompanied by a set of detected object instances $\mtxsup{r}{t} = \cbrackets{\subsup{r}{1}{t}, \subsup{r}{2}{t}, \dots, \subsup{r}{i}{t}, \dots}$ at time $t$. during inference, the detection head produces a set of detected object instances $\mtxsup{r}{t + \delta}$ whilst the tracker's task is to propage the detections $\mtxsup{r}{t}$ to time $t + \delta$, and yielding the tracker output denoted as $\mtxsup{\tilde{r}}{t + \delta}$. please note that it is not the output of the entire tracker, only of the siamese tracker itself. these instances have to be further processed.
 
 This framework relies on a motion model that tracks each detected object instance from time $t$ to $t + \delta$. A specific \gls{bbox} $\subsup{R}{i}{t}$ at time $t$ is propagated to its future counterpart $\subsup{\tilde{R}}{i}{t + \delta}$ at time $t + \delta$. This process is then completed by a spatial matching phase the objective of which is the associaton of the tracker output $\subsup{\tilde{R}}{i}{t + \delta}$ with detections $\subsup{R}{i}{t + \delta}$ at time $t + \delta$ such that detected instances are linked from $t$ to $t + \delta$.
 
@@ -69,14 +69,12 @@ where $\mathcal{T}$ is a module (head) represented by the Siamese tracker with l
 \end{figure}
 % ------------------------------------------------------------------------------
 
-The authors conjectured that motion modeling is of paramount importance for online \gls{mot}. Given our experience in this field so far, we agree. The motion modeling is practically responsible for association between $\mtxsup{R}{t}$ and $\mtxsup{R}{t + \delta}$. Despite its efficacy, there are still issues to be addressed. The association fails due to the following reasons:
+The motion modeling is responsible for association between $\mtxsup{R}{t}$ and $\mtxsup{R}{t + \delta}$. Despite its efficacy, there are still several issues. The association fails due to the following reasons:
 \begin{enumerate}
     \item if $\mtxsup{\tilde{R}}{t + \delta}$ does not match to the correct object instance in $\mtxsup{R}{t + \delta}$,
     \item or if $\subsup{v}{i}{t + \delta}$ is low (below a specific threshold) for a visible object at time $t + \delta$.
 \end{enumerate}
-To tackle the problems outlined above, the Siamese tracker exploits various \gls{sota} techniques developed in the single-object Siamese tracking community. We affirmatively approve of the authors' decisions since we deliberately elaborated on multiple aspects that this tracker heavily relies upon in our survey on Siamese tracking~\cite{ondrasovic2021siamese}.
-
-As far as the Siamese part of the \gls{siammot} is concerned, the authors dubbed their technique ``explicit motion modeling''. They also worked with ``implicit motion modeling'', but that branch of experiments was neither sufficiently expanded in the paper nor it is of particular importance to our research due to its inferior performance.
+Regarding the Siamese part of the \gls{siammot}, the authors dubbed their technique ``explicit motion modeling''. They also worked with ``implicit motion modeling'', but that branch of experiments was neither sufficiently expanded in the paper nor it is of particular importance to our research due to its inferior performance.
 
 \subsubsection{Explicit Motion Modeling}
 
@@ -86,7 +84,7 @@ The most fundamental aspect of Siamese trackers is the cross-correlation operati
 \end{equation}
 Therefore, each map $r_i$ captures a different aspect of similarity at every pixel.
 
-Inspired by the \gls{fcos}~\cite{tian2019fcos}, this tracker adopts fully convolutional network $\psi$ to facilitate instance detection using a response map $\mtxsub{r}{i}$. Besides, the so-called \emph{centerness} is also utilized in this architecture (discussed later). The network $\psi$ enables a prediction of a dense visibility confidence map $\mtxsub{v}{i}$. Every pixel of $\mtxsub{v}{i}$ is used as an indicator of the likelihood that this pixel falls within the location of the target object. Besides, a dense location map $\mtxsub{p}{i}$ is also predicted with the goal of encoding offsets from that particular location to the top-left and bottom right \gls{bbox} corners. Consequently, the instance region at $\rbrackets{x, y}$ can be derived by the transformation
+Inspired by the \gls{fcos}~\cite{tian2019fcos}, this tracker adopts fully convolutional network $\psi$ to facilitate instance detection using a response map $\mtxsub{r}{i}$. The network $\psi$ enables a prediction of a dense visibility confidence map $\mtxsub{v}{i}$. Every pixel of $\mtxsub{v}{i}$ is used as an indicator of the likelihood that this pixel falls within the location of the target object. Besides, a dense location map $\mtxsub{p}{i}$ is also predicted with the goal of encoding offsets from that particular location to the top-left and bottom right \gls{bbox} corners. Consequently, the instance region at $\rbrackets{x, y}$ can be derived by the transformation
 \begin{equation}
     \func{\mathcal{R}}{\func{\mtx{p}}{x, y}} =
     \sbrackets{x - l, y - t, x + r, y + b},
@@ -95,8 +93,8 @@ where $\func{\mtx{p}}{x, y} = \sbrackets{l, t, r, b}$, \ietext{}, individual cor
 \begin{equation}
     \begin{aligned}
                             & \subsup{\tilde{R}}{i}{t + \delta} =
-        \func{\mathcal{R}}{\func{\mtxsub{p}{i}}{x^*, y^*}}                                                                      \\
-                            & \subsup{v}{i}{t + \delta} = \func{\mtxsub{v}{i}}{x^*, y^*}                                        \\
+        \func{\mathcal{R}}{\func{\mtxsub{p}{i}}{x^*, y^*}}                                                                      \qquad \qquad
+        \subsup{v}{i}{t + \delta} = \func{\mtxsub{v}{i}}{x^*, y^*}                                                              \\
         \text{s. t. } \quad & \rbrackets{x^*, y^*} = \underset{x, y}{\argmax} \rbrackets{\mtxsub{v}{i} \odot \mtxsub{\eta}{i}},
     \end{aligned}
 \end{equation}
@@ -115,7 +113,7 @@ Here, the letter $\lambda$, such that $0 \leq \lambda \leq 1$, is a weighting co
 
 \subsubsection{Loss Function}
 
-The loss function for this model consists of multiple parts requires a triplet $\rbrackets{\subsup{R}{i}{t}, \subsup{S}{i}{t + \delta}, \subsup{R}{i}{t + \delta}}$. The following function is minimized during the training:
+The loss function requires a triplet $\rbrackets{\subsup{R}{i}{t}, \subsup{S}{i}{t + \delta}, \subsup{R}{i}{t + \delta}}$ and is defined as
 \begin{equation}
     \begin{aligned}
         \lossf =
@@ -145,7 +143,7 @@ The loss function for this model consists of multiple parts requires a triplet $
         }
     \end{aligned}.
 \end{equation}
-In the expression above, the pairs $\rbrackets{x, y}$ enumerate all valid positions within the $\subsup{S}{i}{t + \delta}$ region. The loss function dedicated to regression task, \ietext{}, $l_{reg}$, is formulated as the \gls{iou} loss for regression~\cite{danelljan2019atom, yu2016unitbox}. To address the class-imbalance problem in an effective way, the focal loss for classification~\cite{lin2018focal} given by the term $l_{focal}$ is employed. All ground-truth values are marked by the $*$ character. So,
+The pairs $\rbrackets{x, y}$ enumerate all valid positions within the $\subsup{S}{i}{t + \delta}$ region. The loss function dedicated to regression task ($l_{reg}$) is formulated as the \gls{iou} loss~\cite{danelljan2019atom, yu2016unitbox}. To address the class-imbalance problem, the focal loss for classification~\cite{lin2018focal} ($l_{focal}$ is employed. All ground-truth values are marked by the $*$ character. So,
 \begin{equation}
     \func{\mtxsubsup{v}{i}{*}}{x, y} =
     \begin{cases}
@@ -155,7 +153,6 @@ In the expression above, the pairs $\rbrackets{x, y}$ enumerate all valid positi
         \end{aligned}
     \end{cases},
 \end{equation}
-and
 \begin{equation}
     \func{\mtxsubsup{p}{i}{*}}{x, y} =
     \sbrackets{
@@ -165,7 +162,7 @@ and
         \subsup{y}{1}{*} - y
     },
 \end{equation}
-where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x}{1}{*}, \subsup{y}{1}{*}}$ correspond to the top-left and bottom-right coordinates of the ground-truth \gls{bbox} $\subsup{R}{i}{t + \delta}$, respectively. Following the line of inspiration from the \gls{fcos}~\cite{tian2019fcos} tracker, the regression loss $l_{reg}$ is additionally modulated by computing the \emph{centerness} for every location (\figtext{}~\ref{fig:FCOSCenterness}). This concept describes the amount of deviation of the pixel's location from the object center. The reason for adding this score was to suppress locations that are further away from the object's center, because they produced low-quality \gls{bbox} predictions. This score is then used as a weighting. The \emph{centerness} coefficient $\func{w}{x, y}$ is calculated for each pixel with respect to the target instance $\subsup{R}{i}{t + \delta}$ as
+where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x}{1}{*}, \subsup{y}{1}{*}}$ correspond to the top-left and bottom-right coordinates of the ground-truth \gls{bbox} $\subsup{R}{i}{t + \delta}$, respectively. The regression loss $l_{reg}$ is additionally modulated by computing the \emph{centerness} for every location (\figtext{}~\ref{fig:FCOSCenterness}). The reason for adding this score was to suppress locations that are further away from the object's center, because they produced low-quality \gls{bbox} predictions. The \emph{centerness} coefficient $\func{w}{x, y}$ is calculated for each pixel with respect to the target instance $\subsup{R}{i}{t + \delta}$ as
 \begin{equation}
     \label{eq:Centerness}
     \func{w}{x, y} =
@@ -178,8 +175,8 @@ where $\rbrackets{\subsup{x}{0}{*}, \subsup{y}{0}{*}}$ and $\rbrackets{\subsup{x
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.2\linewidth]{figures/siamese_tracking/fcos_centerness.pdf}}
-    \caption[Centerness visualization]{Red, blue, and other colors denote $1$, $0$ and the values between them, respectively. Centerness is calculated as given by \eqtext{}~\ref{eq:Centerness} and decays from $1$ to $0$ as the location deviates from the center of the object. Best viewed in color. \externalsrc{\cite{tian2019fcos}}}
+    \centerline{\includegraphics[width=0.15\linewidth]{figures/siamese_tracking/fcos_centerness.pdf}}
+    \caption[Centerness visualization]{Centerness is calculated using \eqtext{}~\ref{eq:Centerness}. It decays from $1$ to $0$ as the location deviates from the center of the object. Best viewed in color. \externalsrc{\cite{tian2019fcos}}}
     \label{fig:FCOSCenterness}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -230,7 +227,7 @@ A short-term occlusion can be defined as having the visibility confidence for th
 
 \subsubsection{Pre-training}
 
-This model is relatively stable and not overly sensitive to hyperparameters. However, the training itself requires a great deal of \gls{gpu} \gls{vram} available to use sufficiently large minibatches. As for our development experience with the \gls{siammot} model, we used the \texttt{NVidia}~\cite{webnvidia} \texttt{RTX 2080Ti} graphics cards that provides $4352$ \gls{cuda} cores together with $11$GB of GDDR6 memory. For training, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \mscoco{}~\cite{lin2014mscoco} dataset, we decided to avoid it due to the conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, \egtext{}, pedestrians.
+This model is relatively stable and not overly sensitive to hyperparameters. However, the training itself requires a great deal of \gls{gpu} \gls{vram} available to use sufficiently large minibatches. As for our development experience with the \gls{siammot} model, we used the \texttt{NVidia RTX 2080Ti} graphics cards that provides $4352$ \gls{cuda} cores together with $11$GB of GDDR6 memory. For training, we often exploited an existing backbone model pre-trained on ImageNet~\cite{deng2009imagenet} dataset provided by the authors. Even though there is the entire model available pre-trained on \mscoco{}~\cite{lin2014mscoco} dataset, we decided to avoid it due to the conflicting nature of object classes. We observed better performance when training vehicle detection from scratch rather than trying to ``re-wire'' the model to dismiss detecting objects we wanted to avoid in the first place, \egtext{}, pedestrians.
 
 \subsubsection{Gradient Accumulation}
 
