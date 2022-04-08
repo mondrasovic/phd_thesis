@@ -223,7 +223,7 @@ Concerning the interpretation, the higher some particular data point lies in the
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_MOTA_MOTP.pdf}}
-    \caption[\gls{dsa} extension evaluation - \gls{mota} vs. \gls{motp}]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) over the entire training lifetime using a complementary pair of \gls{mota} and \gls{motp} metrics. The top-performing \gls{dsa}-extended model (purple square) shows considerable improvement at this benchmark. The existence of multiple clusters depicts the overall effect of attention mechanism upon the tracker, which in this case is slightly inferior.}
+    \caption[\gls{dsa} evaluation - primary metrics]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) over the entire training lifetime using a complementary pair of \gls{mota} and \gls{motp} metrics. The top-performing \gls{dsa}-extended model (purple square) shows considerable improvement at this benchmark. The existence of multiple clusters depicts the overall effect of attention mechanism upon the tracker, which in this case is slightly inferior.}
     \label{fig:OrigVsDSA_160RPN_MOTA_MOTP}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ Concerning the interpretation, the higher some particular data point lies in the
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_rec_prec.pdf}}
-    \caption[\gls{dsa} extension evaluation - precision vs. recall]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) over the entire training lifetime using a well-known precision-recall plot that is often used to evaluate object detectors. The top-performing \gls{dsa}-extended model is only capable of maintaining its object detection abilities compared to the baseline model. We can also observe the existence of clusters reflecting the effect of attention.}
+    \caption[\gls{dsa} evaluation - secondary metrics]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) over the entire training lifetime using a well-known precision-recall plot that is often used to evaluate object detectors. The top-performing \gls{dsa}-extended model is only capable of maintaining its object detection abilities compared to the baseline model. We can also observe the existence of clusters reflecting the effect of attention.}
     \label{fig:OrigVsDSA_160RPN_Prec_Rec}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ As \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP} demonstrates, using bigger
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_MOTA_MOTP.pdf}}
-    \caption[\gls{dsa} extension evaluation - \gls{mota} vs. \gls{motp}]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) when using gradient accumulation with batchsize of $24 = 12 \times 2$. The adoption of \gls{dsa} module shows significant improvement over the original model owing to bigger minibatches. It dominates the upper-right corner thanks to the best combinations of \gls{mota} and \gls{motp} performance scores.}
+    \caption[\gls{dsa} evaluation with gradient accumulation - primary metrics]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) when using gradient accumulation with batchsize of $24 = 12 \times 2$. The adoption of \gls{dsa} module shows significant improvement over the original model owing to bigger minibatches. It dominates the upper-right corner thanks to the best combinations of \gls{mota} and \gls{motp} performance scores.}
     \label{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP}
 \end{figure}
 % ------------------------------------------------------------------------------
@@ -251,12 +251,12 @@ As \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP} demonstrates, using bigger
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_rec_prec.pdf}}
-    \caption[\gls{dsa} extension evaluation - precision vs. recall]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) when using gradient accumulation with batchsize of $24 = 12 \times 2$. Although these results are not what typical object detection precision-recall plots show, we can still observe that the \gls{dsa} yields a group of points in the upper-right corner, showing a consistent gain in performance.}
+    \caption[\gls{dsa} evaluation with gradient accumulation - secondary metrics]{Comparison of the baseline model (circles) against the \gls{dsa}-extended model (squares) when using gradient accumulation with batchsize of $24 = 12 \times 2$. Although these results are not what typical object detection precision-recall plots show, we can still observe that the \gls{dsa} yields a group of points in the upper-right corner, showing a consistent gain in performance.}
     \label{fig:OrigVsDSA_160RPN_GA_Prec_Rec}
 \end{figure}
 % ------------------------------------------------------------------------------
 
-\tabletext{}~\ref{tab:OrigVsDSAScores} summarizes the best scores for exact quantitative comparison, supporting the observations from the discussed plots.  It can be seen that the \gls{dsa} extension brings improvement in all aspects. Although the third row shows performance closer to the baseline model, we believe the cause is the use six times smaller minibatches. This is another reason why the setup involving gradient accumulation supports the claim that had more powerful hardware been used, the gap in performance could have been much wider.
+\tabletext{}~\ref{tab:OrigVsDSAScores} summarizes the best scores for exact quantitative comparison, supporting the observations from the discussed plots. We can seen that the \gls{dsa} extension brings improvement in all aspects. Although the third row shows performance closer to the baseline model, we believe the cause is the use six times smaller minibatches. This is why the setup involving gradient accumulation supports the claim that had more powerful hardware been used, the gap in performance could have been much wider.
 
 \begin{table}[!t]
     \centering
@@ -273,4 +273,21 @@ As \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP} demonstrates, using bigger
     \end{tabular}
     \caption[\gls{dsa} extension table comparison]{Comparison of the top-performing models that were trained and tested on the \uadetrac{} dataset. The models were chosen in accordance with their \gls{mota} and \gls{motp} pair of scores, conforming to the official \gls{clear} rules. The middle separator divides the table into with and without the use of gradient accumulation.}
     \label{tab:OrigVsDSAScores}
+\end{table}
+
+Overall, we can say that this type of experiment eventually lead to betterment of the underlying \gls{siammot} model. We consider this extension to be useful since it consistently improves the tracking performance. However, we have to emphasize the increased \gls{gpu} \gls{vram} demands, especially during the training. Inference is not substantially affected as long as the tracker is not required to track hundreds of objects. For every additional tracked object the \gls{dsa} extension introduces a constant computational overhead. This model can run in inference mode on a laptop \gls{gpu} with $4$GB of memory. As for the change in \gls{fps}, thanks to vectorization of tensor operations and effective implementation of the attention module, the impact on performance is negligible. More specifically, the original model inference runs on average at $?$ \gls{fps}, whereas the \gls{dsa}-extended version achieves $?$ \gls{fps}, incurring a $?$\% reduction in speed (more in \tabletext{}~\ref{tab:InferenceSpeedComparison}).
+
+\begin{table}[!t]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule
+        \multirow{2}{*}{\textbf{model}} & \multicolumn{5}{l}{\textbf{inference speed [\gls{fps}]}}                                                                     \\
+                                        & \textbf{min.}                                            & \textbf{max.} & \textbf{mean} & \textbf{stdev.} & \textbf{median} \\
+        \midrule
+        original                        &                                                          &               &               &                 &                 \\
+        \gls{dsa}-ex                    &                                                          &               &               &                 &                 \\
+        \bottomrule
+    \end{tabular}
+    \caption[\gls{dsa} extension inference time comparison]{Comparison of the the inference speed of the original \gls{siammot} model version and the \gls{dsa}-extended version. The statistics are based on the average \gls{fps} values from $40$ video sequences provided by the \uadetrac{} validation dataset. These values were obtained using the \usedgpu{} \gls{gpu} and \usedcpu{} \gls{cpu}.}
+    \label{tab:InferenceSpeedComparison}
 \end{table}

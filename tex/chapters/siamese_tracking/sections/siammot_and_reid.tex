@@ -124,7 +124,7 @@ We expected that the adoption of \gls{reid} enhancements within the \gls{siammot
 
 Due to an already excessive length of this document and inferior results this experiment brought in terms of tracking accuracy and inference speed, we decided to omit extensive documentation, especially tables with quantitative comparison.
 
-To say the least, we encountered several situations that indicated improvements. Occasionally, the model was capable of properly identifying the lost object based on the embedding vector similarity. However, such situations were rare. The detrimental effect of the \gls{reid} module on the modified \gls{nms} phase decreased the tracker's accuracy. The original online solver uses the \gls{nms} algorithm to assign detections to either active or dormant tracks. This phase is very effective and covers a lot of common situations.
+We encountered several situations that indicated improvements. Occasionally, the model was capable of properly identifying the lost object based on the embedding vector similarity. However, such situations were rare. The detrimental effect of the \gls{reid} module on the modified \gls{nms} phase decreased the tracker's accuracy. The original online solver uses the \gls{nms} algorithm to assign detections to either active or dormant tracks. This phase is very effective and covers a lot of common situations.
 
 Besides the expected slow performance, we noticed approximately $3$\% reduction in \gls{mota}. The number of misses (\gls{fn}) also significantly increased as the model failed to properly assign the detection to the dormant track. Overall, there was no metric that would be improved. We either managed to match the original baseline online solver performance or we performed substantially worse.
 
