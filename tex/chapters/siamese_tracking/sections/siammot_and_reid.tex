@@ -28,6 +28,7 @@ Since this experiment was the first one we embarked upon, we tried to avoid modi
 
 % ##############################################################################
 \subsection{Inference Phase}
+\label{ssec:SiamMOTAndReIDInference}
 
 The online solver algorithm was the primary suspect for potential improvements due to its inherent simplicity compared to the rest of the architecture. The aim was to adopt the already trained \gls{reid} model to help re-instantiate lost tracks due to occlusion. This external module would be invoked on-demand as part of the online solver phase. At this stage of research, we did strive for simplicity rather than efficiency. Consequently, the model inference was substantially impaired by a four-fold speed reduction.
 
