@@ -139,8 +139,6 @@ We assume the reader is acquainted with the original \gls{nms} algorithm (\secti
 
 The proposed embedding-based enhancement was evaluated against the baseline model without the embedding head. For a fair comparison, we made sure that the hyperparameters were identical to the greatest possible extent. We only had to alter the batch size and the learning rate. Since the triplet loss requires the computation of a great number of triplets, especially the batch-all strategy, we had to decrease the batch size to avoid crashes due to not having enough \gls{gpu} \gls{vram} available.
 
-We acknowledge that it is difficult to compare the baseline model with the proposed extension since they progress differently during the training. The notion of ``model equivalency'' is vague. We had to resort to answering the question whether it is possible to surpass the baseline performace at some point, provided that both models reach the state of being properly trained. Therefore, we saved the training state after $K$ training iterations and then evaluated the model performance using the validation dataset. The same process was repeated for the baseline architecture, which we trained from scratch using identical batch sizes. Furthermore, the embedding evaluation also requires the cosine similarity threshold, for which tried multiple different values.
-
 \todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - \gls{mota} vs. \gls{motp}.}
 \todo[inline]{Add ``baseline vs. embedding'' $2$D scatter plot - precision vs. recall.}
 \todo[inline]{Add a table with quantitative comparison.}
