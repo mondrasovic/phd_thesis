@@ -5,10 +5,10 @@
 \subsection{MS-COCO}
 \label{ssec:DatasetMSCOCO}
 
-The \mscoco{} dataset~\cite{lin2014mscoco} was created for the purpose of object segmentation. However, if a model solves a much more complicated problem of object segmentation, pure object detection is then just one of many steps. To this end, this dataset is often adopted for training object detectors. It is a widely used dataset for image classification, object detection, and semantic segmentation. It is considered a benchmark dataset in different academic and industrial research areas. The images in the dataset are everyday objects.
+The \mscoco{} dataset~\cite{lin2014mscoco} was created for object segmentation purposes. However, if a model solves a more complicated problem of object segmentation, pure object detection is then just one of many steps. To this end, this dataset is often adopted for training object detectors. It is widely used for image classification, object detection, and semantic segmentation. It is considered a benchmark dataset in different academic and industrial research areas. The images in the dataset are everyday objects. In total, there are over $200\ 000$ labeled images, $1.5$ million of object instances encompassing $80$ object categories (``person'', ``car'', ``chair'', etc.). There are additional annotations unrelated to our purposes.
 
 % ##############################################################################
 \subsection{CrowdHuman}
 \label{ssec:DatasetCrowdHuman}
 
-This dataset~\cite{shao2018crowdhuman} is a well-known benchmark for detecting humans in a crowd, providing a large amount of data with rich annotations of high diversity. It consists of $15\ 000$, $4\ 370$ and $5\ 000$ images for training, validation, and testing, respectively.
+The \crowdhuman{}~\cite{shao2018crowdhuman} dataset is a well-known benchmark for detecting humans in a crowd, providing a large amount of data with rich annotations of high diversity. It consists of $15\ 000$, $4\ 370$, and $5\ 000$ images for training, validation, and testing, respectively. Images cover a broad range of resolutions and the number of people within them, making it a perfect dataset for the detection of small objects, too. The average number of people per image is $23$. Each human instance is annotated with a head \gls{bbox}, a human visible-region \gls{bbox} and a human full-body \gls{bbox}.
