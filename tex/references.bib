@@ -58,65 +58,16 @@
   eprint        = {1602.00763},
   keywords      = {Computer Vision,Data Association,Detection,Multiple Object Tracking}
 }
-@article{bodla2017softnms,
-  title         = {{Soft-NMS - Improving Object Detection with One Line of Code}},
-  author        = {Bodla, Navaneeth and Singh, Bharat and Chellappa, Rama and Davis, Larry S.},
-  year          = 2017,
-  journal       = {Proceedings of the IEEE International Conference on Computer Vision},
-  volume        = {2017-October},
-  pages         = {5562--5570},
-  doi           = {10.1109/ICCV.2017.593},
-  isbn          = 9781538610329,
-  issn          = 15505499,
-  abstract      = {Non-maximum suppression is an integral part of the object detection pipeline. First, it sorts all detection boxes on the basis of their scores. The detection box M with the maximum score is selected and all other detection boxes with a significant overlap (using a pre-defined threshold) with M are suppressed. This process is recursively applied on the remaining boxes. As per the design of the algorithm, if an object lies within the predefined overlap threshold, it leads to a miss. To this end, we propose Soft-NMS, an algorithm which decays the detection scores of all other objects as a continuous function of their overlap with M. Hence, no object is eliminated in this process. Soft-NMS obtains consistent improvements for the coco-style mAP metric on standard datasets like PASCAL VOC2007 (1.7{\%} for both R-FCN and Faster-RCNN) and MS-COCO (1.3{\%} for R-FCN and 1.1{\%} for Faster-RCNN) by just changing the NMS algorithm without any additional hyper-parameters. Using Deformable-RFCN, Soft-NMS improves state-of-the-art in object detection from 39.8{\%} to 40.9{\%} with a single model. Further, the computational complexity of Soft-NMS is the same as traditional NMS and hence it can be efficiently implemented. Since Soft-NMS does not require any extra training and is simple to implement, it can be easily integrated into any object detection pipeline. Code for Soft-NMS is publicly available on GitHub http://bit.ly/2nJLNMu.},
-  archiveprefix = {arXiv},
-  arxivid       = {1704.04503},
-  eprint        = {1704.04503}
-}
-@article{comaniciu2003kernel,
-  title   = {{Kernel-based object tracking}},
-  author  = {Comaniciu, D. and Ramesh, V. and Meer, P.},
-  year    = 2003,
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  volume  = 25,
-  number  = 5,
-  pages   = {564--577},
-  doi     = {10.1109/TPAMI.2003.1195991}
-}
 @misc{webhomographyrankinggithub,
   title        = {{Homography Ranking}},
   note         = {Accessed: 2020-04-20},
   howpublished = {\url{https://github.com/mondrasovic/homography_ranking}}
-}
-@misc{webcompcarsdataset,
-  title        = {{CompCars}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{http://ai.stanford.edu/~jkrause/cars/car_dataset.html}}
-}
-@article{cortes1995support,
-  title     = {{Support Vector Networks}},
-  author    = {Cortes, C. and Vapnik, V.},
-  year      = 1995,
-  journal   = {Machine Learning},
-  pages     = {273--297},
-  added-at  = {2015-09-17T16:32:09.000+0200},
-  biburl    = {https://www.bibsonomy.org/bibtex/22b1eb8bea07ae0156a53a4e9c6eac1df/nosebrain},
-  interhash = {c223c465141618ad63aac5a6132280f7},
-  intrahash = {2b1eb8bea07ae0156a53a4e9c6eac1df},
-  keywords  = {classification margin soft support svm vector},
-  timestamp = {2015-09-17T17:15:55.000+0200}
 }
 @article{wen2020uadetrac,
   title   = {{ UA-DETRAC: A New Benchmark and Protocol for Multi-Object Detection and Tracking}},
   author  = {Longyin Wen and Dawei Du and Zhaowei Cai and Zhen Lei and Ming{-}Ching Chang and others},
   year    = 2020,
   journal = {Computer Vision and Image Understanding}
-}
-@article{davis2016prcurves,
-  title   = {{The relationship between Precision-Recall and ROC curves}},
-  author  = {Jesse Davis and Mark H. Goadrich},
-  year    = 2006,
-  journal = {Proceedings of the 23rd international conference on Machine learning}
 }
 @article{finn2017oneshotimitation,
   title         = {{One-Shot Visual Imitation Learning via Meta-Learning}},
@@ -130,19 +81,6 @@
   timestamp     = {Mon, 13 Aug 2018 16:47:36 +0200},
   biburl        = {https://dblp.org/rec/journals/corr/abs-1709-04905.bib},
   bibsource     = {dblp computer science bibliography, https://dblp.org}
-}
-@article{dendorfer2019cvpr,
-  title      = {{CVPR19 Tracking and Detection Challenge: How crowded can it get?}},
-  author     = {Patrick Dendorfer and Seyed Hamid Rezatofighi and Anton Milan and Javen Shi and Daniel Cremers and others},
-  year       = 2019,
-  journal    = {CoRR},
-  volume     = {abs/1906.04567},
-  url        = {http://arxiv.org/abs/1906.04567},
-  eprinttype = {arXiv},
-  eprint     = {1906.04567},
-  timestamp  = {Fri, 14 Jun 2019 09:38:24 +0200},
-  biburl     = {https://dblp.org/rec/journals/corr/abs-1906-04567.bib},
-  bibsource  = {dblp computer science bibliography, https://dblp.org}
 }
 @article{everingham2010pascalvoc,
   title   = {{The Pascal Visual Object Classes (VOC) Challenge}},
@@ -169,20 +107,6 @@
   keywords  = {dblp},
   timestamp = {2015-06-18T09:49:18.000+0200}
 }
-@book{franoischollet2017learning,
-  title     = {{Deep Learning with Python }},
-  author    = {Chollet, François},
-  year      = 2017,
-  month     = nov,
-  publisher = {Manning},
-  isbn      = 9781617294433,
-  added-at  = {2018-08-01T08:16:18.000+0200},
-  biburl    = {https://www.bibsonomy.org/bibtex/231f94815ebbd65d3a31e4a69e818573e/jaeschke},
-  interhash = {cfbfd3f93853a469e5e6978f61a74a0a},
-  intrahash = {31f94815ebbd65d3a31e4a69e818573e},
-  keywords  = {ai deeplearning ml},
-  timestamp = {2018-08-01T08:16:18.000+0200}
-}
 @inproceedings{gabriel2003sotamot,
   title     = {{The state of the art in multiple object tracking under occlusion in video sequences}},
   author    = {Gabriel, Pierre F and Verly, Jacques G and Piater, Justus H and Genon, Andr{\'e}},
@@ -201,26 +125,6 @@
   author    = {Ian Goodfellow and Yoshua Bengio and Aaron Courville},
   year      = 2016,
   publisher = {MIT Press}
-}
-@article{goodfellow2014gans,
-  title         = {{Generative adversarial nets}},
-  author        = {Goodfellow, Ian J. and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and others},
-  year          = 2014,
-  journal       = {Advances in Neural Information Processing Systems},
-  volume        = 3,
-  number        = {January},
-  pages         = {2672--2680},
-  doi           = {10.3156/jsoft.29.5_177_2},
-  issn          = 10495258,
-  abstract      = {We propose a new framework for estimating generative models via an adversarial process, in which we simultaneously train two models: a generative model G that captures the data distribution, and a discriminative model D that estimates the probability that a sample came from the training data rather than G. The training procedure for G is to maximize the probability of D making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions G and D, a unique solution exists, with G recovering the training data distribution and D equal to {\textless}sup{\textgreater}1{\textless}/sup{\textgreater}/{\textless}inf{\textgreater}2{\textless}/inf{\textgreater} everywhere. In the case where G and D are defined by multilayer perceptrons, the entire system can be trained with backpropagation. There is no need for any Markov chains or unrolled approximate inference networks during either training or generation of samples. Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples.},
-  archiveprefix = {arXiv},
-  arxivid       = {1406.2661},
-  eprint        = {1406.2661}
-}
-@misc{webgot10kdataset,
-  title        = {{GOT-10k}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{http://got-10k.aitestunion.com/}}
 }
 @misc{guo2019siamcar,
   title         = {{SiamCAR: Siamese Fully Convolutional Classification and Regression for Visual Tracking}},
@@ -277,19 +181,6 @@
   archiveprefix = {arXiv},
   primaryclass  = {cs.CV}
 }
-@article{hochreiter1997lstm,
-  title    = {{Long Short-Term Memory}},
-  author   = {Hochreiter, Sepp and Schmidhuber, J{\"{u}}rgen},
-  year     = 1997,
-  journal  = {Neural Computation},
-  volume   = 9,
-  number   = 8,
-  pages    = {1735--1780},
-  doi      = {10.1162/neco.1997.9.8.1735},
-  issn     = {08997667},
-  abstract = {Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient-based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O(1). Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.},
-  pmid     = 9377276
-}
 @article{hosang2017learningnms,
   title         = {{Learning non-maximum suppression}},
   author        = {Hosang, Jan and Benenson, Rodrigo and Schiele, Bernt},
@@ -317,16 +208,6 @@
   archiveprefix = {arXiv},
   arxivid       = {1611.10012},
   eprint        = {1611.10012}
-}
-@article{huang2021got10k,
-  title   = {{GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild}},
-  author  = {Huang, Lianghua and Zhao, Xin and Huang, Kaiqi},
-  year    = 2021,
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  volume  = 43,
-  number  = 5,
-  pages   = {1562--1577},
-  doi     = {10.1109/TPAMI.2019.2957464}
 }
 @misc{chen2019rotbboxes,
   title         = {{Fast Visual Object Tracking with Rotated Bounding Boxes}},
@@ -376,48 +257,10 @@
   issn     = {1528901X},
   abstract = {The classical filtering and prediction problem is re-examined using the Bode-Sliannon representation of random processes and the “state-transition” method of analysis of dynamic systems. New results are: (1) The formulation and methods of solution of the problem apply without modification to stationary and nonstationary statistics and to growing-memory and infinitememory filters. (2) A nonlinear difference (or differential) equation is derived for the covariance matrix of the optimal estimation error. From the solution of this equation the coefficients of the difference (or differential) equation of the optimal linear filter are obtained without further calculations. (3) The filtering problem is shown to be the dual of the noise-free regulator problem. The new method developed here is applied to two well-known problems, confirming and extending earlier results. The discussion is largely self-contained and proceeds from first principles; basic concepts of the theory of random processes are reviewed in the Appendix. {\textcopyright} 1960 by ASME.}
 }
-@article{karras2020stylegan,
-  title         = {{A Style-Based Generator Architecture for Generative Adversarial Networks}},
-  author        = {Karras, Tero and Laine, Samuli and Aila, Timo},
-  year          = 2020,
-  pages         = {4396--4405},
-  doi           = {10.1109/cvpr.2019.00453},
-  url           = {http://arxiv.org/abs/1812.04948},
-  abstract      = {We propose an alternative generator architecture for generative adversarial networks, borrowing from style transfer literature. The new architecture leads to an automatically learned, unsupervised separation of high-level attributes (e.g., pose and identity when trained on human faces) and stochastic variation in the generated images (e.g., freckles, hair), and it enables intuitive, scale-specific control of the synthesis. The new generator improves the state-of-the-art in terms of traditional distribution quality metrics, leads to demonstrably better interpolation properties, and also better disentangles the latent factors of variation. To quantify interpolation quality and disentanglement, we propose two new, automated methods that are applicable to any generator architecture. Finally, we introduce a new, highly varied and high-quality dataset of human faces.},
-  archiveprefix = {arXiv},
-  arxivid       = {1812.04948},
-  eprint        = {1812.04948}
-}
-@misc{webkittiobjdetectiondataset,
-  title        = {{KITTI Object Detection}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=2d}}
-}
-@misc{webkittiobjtrackingdataset,
-  title        = {{KITTI Object Tracking}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{http://www.cvlibs.net/datasets/kitti/eval_tracking.php}}
-}
 @inproceedings{koch2015siameseoneshot,
   title  = {{Siamese Neural Networks for One-Shot Image Recognition}},
   author = {Gregory R. Koch},
   year   = 2015
-}
-@article{kristan2018vot18,
-  title    = {{VOT2018 results}},
-  author   = {Kristan, Matej and Leonardis, Ale{\v{s}} and Matas, Jiř{\'{i}} and Felsberg, Michael and Pflugfelder, Roman and others},
-  year     = 2018,
-  journal  = {Chinese Academy of Sciences},
-  volume   = 26,
-  number   = 1,
-  pages    = {1--15},
-  url      = {http://vision.fe.uni-lj.si/cvbase06/},
-  abstract = {The Visual Object Tracking challenge VOT2018 is the sixth annual tracker benchmarking activity organized by the VOT initiative. Results of over eighty trackers are presented; many are state-of-the-art trackers published at major computer vision conferences or in journals in the recent years. The evaluation included the standard VOT and other popular methodologies for short-term tracking analysis and a "real-time" experiment simulating a situation where a tracker processes images as if provided by a continuously running sensor. A long-term tracking sub-challenge has been introduced to the set of standard VOT sub-challenges. The new subchallenge focuses on long-term tracking properties, namely coping with target disappearance and reappearance. A new dataset has been compiled and a performance evaluation methodology that focuses on long-term tracking capabilities has been adopted. The VOT toolkit has been updated to support both standard short-term and the new long-term tracking subchallenges. Performance of the tested trackers typically by far exceeds standard baselines. The source code for most of the track-ers is publicly available from the VOT page. The dataset, the evaluation kit and the results are publicly available at the challenge website 60 .}
-}
-@misc{kristan2019motyolovot19,
-  title  = {{The Seventh Visual Object Tracking VOT2019 Challenge Results}},
-  author = {Matej Kristan and Jiri Matas and Ales Leonardis and Michael Felsberg and Roman Pflugfelder and others},
-  year   = 2019
 }
 @article{krizhevsky2012classification,
   title    = {{ImageNet classification with deep convolutional neural networks}},
@@ -429,13 +272,6 @@
   isbn     = 9781627480031,
   issn     = 10495258,
   abstract = {We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5{\%} and 17.0{\%} which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully-connected layers with a final 1000-way softmax. To make training faster, we used non-saturating neurons and a very efficient GPU implementation of the convolution operation. To reduce overfitting in the fully-connected layers we employed a recently-developed regularization method called "dropout" that proved to be very effective. We also entered a variant of this model in the ILSVRC-2012 competition and achieved a winning top-5 test error rate of 15.3{\%}, compared to 26.2{\%} achieved by the second-best entry.}
-}
-@article{kuhn1995hungarian,
-  title   = {{The Hungarian method for the assignment problem}},
-  author  = {H. W. Kuhn and Bryn Yaw},
-  year    = 1955,
-  journal = {Naval Res. Logist. Quart},
-  pages   = {83--97}
 }
 @article{kuma2019vehiclereid,
   title         = {{Vehicle Re-identification: An Efficient Baseline Using Triplet Embedding}},
@@ -525,30 +361,6 @@
   abstract  = {Compared with person reidentification, which has attracted concentrated attention, vehicle reidentification is an important yet frontier problem in video surveillance and has been neglected by the multimedia and vision communities. Since most existing approaches mainly consider the general vehicle appearance for reidentification while overlooking the distinct vehicle identifier, such as the license plate number, they attain suboptimal performance. In this paper, we propose PROVID, a PROgressive Vehicle re-IDentification framework based on deep neural networks. In particular, our framework not only utilizes the multimodality data in large-scale video surveillance, such as visual features, license plates, camera locations, and contextual information, but also considers vehicle reidentification in two progressive procedures: coarse-To-fine search in the feature domain, and near-To-distant search in the physical space. Furthermore, to evaluate our progressive search framework and facilitate related research, we construct the VeRi dataset, which is the most comprehensive dataset from real-world surveillance videos. It not only provides large numbers of vehicles with varied labels and sufficient cross-camera recurrences but also contains license plate numbers and contextual information. Extensive experiments on the VeRi dataset demonstrate both the accuracy and efficiency of our progressive vehicle reidentification framework.},
   keywords  = {Progressive search,contextual information,deep learning,license plate verification,vehicle re-identification}
 }
-@article{lou2019embreid,
-  title     = {{Embedding Adversarial Learning for Vehicle Re-Identification}},
-  author    = {Lou, Yihang and Bai, Yan and Liu, Jun and Wang, Shiqi and Duan, Ling Yu},
-  year      = 2019,
-  journal   = {IEEE Transactions on Image Processing},
-  publisher = {IEEE},
-  volume    = 28,
-  number    = 8,
-  pages     = {3794--3807},
-  doi       = {10.1109/TIP.2019.2902112},
-  issn      = 19410042,
-  abstract  = {The high similarities of different real-world vehicles and great diversities of the acquisition views pose grand challenges to vehicle re-identification (ReID), which traditionally maps the vehicle images into a high-dimensional embedding space for distance optimization, vehicle discrimination, and identification. To improve the discriminative capability and robustness of the ReID algorithm, we propose a novel end-to-end embedding adversarial learning network (EALN) that is capable of generating samples localized in the embedding space. Instead of selecting abundant hard negatives from the training set, which is extremely difficult if not impossible, with our embedding adversarial learning scheme, the automatically generated hard negative samples in the specified embedding space can greatly improve the capability of the network for discriminating similar vehicles. Moreover, the more challenging cross-view vehicle ReID problem, which requires the ReID algorithm to be robust with different query views, can also benefit from such a scheme based on the artificially generated cross-view samples. We demonstrate the promise of EALN through extensive experiments and show the effectiveness of hard negative and cross-view generation in facilitating vehicle ReID based on the comparisons with the state-of-the-art schemes.},
-  keywords  = {Vehicle Re-Identification,cross-view,embedding adversarial learning,generative adversarial network,hard negatives}
-}
-@article{lowe1999sift,
-  title    = {{Object recognition from local scale-invariant features}},
-  author   = {Lowe, David G.},
-  year     = 1999,
-  journal  = {Proceedings of the IEEE International Conference on Computer Vision},
-  volume   = 2,
-  pages    = {1150--1157},
-  doi      = {10.1109/iccv.1999.790410},
-  abstract = {An object recognition system has been developed that uses a new class of local image features. The features are invariant to image scaling, translation, and rotation, and partially invariant to illumination changes and affine or 3D projection. These features share similar properties with neurons in inferior temporal cortex that are used for object recognition in primate vision. Features are efficiently detected through a staged filtering approach that identifies stable points in scale space. Image keys are created that allow for local geometric deformations by representing blurred image gradients in multiple orientation planes and at multiple scales. The keys are used as input to a nearest-neighbor indexing method that identifies candidate object matches. Final verification of each match is achieved by finding a low-residual least-squares solution for the unknown model parameters. Experimental results show that robust object recognition can be achieved in cluttered partially-occluded images with a computation time of under 2 seconds.}
-}
 @article{manmatha2017samplingmatters,
   title         = {{Sampling Matters in Deep Embedding Learning}},
   author        = {Manmatha, R. and Wu, Chao Yuan and Smola, Alexander J. and Krahenbuhl, Philipp},
@@ -564,42 +376,15 @@
   arxivid       = {1706.07567},
   eprint        = {1706.07567}
 }
-@misc{webmotchallenge,
-  title        = {{MOT challenge}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://webmotchallenge.net/}}
-}
-@misc{webmscocodataset,
-  title        = {{MS COCO}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://cocodataset.org/}}
-}
-@inproceedings{ng2002discriminative,
-  title     = {{On discriminative vs. generative classifiers: A comparison of logistic regression and naive bayes}},
-  author    = {Ng, Andrew Y and Jordan, Michael I},
-  year      = 2002,
-  booktitle = {Advances in neural information processing systems},
-  pages     = {841--848}
-}
-@misc{websensors,
-  title        = {{Sensors}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://www.mdpi.com/journal/sensors}}
-}
-@misc{webmistconf,
-  title        = {{MiST}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://mist-klak.webnode.sk/}}
-}
-@misc{webhomographybasiccode,
-  title        = {{Homography - basic concepts}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{http://man.hubwiz.com/docset/OpenCV.docset/Contents/Resources/Documents/d9/dab/tutorial_homography.html}}
-}
-@misc{webpymotmetrics,
-  title        = {{webpymotmetrics}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://github.com/cheind/py-motmetrics}}
+@misc{shao2018crowdhuman,
+  doi       = {10.48550/ARXIV.1805.00123},
+  url       = {https://arxiv.org/abs/1805.00123},
+  author    = {Shao, Shuai and Zhao, Zijian and Li, Boxun and Xiao, Tete and Yu, Gang and Zhang, Xiangyu and Sun, Jian},
+  keywords  = {Computer Vision and Pattern Recognition (cs.CV), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  title     = {CrowdHuman: A Benchmark for Detecting Human in a Crowd},
+  publisher = {arXiv},
+  year      = {2018},
+  copyright = {arXiv.org perpetual, non-exclusive license}
 }
 @misc{websiammotforkgithub,
   title        = {{SiamMOT - GitHub (forked project)}},
@@ -660,14 +445,6 @@
   doi     = {https://doi.org/10.14358/PERS.81.2.103},
   issn    = {0099-1112},
   url     = {https://www.sciencedirect.com/science/article/pii/S0099111215303086}
-}
-@article{mcconnell1986osti,
-  title        = {{Method of and apparatus for pattern recognition}},
-  author       = {McConnell, R K},
-  year         = 1986,
-  month        = 1,
-  abstractnote = {This patent describes a method of recognizing a pattern in a test object. The method consists of: specifying properties characteristic of the pattern; specifying discrete ranges of values of the properties; measuring the values of the properties in the test object; arranging the measured values in at least one test histogram; determining a reference set of values of the properties and arranging the set as at least a first reference histogram; and comparing the test and reference histograms by determination of the value of a function which provides a measure of the amount of information necessary to express the at least one test histogram in terms of the optimum code for describing at least the first reference histogram.},
-  place        = {United States}
 }
 @article{parkhi2015deepface,
   title    = {{Deep Face Recognition}},
@@ -733,14 +510,6 @@
   keywords      = {Object detection,convolutional neural network,region proposal},
   pmid          = 27295650
 }
-@article{rosenblatt1958perceptron,
-  title   = {{The perceptron: a probabilistic model for information storage and organization in the brain.}},
-  author  = {Frank F. Rosenblatt},
-  year    = 1958,
-  journal = {Psychological review},
-  volume  = {65 6},
-  pages   = {386--408}
-}
 @incollection{rumelhart1986backprop,
   title                = {{Learning Internal Representations by Error Propagation}},
   author               = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
@@ -798,21 +567,6 @@
   archiveprefix = {arXiv},
   arxivid       = {1409.1556}
 }
-@article{szegedy2015inception,
-  title         = {{Going deeper with convolutions}},
-  author        = {Szegedy, Christian and Liu, Wei and Jia, Yangqing and Sermanet, Pierre and Reed, Scott and others},
-  year          = 2015,
-  journal       = {Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition},
-  volume        = {07-12-June},
-  pages         = {1--9},
-  doi           = {10.1109/CVPR.2015.7298594},
-  isbn          = 9781467369640,
-  issn          = 10636919,
-  abstract      = {We propose a deep convolutional neural network architecture codenamed Inception that achieves the new state of the art for classification and detection in the ImageNet Large-Scale Visual Recognition Challenge 2014 (ILSVRC14). The main hallmark of this architecture is the improved utilization of the computing resources inside the network. By a carefully crafted design, we increased the depth and width of the network while keeping the computational budget constant. To optimize quality, the architectural decisions were based on the Hebbian principle and the intuition of multi-scale processing. One particular incarnation used in our submission for ILSVRC14 is called GoogLeNet, a 22 layers deep network, the quality of which is assessed in the context of classification and detection.},
-  archiveprefix = {arXiv},
-  arxivid       = {1409.4842},
-  eprint        = {1409.4842}
-}
 @article{taigman2014deepface,
   title         = {{DeepFace: Closing the gap to human-level performance in face verification}},
   author        = {Taigman, Yaniv and Yang, Ming and Ranzato, Marc'Aurelio and Wolf, Lior},
@@ -827,18 +581,6 @@
   arxivid       = {1501.05703},
   eprint        = {1501.05703},
   pmid          = 21646680
-}
-@article{tan2019motyolo,
-  title     = {{A Multiple Object Tracking Algorithm Based on YOLO Detection}},
-  author    = {Tan, Li and Dong, Xu and Ma, Yuxi and Yu, Chongchong},
-  year      = 2019,
-  journal   = {Proceedings - 2018 11th International Congress on Image and Signal Processing, BioMedical Engineering and Informatics, CISP-BMEI 2018},
-  publisher = {IEEE},
-  pages     = {1--5},
-  doi       = {10.1109/CISP-BMEI.2018.8633009},
-  isbn      = 9781538676042,
-  abstract  = {In order to further improve the accuracy and the efficiency of multi-target tracking, a multi-target tracking algorithm based on YOLO is proposed. Firstly, the video stream is detected by YOLO algorithm for multi-target detection. After obtaining the target size, position and other information, the depth feature extraction is performed, the noise data of the unrelated regions in the image is removed, and the complexity of calculation and time of feature extraction are reduced. LSTM (long short-term memory) obtains the temporal relationship between frames and frames. Finally, the Euclidean distance is used to measure the similarity so as to achieve target matching and association and complete the tracking of multiple targets in the video stream. Experiments on the open target tracking data set MOT-16 and MSR Data Set show that the proposed algorithm is workable on multi-target tracking.},
-  keywords  = {convolution neural network,multi-target detection,multi-target tracking,recurrent neural network}
 }
 @article{tang2019cityflow,
   title         = {{Cityflow: A city-scale benchmark for multi-target multi-camera vehicle tracking and re-identification}},
@@ -886,36 +628,6 @@
   arxivid       = {1904.01355},
   eprint        = {1904.01355}
 }
-@misc{webcnnarchitecture,
-  title        = {{Convolutional Neural Network Architecture}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://ch.mathworks.com/fr/solutions/deep-learning/convolutional-neural-network.html}}
-}
-@misc{webfcarchitecture,
-  title        = {{Fully Connected Neural Network Architecture}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://ch.mathworks.com/fr/solutions/deep-learning/convolutional-neural-network.html}}
-}
-@misc{webuadetracdataset,
-  title        = {{UA-DETRAC dataset}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://detrac-db.rit.albany.edu/}}
-}
-@misc{webveridataset,
-  title        = {{VeRI-776}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://vehiclereid.github.io/VeRi/}}
-}
-@misc{webvot2019dataset,
-  title        = {{VOT 2019}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://www.webvotchallenge.net/vot2019/dataset.html}}
-}
-@misc{webvotchallenge,
-  title        = {{VOT challenge}},
-  note         = {Accessed: 2020-04-20},
-  howpublished = {\url{https://www.webvotchallenge.net/}}
-}
 @misc{wang2020yolov4,
   title         = {{YOLOv4: Optimal Speed and Accuracy of Object Detection}},
   author        = {Alexey Bochkovskiy and Chien-Yao Wang and Hong-Yuan Mark Liao},
@@ -959,36 +671,6 @@
   journal = {2019 Fifth Workshop on Energy Efficient Machine Learning and Cognitive Computing - NeurIPS Edition (EMC2-NIPS)},
   pages   = {22--25}
 }
-@article{wren1997pfinder,
-  title     = {{Pfinder: Real-time tracking of the human body}},
-  author    = {Wren, Christopher Richard and Azarbayejani, Ali and Darrell, Trevor and Pentland, Alex Paul},
-  year      = 1997,
-  journal   = {IEEE Transactions on pattern analysis and machine intelligence},
-  publisher = {IEEE},
-  volume    = 19,
-  number    = 7,
-  pages     = {780--785}
-}
-@inproceedings{yan2017exploiting,
-  title     = {{Exploiting Multi-grain Ranking Constraints for Precisely Searching Visually-similar Vehicles}},
-  author    = {Yan, Ke and Tian, Yonghong and Wang, Yaowei and Zeng, Wei and Huang, Tiejun},
-  year      = 2017,
-  booktitle = {2017 IEEE International Conference on Computer Vision (ICCV)},
-  pages     = {562--570},
-  doi       = {10.1109/ICCV.2017.68}
-}
-@article{yang2015compcars,
-  title    = {{A large-scale car dataset for fine-grained categorization and verification}},
-  author   = {Yang, Linjie and Luo, Ping and Loy, Chen Change and Tang, Xiaoou},
-  year     = 2015,
-  journal  = {Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition},
-  volume   = {07-12-June-2015},
-  pages    = {3973--3981},
-  doi      = {10.1109/CVPR.2015.7299023},
-  isbn     = 9781467369640,
-  issn     = 10636919,
-  abstract = {This paper aims to highlight vision related tasks centered around 'car', which has been largely neglected by vision community in comparison to other objects. We show that there are still many interesting car-related problems and applications, which are not yet well explored and researched. To facilitate future car-related research, in this paper we present our on-going effort in collecting a large-scale dataset, 'CompCars', that covers not only different car views, but also their different internal and external parts, and rich attributes. Importantly, the dataset is constructed with a cross-modality nature, containing a surveillance-nature set and a web-nature set. We further demonstrate a few important applications exploiting the dataset, namely car model classification, car model verification, and attribute prediction. We also discuss specific challenges of the car-related problems and other potential applications that worth further investigations. The latest dataset can be downloaded at http://mmlab.ie.cuhk.edu.hk/ datasets/comp-cars/index.html.}
-}
 @article{yang2016encoderdecoder,
   title         = {{Object contour detection with a fully convolutional encoder-decoder network}},
   author        = {Yang, Jimei and Price, Brian and Cohen, Scott and Lee, Honglak and Yang, Ming Hsuan},
@@ -1017,14 +699,6 @@
   arxivid       = {1608.01471},
   eprint        = {1608.01471},
   keywords      = {Bounding Box Prediction,IoU Loss,Object Detection}
-}
-@misc{zhang2017deeprlintracking,
-  title         = {{Deep Reinforcement Learning for Visual Object Tracking in Videos}},
-  author        = {Da Zhang and Hamid Maei and Xin Wang and Yuan-Fang Wang},
-  year          = 2017,
-  eprint        = {1701.08936},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.CV}
 }
 @article{geetha2013automatic,
   title   = {Automatic rectification of perspective distortion from a single image using plane homography},
@@ -1103,15 +777,6 @@
   booktitle    = {CVPR 2011},
   pages        = {49--56},
   doi          = {10.1109/CVPR.2011.5995433},
-  organization = {IEEE}
-}
-@inproceedings{liu2015smooth,
-  title        = {Smooth Globally Warp Locally: Video Stabilization Using Homography Fields},
-  author       = {W. X. {Liu} and T. {Chin}},
-  year         = 2015,
-  booktitle    = {2015 International Conference on Digital Image Computing: Techniques and Applications (DICTA)},
-  pages        = {1--8},
-  doi          = {10.1109/DICTA.2015.7371309},
   organization = {IEEE}
 }
 @article{mariyanayagam2018poseestim,
@@ -1410,14 +1075,6 @@
   archiveprefix = {arXiv},
   primaryclass  = {cs.CV}
 }
-@misc{huang2018densenet,
-  title         = {Densely Connected Convolutional Networks},
-  author        = {Gao Huang and Zhuang Liu and Laurens van der Maaten and Kilian Q. Weinberger},
-  year          = {2018},
-  eprint        = {1608.06993},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.CV}
-}
 @misc{pflugfelder2018indepth,
   title         = {An In-Depth Analysis of Visual Tracking with Siamese Neural Networks},
   author        = {Roman Pflugfelder},
@@ -1548,16 +1205,6 @@
   number    = {},
   pages     = {764-773},
   doi       = {10.1109/ICCV.2017.89}
-}
-@inproceedings{rublee2011orb,
-  author    = {Rublee, Ethan and Rabaud, Vincent and Konolige, Kurt and Bradski, Gary},
-  booktitle = {2011 International Conference on Computer Vision},
-  title     = {ORB: An efficient alternative to SIFT or SURF},
-  year      = {2011},
-  volume    = {},
-  number    = {},
-  pages     = {2564-2571},
-  doi       = {10.1109/ICCV.2011.6126544}
 }
 @misc{jaderberg2016stn,
   title         = {Spatial Transformer Networks},

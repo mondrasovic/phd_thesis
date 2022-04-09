@@ -21,21 +21,13 @@ We aimed at exploring the possibility of employing homography for \gls{vot}. The
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.8\linewidth]{figures/homography/chessboard_marker.jpg}}
-    \caption[Chessboard marker]{An example of a chessboard marker present in a scene that may be used to establish a point correspondence that would serve for a homography transformation. The rectified, fronto-parallel view demonstrates the desired effect that points present on the ``ground'' plane are properly projected, whereas other points suffer from substantial distortion. \externalsrc{\cite{webhomographybasiccode}}}
-    \label{fig:ChessboardMarker}
-\end{figure}
-% ------------------------------------------------------------------------------
-
-% ------------------------------------------------------------------------------
-\begin{figure}[t]
     \centerline{\includegraphics[width=\linewidth]{figures/homography/homography_road.png}}
     \caption[Square marker on a road]{An example of a virtual square marker present on a road that may be used to establish a point correspondence, and thus the homography transformation, too. The obtained view allows for many applications such as speed and size measurements that would otherwise be a lot more problematic in a perspectively deformed view. \externalsrc{\cite{bose2004groundplane}}}
     \label{fig:RoadMarker}
 \end{figure}
 % ------------------------------------------------------------------------------
 
-A common approach to estimate the homography is to use a set of at least four $2$D point correspondences~\cite{hartley1997defense}. The points that are used for establishing the $2$D point correspondences will be referred to as keypoints. These keypoints may belong to a marker which is an object with a known shape that is either naturally occurring or artificially positioned in the scene. A regular, easy-to-detect pattern (\egtext{}, a chessboard) is commonly utilized~\cite{zhang2016flexible} (\figtext{}~\ref{fig:ChessboardMarker}). A single marker is identified in the image by multiple independent keypoints that have a direct correspondence to its real shape, thus making a group of point correspondences. For the sake of traffic analysis, the marker may be represented by virtually any points on the image as long as certain conditions are met (\figtext{}~\ref{fig:RoadMarker}). However, the point correspondences established this way are often subjected to noise, thus errors may be introduced in the homography estimation. Although $4$ keypoints are satisfactory, often a greater number of keypoints is used, allowing to use optimization to minimize a suitable cost function~\cite{osuna2016multiobjective, mou2013robust}. Subsequently, an outlier removal becomes an important step in the processing pipeline, for which effective and robust algorithms such as RANSAC~\cite{fischler1981ransac} are usually employed.
+A common approach to estimate the homography is to use a set of at least four $2$D point correspondences~\cite{hartley1997defense}. The points that are used for establishing the $2$D point correspondences will be referred to as keypoints. These keypoints may belong to a marker which is an object with a known shape that is either naturally occurring or artificially positioned in the scene. A regular, easy-to-detect pattern (\egtext{}, a chessboard) is commonly utilized~\cite{zhang2016flexible}. A single marker is identified in the image by multiple independent keypoints that have a direct correspondence to its real shape, thus making a group of point correspondences. For the sake of traffic analysis, the marker may be represented by virtually any points on the image as long as certain conditions are met (\figtext{}~\ref{fig:RoadMarker}). However, the point correspondences established this way are often subjected to noise, thus errors may be introduced in the homography estimation. Although $4$ keypoints are satisfactory, often a greater number of keypoints is used, allowing to use optimization~\cite{osuna2016multiobjective, mou2013robust}. Subsequently, an outlier removal becomes an important step in the processing pipeline, for which effective and robust algorithms such as RANSAC~\cite{fischler1981ransac} are usually employed.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
