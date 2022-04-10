@@ -24,7 +24,7 @@ We adopted the object \gls{reid} approach published in~\cite{luo2019bagoftricksr
 % ##############################################################################
 \subsection{Training Phase}
 
-Since this experiment was the first one we embarked upon, we tried to avoid modifications to the underlying model. Only upon obtaining prospective improvements would we consider incorporating the object \gls{reid} into the whole pipeline. We employed an external object \gls{reid} network to perform embedding computation during the inference. As for the training of the \gls{reid} network, we adopted a standard approach of using the triplet loss (\eqtext{}~\ref{eq:TripletLoss} ,~p.~\pageref{eq:TripletLoss}) in conjunction with the categorical cross-entropy loss. We trained the model using the \verisss{} dataset (\sectiontext{}~\ref{ssec:DatasetVeRI776} ,~p.~\pageref{ssec:DatasetVeRI776}) on which the evaluation was performed, too. The model was trained to produce $l_2$-normalized embedding vectors that were then used to measure the degree of similarity between vehicles.
+Since this experiment was the first one we embarked upon, we tried to avoid modifications to the underlying model. Only upon obtaining prospective improvements would we consider incorporating the object \gls{reid} into the whole pipeline. We employed an external object \gls{reid} network to perform embedding computation during the inference. As for the training of the \gls{reid} network, we adopted a standard approach of using the triplet loss (\eqtext{}~\ref{eq:TripletLoss},~p.~\pageref{eq:TripletLoss}) in conjunction with the categorical cross-entropy loss. We trained the model using the \verisss{} dataset (\sectiontext{}~\ref{ssec:DatasetVeRI776},~p.~\pageref{ssec:DatasetVeRI776}) on which the evaluation was performed, too. The model was trained to produce $l_2$-normalized embedding vectors that were then used to measure the degree of similarity between vehicles.
 
 % ##############################################################################
 \subsection{Inference Phase}
@@ -36,7 +36,7 @@ We isolated the modifications to the inference phase only to the online solver i
 
 The algorithm works as follows. The input to the online solver is the set of active tracks, dormant tracks, and newly detected (still unassigned) objects. As in the original implementation, the greatest emphasis during the \gls{nms} processing is put on the active tracks, then dormant tracks, and the last ones are the new detections. This ranking establishes the priority with which the \gls{nms} algorithm processes the inputs. Our approach was based on altering the first \gls{nms} phase by incorporating only the active tracks and unassigned detections (hence the name ``non-dormant'' in the pseudocode). Thus, if the overlap between an active track \gls{bbox} and detection was too high (above the value of $t_{nms}$), we considered them to be the same object, and thus the active track was preserved.
 
-Having suspended the removed active tracks, we adopted Munkres' algorithm~\cite{munkres1957assignment} to solve the linear sum assignment optimization problem. It is reasonable to assume that a new detection can be assigned to only one dormant track and vice versa, if necessary. The cost matrix was computed based on the cosine similarity (\eqtext{}~\ref{eq:CosineSimilarity} ,~p.~\pageref{eq:CosineSimilarity}) between the embedding vectors belonging to the regions of the unassigned detections and the dormant tracks. However, only the visual features where the dormant object was last visible (its visibility confidence was above the threshold $t_{track}$) were used, as we assumed the object might have been fully occluded. The task was to find an optimal assignment between the new detections with sufficiently high confidence (above the threshold $t_{resume}$) and the dormant tracks. Upon obtaining the assignment matrix, we processed all possible pairs and if the similarity between the embedding vectors surpassed the value of $t_{sim}$, we then resumed the dormant track and re-used the new detection for the object \gls{bbox}.
+Having suspended the removed active tracks, we adopted Munkres' algorithm~\cite{munkres1957assignment} to solve the linear sum assignment optimization problem. It is reasonable to assume that a new detection can be assigned to only one dormant track and vice versa, if necessary. The cost matrix was computed based on the cosine similarity (\eqtext{}~\ref{eq:CosineSimilarity},~p.~\pageref{eq:CosineSimilarity}) between the embedding vectors belonging to the regions of the unassigned detections and the dormant tracks. However, only the visual features where the dormant object was last visible (its visibility confidence was above the threshold $t_{track}$) were used, as we assumed the object might have been fully occluded. The task was to find an optimal assignment between the new detections with sufficiently high confidence (above the threshold $t_{resume}$) and the dormant tracks. Upon obtaining the assignment matrix, we processed all possible pairs and if the similarity between the embedding vectors surpassed the value of $t_{sim}$, we then resumed the dormant track and re-used the new detection for the object \gls{bbox}.
 
 Subsequently, we collected all the remaining unassigned detections the confidence of which was above $t_{start}$ and initiated new tracks based on them. At last, we searched for active tracks with low visibility confidence (below the threshold $t_{track}$) to suspend them, to make them dormant.
 
@@ -50,7 +50,7 @@ Subsequently, we collected all the remaining unassigned detections the confidenc
         \Comment{non-dormant items (active tracks, unassigned dets.)}
 
         \State $\mset{\bar{D}}_{nms}$ $\gets$ \Call{NMS}{$\mset{\bar{D}}$}
-        \Comment{non-maximum suppression (\algtext{}~\ref{alg:NonMaximumSuppression} ,~p.~\pageref{alg:NonMaximumSuppression})}
+        \Comment{non-maximum suppression (\algtext{}~\ref{alg:NonMaximumSuppression},~p.~\pageref{alg:NonMaximumSuppression})}
 
         \State $\mset{A}_{nms}$, $\mset{U}_{nms}$ $\gets$ \Call{split}{$\mset{\bar{D}}_{nms}$}
         \Comment{``after-\gls{nms}'' active tracks and unassigned dets.}
@@ -89,7 +89,7 @@ Subsequently, we collected all the remaining unassigned detections the confidenc
         \Comment{embedding vector of the dormant region}
 
         \If{\Call{cos_sim}{$e_u$, $e_d$} $\geq t_{sim}$}
-        \Comment{similarity check (\eqtext{}~\ref{eq:CosineSimilarity} ,~p.~\pageref{eq:CosineSimilarity})}
+        \Comment{similarity check (\eqtext{}~\ref{eq:CosineSimilarity},~p.~\pageref{eq:CosineSimilarity})}
 
         \State \Call{resume_track}{$d_{idx}$}
         \Comment{resume dormant track using unassigned det.}
@@ -115,6 +115,7 @@ Subsequently, we collected all the remaining unassigned detections the confidenc
 
 % ##############################################################################
 \subsection{Experimental Evaluation and Discussion}
+\label{ssec:SiamMOTAndReIDDiscussion}
 
 We expected that the adoption of \gls{reid} enhancements within the \gls{siammot} framework would bring improvements in certain areas and for the most part maintain the performance in others. However, our experiments showed detrimental effects on the tracker's accuracy. Despite our negative outcome, we still consider the performed research to be a contribution to the \gls{mot} area. We will elaborate further on why it is so in order to learn from such an experience as much as possible. Our surprise stems primarily from the fact that the goals of this thesis revolved around the application of \gls{reid} to object tracking. Therefore, finding that such an approach does not yield the desired outcome raises multiple questions, specifically the following ones:
 \begin{enumerate}
@@ -129,7 +130,7 @@ We encountered several situations that indicated improvements. Occasionally, the
 
 Besides the expected slow performance, we noticed approximately $3$\% reduction in \gls{mota}. The number of misses (\gls{fn}) also significantly increased as the model failed to properly assign the detection to the dormant track. Overall, there was no metric that would be improved. We either managed to match the original baseline online solver performance or we performed substantially worse.
 
-Our observations brought the following question. Is it more likely for the occluded object to appear at a completely different position within the frame or somewhere near the position of disappearance? If we constraint ourselves to the \interreg{} project with the road viewed from the side (\figtext{}~\ref{fig:InterregDatasetSample}), then it might hold true most of the time. But in general traffic analysis, especially in the scenes from the \uadetrac{} dataset (\figtext{}~\ref{fig:DatasetUADETRAC} ,~p.~\pageref{fig:DatasetUADETRAC}), it is scarcely true. Vehicles often re-appear near the position where they last disappeared. As a result, the original online solver dealt with such situations competently. In fact, it outperformed the entire \gls{reid} model due to the inherent ability of the Siamese tracker head to implicitly assess the object similarity when producing the response map. Remember that the search region encompasses a square area with sides twice as long as the exemplar region.
+Our observations brought the following question. Is it more likely for the occluded object to appear at a completely different position within the frame or somewhere near the position of disappearance? If we constraint ourselves to the \interreg{} project with the road viewed from the side (\figtext{}~\ref{fig:InterregDatasetSample}), then it might hold true most of the time. But in general traffic analysis, especially in the scenes from the \uadetrac{} dataset (\figtext{}~\ref{fig:DatasetUADETRAC},~p.~\pageref{fig:DatasetUADETRAC}), it is scarcely true. Vehicles often re-appear near the position where they last disappeared. As a result, the original online solver dealt with such situations competently. In fact, it outperformed the entire \gls{reid} model due to the inherent ability of the Siamese tracker head to implicitly assess the object similarity when producing the response map. Remember that the search region encompasses a square area with sides twice as long as the exemplar region.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
