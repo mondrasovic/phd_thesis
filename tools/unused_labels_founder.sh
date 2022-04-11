@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# A script that finds unused citations within multipe "*.tex" files according to
-# some "*.bib" files.
+# A script that finds unused labels within multipe "*.tex" files.
 
 # Author: Milan Ondrasovic, <milan.ondrasovic@gmail.com>
 
