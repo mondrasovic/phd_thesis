@@ -22,8 +22,7 @@
 		\setentrycounter[]{page}\glsnumberformat{96\delimN 97}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{99\delimN 100}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{102\delimN 103}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{105}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{107}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{105\delimR 107}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{123}}}\glsgroupskip
 \glsgroupheading{C}\relax \glsresetentrylist %
 \glossentry{centernet}{\glossaryentrynumbers{\relax 
@@ -104,7 +103,7 @@
 \glossentry{ga}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{10}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{90\delimR 92}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{104}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{103\delimN 104}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{119\delimR 122}}}%
 \glossentry{gap}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{99}}}%
@@ -114,7 +113,7 @@
 		\setentrycounter[]{page}\glsnumberformat{37\delimN 38}}}%
 \glossentry{gpu}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{90\delimN 91}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{102\delimR 104}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{102\delimN 103}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{117}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{119\delimR 122}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{124}\delimN 
@@ -306,7 +305,7 @@
 		\setentrycounter[]{page}\glsnumberformat{127\delimN 128}}}%
 \glossentry{vram}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{90\delimN 91}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{103\delimN 104}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{103}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{117}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{120\delimN 121}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{124}\delimN 
