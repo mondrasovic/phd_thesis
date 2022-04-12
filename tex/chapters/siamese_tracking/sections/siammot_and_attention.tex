@@ -8,9 +8,9 @@ During several evaluation runs and our manual inspection of the tracker performa
 
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/siamese_tracking/uadetrac_partial_occlusion_red_light.pdf}}
-    \caption[Partial occlusion in the \uadetrac{} dataset]{An example of a situation where multiple vehicles are standing still on a cross-road. In this scenario, even though just a slight degree of occlusion is present, the biggest issues are caused by the need to delineate \glspl{roi} using axis-aligned \glspl{bbox}. This inevitably captures the neighboring vehicles, increasing the likelihood of drifting to the semantic background due to the presence of similar interference (distractors).}
-    \label{fig:UADETRACPartialOcclusion}
+  \centerline{\includegraphics[width=0.7\linewidth]{figures/siamese_tracking/uadetrac_partial_occlusion_red_light.pdf}}
+  \caption[Partial occlusion in the \uadetrac{} dataset]{An example of a situation where multiple vehicles are standing still on a cross-road. In this scenario, even though just a slight degree of occlusion is present, the biggest issues are caused by the need to delineate \glspl{roi} using axis-aligned \glspl{bbox}. This inevitably captures the neighboring vehicles, increasing the likelihood of drifting to the semantic background due to the presence of similar interference (distractors).}
+  \label{fig:UADETRACPartialOcclusion}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -30,16 +30,16 @@ The attention aims to exploit deep learning to learn a transformation of the inp
 
 For a more concrete demonstration, we will use scaled dot-product attention. The input consists of queries and keys of dimension $d_k$, and values of dimension $d_v$. The query is used to compute a dot product with all the keys. These computations are scaled by $\sqrt{d_k}$ to provide a temperature scaling for the following softmax transformation to obtain the weights that will be used to retrieve values (\figtext{}~\ref{fig:ScaledDotProductAttention}). For optimal performance, it is reasonable to compute the attention function for the set of queries simultaneously as they can be easily stored in a matrix, denoted by $\mtx{Q}$. Analogically, keys and values can be also packed together into matrices given by $\mtx{K}$ and $\mtx{V}$, respectively. Thus, the attention can be formulated as a function of queries, keys, and values:
 \begin{equation}
-    \label{eq:ScaledDotProductAttention}
-    \func{attention}{\mtx{Q}, \mtx{K}, \mtx{V}} =
-    \func{softmax}{\frac{\mtx{Q} \mtx{K}^T}{\sqrt{d_k}}} \mtx{V}.
+  \label{eq:ScaledDotProductAttention}
+  \func{attention}{\mtx{Q}, \mtx{K}, \mtx{V}} =
+  \func{softmax}{\frac{\mtx{Q} \mtx{K}^T}{\sqrt{d_k}}} \mtx{V}.
 \end{equation}
 
 % ------------------------------------------------------------------------------
 \begin{figure}[!t]
-    \centerline{\includegraphics[width=0.15\linewidth]{figures/siamese_tracking/scaled_dot_product_attention.pdf}}
-    \caption[Scaled dot-product attention]{An example of the input transformation by the scaled dot-product attention module. The pair of queries and keys is used to produce the probability distribution over the individual values for the final weighted sum. \externalsrc{\cite{vaswani2017attention}}}
-    \label{fig:ScaledDotProductAttention}
+  \centerline{\includegraphics[width=0.15\linewidth]{figures/siamese_tracking/scaled_dot_product_attention.pdf}}
+  \caption[Scaled dot-product attention]{An example of the input transformation by the scaled dot-product attention module. The pair of queries and keys is used to produce the probability distribution over the individual values for the final weighted sum. \externalsrc{\cite{vaswani2017attention}}}
+  \label{fig:ScaledDotProductAttention}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -59,54 +59,54 @@ The first work to learn spatial transformation from the training data in a deep 
 
 In concrete terms, a $2$D convolution consists of sampling using a regular offset grid $\mset{R}$ defining the receptive field as well as dilation over the input features $\vect{x}$ followed by the summation of the samples values weighted by $\vect{w}$. For example, a standard $3 \times 3$ convolution with dilation $1$ would employ offsets given by
 \begin{equation}
-    \label{eq:StandardConvolutionOffsetGrid}
-    \mset{R} = \cbrackets{
-        \rbrackets{-1, -1}, \rbrackets{-1, 0}, \dots, \rbrackets{0, 1}, \rbrackets{1, 1}
-    }.
+  \label{eq:StandardConvolutionOffsetGrid}
+  \mset{R} = \cbrackets{
+    \rbrackets{-1, -1}, \rbrackets{-1, 0}, \dots, \rbrackets{0, 1}, \rbrackets{1, 1}
+  }.
 \end{equation}
 Then, for each location $\vect{p}_0$ within the output feature map $\vect{y}$ is calculated as
 \begin{equation}
-    \label{eq:StandardConvolutionOutputCalc}
-    \func{\vect{y}}{\vect{p}_0} =
-    \sum_{\forall \vect{p}_n \in \mset{R}}
-    \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n},
+  \label{eq:StandardConvolutionOutputCalc}
+  \func{\vect{y}}{\vect{p}_0} =
+  \sum_{\forall \vect{p}_n \in \mset{R}}
+  \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n},
 \end{equation}
 where the locations in $\mset{R}$ are iterated over by $\vect{p}_n$. Conversely, the deformable convolution extends the standard one by augmenting the original sampling grid $\mset{R}$ with additional offsets $\cbrackets{\Delta \vect{p}_n \ |\ n = 1, \dots, \msetsize{R}}$ (\figtext{}~\ref{fig:DeformableCNN}). Thus, \eqtext{}~\ref{eq:StandardConvolutionOutputCalc} is reformulated as
 \begin{equation}
-    \label{eq:DeformableConvolutionOutputCalc}
-    \func{\vect{y}}{\vect{p}_0} =
-    \sum_{\forall \vect{p}_n \in \mset{R}}
-    \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n + \Delta \vect{p}_n}.
+  \label{eq:DeformableConvolutionOutputCalc}
+  \func{\vect{y}}{\vect{p}_0} =
+  \sum_{\forall \vect{p}_n \in \mset{R}}
+  \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n + \Delta \vect{p}_n}.
 \end{equation}
 Nonetheless, the user needs to keep in mind that the sampling offsets now become fractions and thus have to be handled accordingly. One approach is to employ bilinear interpolation, where the position in the input feature map $\vect{x}$ is determined by
 \begin{equation}
-    \label{eq:DeformableConvolutionBilinear}
-    \func{\vect{x}}{\vect{p}} =
-    \sum_{\forall \vect{q}} \func{G}{\vect{q}, \vect{p}} \cdot \func{\vect{x}}{\vect{p}},
+  \label{eq:DeformableConvolutionBilinear}
+  \func{\vect{x}}{\vect{p}} =
+  \sum_{\forall \vect{q}} \func{G}{\vect{q}, \vect{p}} \cdot \func{\vect{x}}{\vect{p}},
 \end{equation}
 in which $\vect{q}$ enumerates all integral locations and $\func{G}{\cdot}$ represents the  interpolation kernel. The interpolation processing can be efficiently implemented owing to the sparsity. The performance overhead is negligible compared to the reaped benefits of adaptive sampling locations capable of covering very complicated transformations (\figtext{}~\ref{fig:SamplingLocationsDeformableCNN}).
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.6\linewidth]{figures/siamese_tracking/dcn_standard_vs_deformable.png}}
-    \caption[Standard vs. deformable convolution]{Visualization of the difference between the fixed \imgpartdesc{a} and adaptive \imgpartdesc{b} receptive fields. Stacking multiple deformable convolutions results in profound amplification of deformation, making the transformation capture diverse shapes that would otherwise be very coarsely approximated by a standard convolution. \externalsrc{\cite{dai2017dcnn}}}
-    \label{fig:StandardVsDeformableCNN}
+  \centerline{\includegraphics[width=0.6\linewidth]{figures/siamese_tracking/dcn_standard_vs_deformable.png}}
+  \caption[Standard vs. deformable convolution]{Visualization of the difference between the fixed \imgpartdesc{a} and adaptive \imgpartdesc{b} receptive fields. Stacking multiple deformable convolutions results in profound amplification of deformation, making the transformation capture diverse shapes that would otherwise be very coarsely approximated by a standard convolution. \externalsrc{\cite{dai2017dcnn}}}
+  \label{fig:StandardVsDeformableCNN}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.6\linewidth]{figures/siamese_tracking/deformable_convolution.pdf}}
-    \caption[\gls{dcnn}]{Illustration of a $3 \times 3$ deformable convolution operation. Unlike the standard convolution operation used in neural networks, this one employs one additional step of predicting variable offsets instead of using a fixed rectangular grid. \externalsrc{\cite{dai2017dcnn}}}
-    \label{fig:DeformableCNN}
+  \centerline{\includegraphics[width=0.6\linewidth]{figures/siamese_tracking/deformable_convolution.pdf}}
+  \caption[\gls{dcnn}]{Illustration of a $3 \times 3$ deformable convolution operation. Unlike the standard convolution operation used in neural networks, this one employs one additional step of predicting variable offsets instead of using a fixed rectangular grid. \externalsrc{\cite{dai2017dcnn}}}
+  \label{fig:DeformableCNN}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.7\linewidth]{figures/siamese_tracking/dcn_sampling_locations.png}}
-    \caption[Various sampling locations in \glspl{dcnn}]{Deformable convolution is effective at learning appropriate sampling locations reflecting the underlying transformation. \imgpartdesc{a} shows the regular sampling grid of a standard convolution; \imgpartdesc{b} is an example of irregularly deformed sampling region; \imgpartdesc{c} and \imgpartdesc{d} represent an expected pattern corresponding to scaling and rotation operations, respectively. \externalsrc{\cite{dai2017dcnn}}}
-    \label{fig:SamplingLocationsDeformableCNN}
+  \centerline{\includegraphics[width=0.7\linewidth]{figures/siamese_tracking/dcn_sampling_locations.png}}
+  \caption[Various sampling locations in \glspl{dcnn}]{Deformable convolution is effective at learning appropriate sampling locations reflecting the underlying transformation. \imgpartdesc{a} shows the regular sampling grid of a standard convolution; \imgpartdesc{b} is an example of irregularly deformed sampling region; \imgpartdesc{c} and \imgpartdesc{d} represent an expected pattern corresponding to scaling and rotation operations, respectively. \externalsrc{\cite{dai2017dcnn}}}
+  \label{fig:SamplingLocationsDeformableCNN}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -120,10 +120,10 @@ The original paper by Zhu~\etal{}~\cite{zhu2018mdcnn} aptly described their cont
 
 Since we are simply adding a slight modifications to an already introduced equation, we will try to avoid repetition. Thus, let $\vect{p}_0$, $\vect{p}_n$ and $\Delta \vect{p}_n$ have the same meaning as in \eqtext{}~\ref{eq:DeformableConvolutionOutputCalc}. Then, the modified equation becomes
 \begin{equation}
-    \label{eq:ModulatedDeformableConvolutionOutputCalc}
-    \func{\vect{y}}{\vect{p}_0} =
-    \sum_{\forall \vect{p}_n \in \mset{R}}
-    \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n + \Delta \vect{p}_n} \cdot \Delta \vect{m}_n,
+  \label{eq:ModulatedDeformableConvolutionOutputCalc}
+  \func{\vect{y}}{\vect{p}_0} =
+  \sum_{\forall \vect{p}_n \in \mset{R}}
+  \func{\vect{w}}{\vect{p}_n} \cdot \func{\vect{x}}{\vect{p}_0 + \vect{p}_n + \Delta \vect{p}_n} \cdot \Delta \vect{m}_n,
 \end{equation}
 where $\Delta \vect{m}_n$ is the modulation scalar for the current location, such that $\Delta \vect{m}_n \in \rbrackets{0, 1}$. Thus, there are two types of learnable parameters. The already described offsets, given by the $\Delta \vect{p}_n$ term, and the new modulation (weighting) coefficients, represented by the term $\Delta \vect{m}_n$. This trivial extension allows the system to not only learn how to sample features in a non-regular fashion if needed, but it also allows applying distinct weight to each sampling location to further adaptively intensify the deforming effect. Although the weights of the underlying convolutional layer can be tweaked to a large extent in order to apply different weights to different features, the inclusion of additional weighting coefficient provides more \glspl{dof}, making the transformation more versatile.
 
@@ -139,9 +139,9 @@ Yu~\etal{}~\cite{yu2021dsa} formulated their \gls{dsa}, which covered both of ou
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/siammot_attention_training.pdf}}
-    \caption[\gls{siammot} with attention]{Our proposal to incorporate attention into the \gls{siammot} pipeline. This diagram shows the relationships between individual parts of the framework during the training phase.}
-    \label{fig:SiamMOTWithAttention}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/siammot_attention_training.pdf}}
+  \caption[\gls{siammot} with attention]{Our proposal to incorporate attention into the \gls{siammot} pipeline. This diagram shows the relationships between individual parts of the framework during the training phase.}
+  \label{fig:SiamMOTWithAttention}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -149,9 +149,9 @@ Considering their contribution and promising outcomes for the \gls{sot} demonstr
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/deformable_siamese_attention.pdf}}
-    \caption[\gls{dsa} diagram]{The \gls{dsa} extension introduces two sub-modules for both exemplar and search branch. The self-attention is further divided into two operations, namely spatial and channel attention. The very same attention network is used to process both features independently. Notice how the channel attention is computed only once as part of the self-attention process and then directly fused with the channel self-attention of the other branch, creating the cross-attention effect, which is the strongest one of all three, according to the authors. \externalsrc{\cite{yu2021dsa}}}
-    \label{fig:DeformableSiameseAttention}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/deformable_siamese_attention.pdf}}
+  \caption[\gls{dsa} diagram]{The \gls{dsa} extension introduces two sub-modules for both exemplar and search branch. The self-attention is further divided into two operations, namely spatial and channel attention. The very same attention network is used to process both features independently. Notice how the channel attention is computed only once as part of the self-attention process and then directly fused with the channel self-attention of the other branch, creating the cross-attention effect, which is the strongest one of all three, according to the authors. \externalsrc{\cite{yu2021dsa}}}
+  \label{fig:DeformableSiameseAttention}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -161,17 +161,17 @@ Self-attention is computed on the exemplar and search branch independently. This
 
 Let $\mtx{X} \in \setrnnn{C}{H}{W}$ be the input features. To produce query features $\mtx{Q}$ and key features $\mtx{K}$, such that $\mtx{Q}, \mtx{K} \in \setrnnn{C^{\prime}} {H}{W}$ and $C^{\prime} = \frac{1}{4}C$, where $C^{\prime}$ is the reduced number of channels, two separate $1 \times 1$ convolution layers are applied. The obtained features are then reshaped into $\mtx{\bar{Q}}, \mtx{\bar{K}} \in \setrnn{C^{\prime}}{N}$, where $N = H \times W$. The spatial self-attention $\mtxsubsup{A}{S}{S} \in \setrnn{N}{N}$ is produced via matrix multiplication and a column-wise softmax operation as
 \begin{equation}
-    \label{eq:SpatialSelfAttention}
-    \mtxsubsup{A}{S}{S} =
-    \func{softmax_{col}}{\mtx{\bar{Q}}^T \mtx{\bar{K}}}.
+  \label{eq:SpatialSelfAttention}
+  \mtxsubsup{A}{S}{S} =
+  \func{softmax_{col}}{\mtx{\bar{Q}}^T \mtx{\bar{K}}}.
 \end{equation}
 Authors used $C^{\prime} = \frac{1}{8}C$, but in \gls{mot}, the number of objects to track is often a lot greater, thus the computation graph grows dramatically with the higher number of channels. Furthermore, in our case $C = 128$ (by \gls{siammot} design), and we considered using $32$ channels for the attention to be the bare minimum.
 
 Meanwhile, an analogous sequence of operations is adopted to produce the value features. A $1 \times 1$ convolution layer without the subsequent reshape operation transforms the input features $\mtx{X}$ into the value features $\mtx{\bar{V}} \in \setrnn{C}{N}$. At this point, we have matched the queries with keys and computed the values. We may proceeed further to the weighted selection from the values and to incorporate the attention into the features as follows
 \begin{equation}
-    \label{eq:SpatialSelfAttentionApplication}
-    \mtxsubsup{\bar{X}}{S}{S} =
-    \alpha \mtx{\bar{V}} \mtxsubsup{A}{S}{S} + \mtx{\bar{X}},
+  \label{eq:SpatialSelfAttentionApplication}
+  \mtxsubsup{\bar{X}}{S}{S} =
+  \alpha \mtx{\bar{V}} \mtxsubsup{A}{S}{S} + \mtx{\bar{X}},
 \end{equation}
 where $\alpha$ is a learnable scalar parameter, and $\mtxsubsup{\bar{X}}{S}{S} \in \setrnn{C}{N}$. The outputs $\mtxsubsup{\bar{X}}{S}{S}$ are then reshaped back to the original size, specifically $\mtxsubsup{X}{S}{S} \in \setrnnn{C}{H}{W}$. From our experience, the parameter $\alpha$ is very useful for training stabilization.
 
@@ -181,15 +181,15 @@ The corresponding channel self-attention $\mtxsubsup{A}{C}{S}$ and the channel-w
 
 Let $\mtx{Z} \in \setrnnn{C}{h}{w}$, $\mtx{X} \in \setrnnn{C}{H}{W}$ denote the exemplar and search region features, respectively. The following description introduces the computation of the cross-attention from the perspective of the search branch. First, the exemplar features $\mtx{Z}$ are reshaped into $\mtx{\bar{Z}} \in \setrnn{C}{n}$, where $n = h \times w$. Then, the cross-attention from the exemplar branch is computed. We emphasize that the channel attention is reused, therefore, the computation below serves as a recipe for how to compute the channel self-attention. So, we compute the channel cross-attention $\mtxsup{A}{C} \in \setrnn{C}{C}$ as
 \begin{equation}
-    \label{eq:CrossAttentionCalc}
-    \mtxsup{A}{C} =
-    \func{softmax_{row}}{\mtx{\bar{Z}} \mtx{\bar{Z}}^T}.
+  \label{eq:CrossAttentionCalc}
+  \mtxsup{A}{C} =
+  \func{softmax_{row}}{\mtx{\bar{Z}} \mtx{\bar{Z}}^T}.
 \end{equation}
 The real benefit comes from the merging stage, where the above-computed attention is merged with the other, in this case, the search branch as
 \begin{equation}
-    \label{eq:CrossAttentionMerge}
-    \mtxsup{\bar{X}}{C} =
-    \gamma \mtxsup{A}{C} \mtx{\bar{X}} + \mtx{\bar{X}},
+  \label{eq:CrossAttentionMerge}
+  \mtxsup{\bar{X}}{C} =
+  \gamma \mtxsup{A}{C} \mtx{\bar{X}} + \mtx{\bar{X}},
 \end{equation}
 where $\gamma$ is a learnable scalar parameter. The merged features $\mtxsup{\bar{X}}{C}$, once again, have to be reshaped, so the features $\mtxsup{X}{C} \in \setrnnn{C}{H}{W}$ are the final output.
 
@@ -203,9 +203,9 @@ The attention is finalized by processing the obtained feature tensors by another
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=0.5\linewidth]{figures/siamese_tracking/dsa_attention_visualization.pdf}}
-    \caption[\gls{dsa} attention visualization]{Visualization of response (confidence) maps. The first column represents the search image, the second column represents the activation levels without the \gls{dsa} module, whereas the third column clearly demonstrates the improved target-background discirminability in the computed attentional features. \externalsrc{\cite{yu2021dsa}}}
-    \label{fig:DSAAttentionVisualization}
+  \centerline{\includegraphics[width=0.5\linewidth]{figures/siamese_tracking/dsa_attention_visualization.pdf}}
+  \caption[\gls{dsa} attention visualization]{Visualization of response (confidence) maps. The first column represents the search image, the second column represents the activation levels without the \gls{dsa} module, whereas the third column clearly demonstrates the improved target-background discirminability in the computed attentional features. \externalsrc{\cite{yu2021dsa}}}
+  \label{fig:DSAAttentionVisualization}
 \end{figure}
 % ------------------------------------------------------------------------------
 
@@ -213,11 +213,11 @@ The attention is finalized by processing the obtained feature tensors by another
 \subsection{Experimental Evaluation and Discussion}
 \label{ssec:DSAExperimentalEvaluation}
 
-The inclusion of the \gls{dsa} module substantially increased the consumption of \gls{gpu} \gls{vram} during the training as each proposal needs its corresponding attentional features. The number of proposals is by default $256$, but we decreased this number to $160$ to allow for bigger minibatches. The inference phase is not as affected since the number of ``computed attentions'' is given by the number of tracked objects. Unlike the original model that allowed the batch size of $24$, \dsamodel{} model utilized at most $4$.
+The inclusion of the \gls{dsa} module substantially increased the consumption of \gls{gpu} \gls{vram} during the training as each proposal needs its corresponding attentional features. The number of proposals is by default $256$, but we decreased it to $160$ to allow for bigger minibatches. We used the lower number of proposals for all the experiments to have as many common hyperparameter settings between the experiments as possible. To the contrary, the inference phase is not as affected since the number of ``computed attentions'' is given by the number of tracked objects. Unlike the original model that allowed the batch size of $24$, \dsamodel{} model utilized at most $4$.
 
 As \figtext{}~\ref{fig:SiamMOTWithAttention} shows, this extension is directly incorporated into the architecture, right before applying the cross-correlation. We trained the entire model in an end-to-end fashion. We also tried to train the architecture in two stages, \ietext{}, to freeze the attention and train the rest of the model, and then freeze the rest and just fine-tune the attention. But this training regime was detrimental to the overall performance, thus all the results discussed below are based on joint training.
 
-The following plots share the very same pattern. The original implementation represented by circles with a minimum number of modifications is compared against the very same model extended with the \gls{dsa} module represented by squares. We chose $2$D diagrams to show the change in performance using two complementary metrics. One pair of metrics is \gls{mota} vs. \gls{motp} (the most important one) and the second pair is precision vs. recall. Models with a matching number of training iterations have the same color.
+The following plots (\figtext{}~\ref{fig:OrigVsDSA_160RPN_MOTA_MOTP}, \figtext{}~\ref{fig:OrigVsDSA_160RPN_Prec_Rec}, \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP}, and \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_Prec_Rec}) share the very same pattern. The original implementation represented by circles with a minimum number of modifications is compared against the very same model extended with the \gls{dsa} module represented by squares. We chose $2$D diagrams to show the change in performance using two complementary metrics. One pair of metrics is \gls{mota} vs. \gls{motp} (the most important one) and the second pair is precision vs. recall. Models with a matching number of training iterations have the same color.
 
 Concerning the interpretation, the higher some particular data point lies in the upper right corner, the better. Increasing \gls{mota} while increasing \gls{motp} is desired. The same applies to the \gls{pr} plot. However, we have to keep in mind that the \gls{motp} metric is evaluated only with respect to properly matched detections. If a tracker makes very few predictions its \gls{motp} score may be high. The official \gls{clear} evaluation (\sectiontext{}~\ref{sec:EvaluatingMOT},~p.~\pageref{sec:EvaluatingMOT}) prioritizes \gls{mota} and \gls{motp} scores above other scores (\tabletext{}~\ref{tab:OtherCLEARMetrics},~p.~\pageref{tab:OtherCLEARMetrics}). In addition, the \gls{mota} score has the leading priority within the ranking. \gls{pr} plots are our subjective choice to peek into the object detection performance deeper.
 
@@ -225,57 +225,57 @@ Concerning the interpretation, the higher some particular data point lies in the
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_MOTA_MOTP.pdf}}
-    \caption[\gls{dsa} evaluation - primary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) over the entire training lifetime using a complementary pair of \gls{mota} and \gls{motp} metrics. The top-performing \dsamodel{} model (purple square) shows considerable improvement at this benchmark. The existence of multiple clusters depicts the overall effect of attention mechanism upon the tracker, which in this case is slightly inferior. However, the batch size for the original model is $24$ whilist for the \dsamodel{} version it is just $4$.}
-    \label{fig:OrigVsDSA_160RPN_MOTA_MOTP}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_MOTA_MOTP.pdf}}
+  \caption[\gls{dsa} evaluation - primary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) over the entire training lifetime using a complementary pair of \gls{mota} and \gls{motp} metrics. The top-performing \dsamodel{} model (purple square) shows considerable improvement at this benchmark. The existence of multiple clusters depicts the overall effect of attention mechanism upon the tracker, which in this case is slightly inferior. However, the batch size for the original model is $24$ whilist for the \dsamodel{} version it is just $4$.}
+  \label{fig:OrigVsDSA_160RPN_MOTA_MOTP}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_rec_prec.pdf}}
-    \caption[\gls{dsa} evaluation - secondary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) over the entire training lifetime using a well-known \gls{pr} plot that is often used to evaluate object detectors. The top-performing \dsamodel{} model is only capable of maintaining its object detection abilities compared to the baseline model. We can also observe the existence of clusters reflecting the effect of attention. However, the batch size for the original model is $24$ whilist for the \dsamodel{} version it is just $4$.}
-    \label{fig:OrigVsDSA_160RPN_Prec_Rec}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_rec_prec.pdf}}
+  \caption[\gls{dsa} evaluation - secondary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) over the entire training lifetime using a well-known \gls{pr} plot that is often used to evaluate object detectors. The top-performing \dsamodel{} model is only capable of maintaining its object detection abilities compared to the baseline model. We can also observe the existence of clusters reflecting the effect of attention. However, the batch size for the original model is $24$ whilist for the \dsamodel{} version it is just $4$.}
+  \label{fig:OrigVsDSA_160RPN_Prec_Rec}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 To make our analysis more complete, we have to take into account the difference in batch size. Due to insufficient memory of our two \glspl{gpu}, we employed the already introduced \gls{ga}. Mathematically speaking, applying \gls{ga} is similar to a multi-\gls{gpu} setup. However, we know that batch normalization layers are particularly sensitive to small minibatches, so in practice, this claim does not hold. To remedy this, we adopted ``frozen'' versions of the batch normalization layers. Thus, these layers maintained their weights from the pre-training phase on the ImageNet dataset. Performance issues aside, we wanted to compare how our extension would perform with the same batch size, regardless of how inferior its performance would be. The relative difference was our concern. The number of training iterations was higher due to having minibatches containing just a single pair of frames for siamese training. These minibatches were then accumulated $12$ times.
 
-As \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP} demonstrates, using bigger minibatches favors the performance of our model the most. Even though we are unable to execute identical training as the original authors who used very powerful eight \texttt{NVidia V100} \glspl{gpu}, we believe that the \gls{dsa} performance would maintain its edge over the baseline model. Not only does the expansion of minibatches yield better \gls{mota} and \gls{motp} combinations, but it also creates a big cluster of data points in the upper right corner of the \gls{pr} plot (\figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_Prec_Rec}). We consider this result significantly better compared to our previous experiment in which we just managed to maintain the \gls{pr} performance, not improve it. Additionally, training with \gls{ga} is more accessible to ordinary users as they may not have at least $11$GB of \gls{gpu} \gls{vram} available. For this configuration, $6$GB would suffice. The only downside is the threefold increase in training time.
+As \figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP} demonstrates, using bigger minibatches favors the performance of our model the most. Even though we are unable to execute identical training as the original authors who used very powerful eight \texttt{NVIDIA V100} \glspl{gpu}, we believe that the \gls{dsa} performance would maintain its edge over the baseline model. Not only does the expansion of minibatches yield better \gls{mota} and \gls{motp} combinations, but it also creates a big cluster of data points in the upper right corner of the \gls{pr} plot (\figtext{}~\ref{fig:OrigVsDSA_160RPN_GA_Prec_Rec}). We consider this result significantly better compared to our previous experiment in which we just managed to maintain the \gls{pr} performance, not improve it. Additionally, training with \gls{ga} is more accessible to ordinary users as they may not have at least $11$GB of \gls{gpu} \gls{vram} available. For this configuration, $6$GB would suffice. The only downside is the threefold increase in training time.
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_MOTA_MOTP.pdf}}
-    \caption[\gls{dsa} evaluation with \gls{ga} - primary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) when using \gls{ga} with batch size of $24 = 12 \times 2$. The adoption of \gls{dsa} module shows significant improvement over the original model owing to bigger minibatches. It dominates the upper-right corner thanks to the best combinations of \gls{mota} and \gls{motp} performance scores.}
-    \label{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_MOTA_MOTP.pdf}}
+  \caption[\gls{dsa} evaluation with \gls{ga} - primary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) when using \gls{ga} with batch size of $24 = 12 \times 2$. The adoption of \gls{dsa} module shows significant improvement over the original model owing to bigger minibatches. It dominates the upper-right corner thanks to the best combinations of \gls{mota} and \gls{motp} performance scores.}
+  \label{fig:OrigVsDSA_160RPN_GA_MOTA_MOTP}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 \begin{figure}[t]
-    \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_rec_prec.pdf}}
-    \caption[\gls{dsa} evaluation with \gls{ga} - secondary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) when using \gls{ga} with batch size of $24 = 12 \times 2$. Although these results are not what typical object detection \gls{pr} plots show, we can still observe that the \gls{dsa} yields a group of points in the upper-right corner, showing a consistent gain in performance.}
-    \label{fig:OrigVsDSA_160RPN_GA_Prec_Rec}
+  \centerline{\includegraphics[width=\linewidth]{figures/siamese_tracking/tracker_cmp_160_2x12_vs_160_2x2_DSA_GA_rec_prec.pdf}}
+  \caption[\gls{dsa} evaluation with \gls{ga} - secondary metrics]{Comparison of the baseline model (circles) against the \dsamodel{} model (squares) when using \gls{ga} with batch size of $24 = 12 \times 2$. Although these results are not what typical object detection \gls{pr} plots show, we can still observe that the \gls{dsa} yields a group of points in the upper-right corner, showing a consistent gain in performance.}
+  \label{fig:OrigVsDSA_160RPN_GA_Prec_Rec}
 \end{figure}
 % ------------------------------------------------------------------------------
 
 \tabletext{}~\ref{tab:OrigVsDSAScores} summarizes the best scores for exact quantitative comparison, supporting the observations from the discussed plots. We can see that the \gls{dsa} extension brings improvement in all aspects. Although the third row shows performance closer to the baseline model, we believe the cause is the use of six times smaller minibatches. This is why the setup involving \gls{ga} supports the claim that had more powerful hardware been used, the performance gap could have been wider.
 
 \begin{table}[!t]
-    \centering
-    \begin{tabular}{lllllll}
-        \toprule
-        \textbf{model} & \textbf{batch size} & \textbf{grad. accum.} & \textbf{MOTA} & \textbf{MOTP} & \textbf{precision} & \textbf{recall} \\
-        \midrule
-        \dsamodel{}    & $24$                & \checkmark            & $0.7625$      & $0.1548$      & $0.9260$           & $0.8315$        \\
-        original       & $24$                & \checkmark            & $0.7429$      & $0.1533$      & $0.9137$           & $0.8230$        \\
-        \midrule
-        \dsamodel{}    & $4$                 &                       & $0.7274$      & $0.1639$      & $0.8843$           & $0.8401$        \\
-        original       & $24$                &                       & $0.7263$      & $0.1556$      & $0.8825$           & $0.8415$        \\
-        \bottomrule
-    \end{tabular}
-    \caption[\gls{dsa} extension performance table comparison]{Comparison of the top-performing models that were trained and tested on the \uadetrac{} dataset. The models were chosen in accordance with their \gls{mota} and \gls{motp} pair of scores, conforming to the official \gls{clear} rules. The middle separator divides the table into with and without the use of \gls{ga}.}
-    \label{tab:OrigVsDSAScores}
+  \centering
+  \begin{tabular}{lllllll}
+    \toprule
+    \textbf{model} & \textbf{batch size} & \textbf{grad. accum.} & \textbf{MOTA} & \textbf{MOTP} & \textbf{precision} & \textbf{recall} \\
+    \midrule
+    \dsamodel{}    & $24$                & \checkmark            & $0.7625$      & $0.1548$      & $0.9260$           & $0.8315$        \\
+    original       & $24$                & \checkmark            & $0.7429$      & $0.1533$      & $0.9137$           & $0.8230$        \\
+    \midrule
+    \dsamodel{}    & $4$                 &                       & $0.7274$      & $0.1639$      & $0.8843$           & $0.8401$        \\
+    original       & $24$                &                       & $0.7263$      & $0.1556$      & $0.8825$           & $0.8415$        \\
+    \bottomrule
+  \end{tabular}
+  \caption[\gls{dsa} extension performance table comparison]{Comparison of the top-performing models that were trained and tested on the \uadetrac{} dataset. The models were chosen in accordance with their \gls{mota} and \gls{motp} pair of scores, conforming to the official \gls{clear} rules. The middle separator divides the table into with and without the use of \gls{ga}.}
+  \label{tab:OrigVsDSAScores}
 \end{table}
 
 Overall, we can say that this type of experiment eventually lead to the improvement of the underlying \gls{siammot} model. We consider this extension applicable since it consistently improves the tracking performance. However, there are increased \gls{gpu} \gls{vram} demands, especially during the training. The inference is not substantially affected unless the tracker is required to track hundreds of objects. For every additional object, the \gls{dsa} extension introduces a constant computational overhead. This model can run in inference mode on a laptop \gls{gpu} with $4$GB of memory. As for the change in \gls{fps}, the impact on performance is negligible as the real-time speed is preserved. Specifically, the original model inference runs on average at $26.49$ \gls{fps}, whereas the \dsamodel{} version achieves $24.16$ \gls{fps}, incurring an approximately $9$\% reduction in speed (more in \tabletext{}~\ref{tab:InferenceSpeedComparison}).
